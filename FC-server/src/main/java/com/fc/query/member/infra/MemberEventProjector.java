@@ -4,8 +4,11 @@ import java.util.Date;
 
 import javax.transaction.Transactional;
 
+import com.fc.command.member.exception.MemberNotFoundException;
 import com.fc.core.event.AbstractEventProjector;
+import com.fc.domain.member.Email;
 import com.fc.domain.member.Member.MemberState;
+import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.RegisteredMember;
 import com.fc.domain.member.read.Member;
 
@@ -28,5 +31,13 @@ public class MemberEventProjector extends AbstractEventProjector {
 				.build();
 		memberJpaRepository.save(member);
 		log.info("save query member : {}", event);
+	}
+	
+	public void execute(ChangedMemberAddress event) {
+		Email to = event.getIdentifier();
+		Member member = memberJpaRepository.findById(to).orElseThrow(()->new MemberNotFoundException("해당 사용자가 존재하지 않습니다."));
+		member.changeAddress(event.getAddress());
+		memberJpaRepository.save(member);
+		log.info("change address member : {}", event);
 	}
 }

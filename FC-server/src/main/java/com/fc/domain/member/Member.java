@@ -3,8 +3,9 @@ package com.fc.domain.member;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fc.command.member.model.MemberCommand.CreateMemberCommand;
+import com.fc.command.member.model.MemberCommand.CreateMember;
 import com.fc.core.domain.AggregateRoot;
+import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.RegisteredMember;
 
 import lombok.AccessLevel;
@@ -35,6 +36,7 @@ public class Member extends AggregateRoot<Email> {
 	}
 	
 	Member(Email email){
+		super(email);
 		this.email = email;
 	}
 	
@@ -48,12 +50,17 @@ public class Member extends AggregateRoot<Email> {
 		applyChange(new RegisteredMember(this.email,this.password,this.rule));
 	}
 	
-	public static Member create(CreateMemberCommand command) {
+	public static Member create(CreateMember command) {
 		Member member = new Member(command.getEmail(), command.getPassword());
 		return member;
 	}
 	
-	public void apply(RegisteredMember event) {
+	public void changeAddress(Address address) {
+		this.address = address;
+		applyChange(new ChangedMemberAddress(this.email, this.address));
+	}
+	
+	protected void apply(RegisteredMember event) {
 		this.email = event.getEmail();
 		this.password = event.getPassword();
 		this.state = MemberState.CREATE;
@@ -61,4 +68,8 @@ public class Member extends AggregateRoot<Email> {
 		this.createDateTime = new Date();
 	}
 
+	protected void apply(ChangedMemberAddress event) {
+		this.address = event.getAddress();
+	}
+	
 }

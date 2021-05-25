@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.member.exception.InvalidMemberException;
 import com.fc.command.member.infra.validator.PasswordMeter.PasswordStrength;
-import com.fc.command.member.model.MemberCommand.CreateMemberCommand;
+import com.fc.command.member.model.MemberCommand.CreateMember;
 import com.fc.core.infra.Validator;
 
 import lombok.RequiredArgsConstructor;
@@ -13,12 +13,12 @@ import lombok.Setter;
 
 @Setter
 @RequiredArgsConstructor
-public class CreateMemberValidator implements Validator<CreateMemberCommand> {
+public class CreateMemberValidator implements Validator<CreateMember> {
 	private final Validator<AddressCommand> addressValidator;
 	private final PasswordMeter passwordMeter;
 	
 	@Override
-	public void validation(CreateMemberCommand target) {
+	public void validation(CreateMember target) {
 		String email = target.getEmail();
 		String password = target.getPassword();
 		AddressCommand address = target.getAddress();

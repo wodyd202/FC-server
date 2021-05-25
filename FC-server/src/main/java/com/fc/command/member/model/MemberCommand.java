@@ -14,14 +14,23 @@ public class MemberCommand implements Command{
 	@Getter
 	@AllArgsConstructor
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class CreateMemberCommand {
+	public static class CreateMember {
 		private String email;
 		private String password;
 		private AddressCommand address;
 		
-		public CreateMemberCommand(String email, String password) {
+		public CreateMember(String email, String password) {
 			this.email = email;
 			this.password = password;
 		}
 	}
+	
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class ChangeAddress {
+		private double longtitude;
+		private double letitude;
+	}
+	
 }

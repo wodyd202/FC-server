@@ -32,8 +32,8 @@ public class InmemoryMemberEventStore implements EventStore<Email> {
 		if(expectedVersion > 0) {
 			List<MemberRawEvent> events = eventStoreRepository.findByEmail(identifier);
 			Long actualVersion = events.get(events.size() - 1).getVersion();
-
-			if(expectedVersion.equals(actualVersion)) {
+			
+			if(expectedVersion.equals(actualVersion + 1)) {
 				String exceptionMessage = String.format("Unmatched Version : expected: {}, actual: {}", expectedVersion, actualVersion);
 				throw new IllegalStateException(exceptionMessage);
 			}

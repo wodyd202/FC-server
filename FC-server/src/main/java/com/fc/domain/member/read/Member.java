@@ -66,4 +66,8 @@ public class Member {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
 	private Date createDateTime;
+
+	public void changeAddress(Address address) {
+		this.address = address;
+	}
 }
