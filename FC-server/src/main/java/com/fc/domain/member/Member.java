@@ -7,7 +7,7 @@ import com.fc.core.domain.AggregateRoot;
 import lombok.Getter;
 
 @Getter
-public class Member extends AggregateRoot<Email>{
+public class Member extends AggregateRoot<Email> {
 	private static final long serialVersionUID = 1L;
 	public enum MemberState { CREATE, DELETE }
 	public enum MemberRule { BUYER, SELLER }
