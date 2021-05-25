@@ -11,6 +11,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fc.command.member.SimpleMemberService;
+import com.fc.command.member.exception.AlreadyDeletedMemberException;
+import com.fc.command.member.exception.AlreadyExistMemberException;
+import com.fc.command.member.infra.InmemoryMemberEventStore;
+import com.fc.command.member.infra.InmemoryMemberEventStoreRepository;
+import com.fc.command.member.infra.InmemoryMemberSnapshotRepository;
+import com.fc.command.member.infra.MemberEventHandler;
+import com.fc.command.member.infra.MemberEventPublisher;
+import com.fc.command.member.infra.MemberEventStoreRepository;
+import com.fc.command.member.model.MemberCommand;
 import com.fc.core.event.EventProjector;
 import com.fc.core.event.EventPublisher;
 import com.fc.core.event.EventStore;
@@ -20,17 +30,8 @@ import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.Member.MemberState;
 import com.fc.domain.member.event.MemberRawEvent;
-import com.fc.service.member.SimpleMemberService;
-import com.fc.service.member.exception.AlreadyExistMemberException;
-import com.fc.service.member.exception.AlreadyDeletedMemberException;
-import com.fc.service.member.infra.InmemoryMemberEventStore;
-import com.fc.service.member.infra.InmemoryMemberEventStoreRepository;
-import com.fc.service.member.infra.InmemoryMemberSnapshotRepository;
-import com.fc.service.member.infra.MemberEventHandler;
-import com.fc.service.member.infra.MemberEventProjector;
-import com.fc.service.member.infra.MemberEventPublisher;
-import com.fc.service.member.infra.MemberEventStoreRepository;
-import com.fc.service.member.model.MemberCommand;
+import com.fc.query.member.infra.MemberEventProjector;
+import com.fc.query.member.infra.MemberJpaRepository;
 
 @SuppressWarnings("unchecked")
 public class MemberCreateTest {
@@ -72,7 +73,7 @@ public class MemberCreateTest {
 	@BeforeEach
 	void setUp() {
 		EventPublisher<MemberRawEvent> publisher = new MemberEventPublisher();
-		EventProjector projector = new MemberEventProjector();
+		EventProjector projector = new MemberEventProjector(mock(MemberJpaRepository.class));
 		
 		// 이벤트
 		MemberEventStoreRepository eventStoreRepository = new InmemoryMemberEventStoreRepository();

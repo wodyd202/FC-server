@@ -1,16 +1,16 @@
-package com.fc.service.member;
+package com.fc.command.member;
 
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.fc.command.member.exception.AlreadyDeletedMemberException;
+import com.fc.command.member.exception.AlreadyExistMemberException;
+import com.fc.command.member.infra.MemberEventHandler;
+import com.fc.command.member.model.MemberCommand.CreateMemberCommand;
 import com.fc.core.infra.Validator;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
-import com.fc.service.member.exception.AlreadyDeletedMemberException;
-import com.fc.service.member.exception.AlreadyExistMemberException;
-import com.fc.service.member.infra.MemberEventHandler;
-import com.fc.service.member.model.MemberCommand.CreateMemberCommand;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;

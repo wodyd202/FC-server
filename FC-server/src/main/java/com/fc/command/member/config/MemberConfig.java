@@ -1,9 +1,15 @@
-package com.fc.service.member.config;
+package com.fc.command.member.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fc.command.member.infra.InmemoryMemberEventStore;
+import com.fc.command.member.infra.InmemoryMemberEventStoreRepository;
+import com.fc.command.member.infra.InmemoryMemberSnapshotRepository;
+import com.fc.command.member.infra.MemberEventHandler;
+import com.fc.command.member.infra.MemberEventPublisher;
+import com.fc.command.member.infra.MemberEventStoreRepository;
 import com.fc.core.event.EventProjector;
 import com.fc.core.event.EventPublisher;
 import com.fc.core.event.EventStore;
@@ -11,20 +17,13 @@ import com.fc.core.snapshot.SnapshotRepository;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.event.MemberRawEvent;
-import com.fc.service.member.infra.InmemoryMemberEventStore;
-import com.fc.service.member.infra.InmemoryMemberEventStoreRepository;
-import com.fc.service.member.infra.InmemoryMemberSnapshotRepository;
-import com.fc.service.member.infra.MemberEventHandler;
-import com.fc.service.member.infra.MemberEventProjector;
-import com.fc.service.member.infra.MemberEventPublisher;
-import com.fc.service.member.infra.MemberEventStoreRepository;
 
 @Configuration
 public class MemberConfig {
 	
 	@Bean
-	MemberEventHandler memberEventHandler(ObjectMapper objectMapper) {
-		return new MemberEventHandler(memberEventStore(objectMapper), memberSnapshotRepository());
+	MemberEventHandler memberEventHandler(ObjectMapper objectMapper, EventProjector memberEventProjector) {
+		return new MemberEventHandler(memberEventStore(objectMapper, memberEventProjector), memberSnapshotRepository());
 	}
 	
 	@Bean
@@ -33,18 +32,13 @@ public class MemberConfig {
 	}
 	
 	@Bean
-	EventStore<Email> memberEventStore(ObjectMapper objectMapper){
-		return new InmemoryMemberEventStore(objectMapper, memberEventStoreRepository(), memberEventPublisher(), memberEventProjector());
+	EventStore<Email> memberEventStore(ObjectMapper objectMapper, EventProjector memberEventProjector){
+		return new InmemoryMemberEventStore(objectMapper, memberEventStoreRepository(), memberEventPublisher(), memberEventProjector);
 	}
 	
 	@Bean
 	MemberEventStoreRepository memberEventStoreRepository() {
 		return new InmemoryMemberEventStoreRepository();
-	}
-	
-	@Bean
-	EventProjector memberEventProjector() {
-		return new MemberEventProjector();
 	}
 	
 	@Bean

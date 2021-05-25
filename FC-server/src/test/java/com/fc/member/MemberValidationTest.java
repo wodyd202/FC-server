@@ -5,13 +5,13 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
+import com.fc.command.common.address.exception.InvalidAddressException;
+import com.fc.command.common.address.model.AddressCommand;
+import com.fc.command.member.exception.InvalidMemberException;
+import com.fc.command.member.infra.validator.CreateMemberValidator;
+import com.fc.command.member.infra.validator.PasswordMeter;
+import com.fc.command.member.model.MemberCommand;
 import com.fc.core.infra.Validator;
-import com.fc.service.common.address.exception.InvalidAddressException;
-import com.fc.service.common.address.model.AddressCommand;
-import com.fc.service.member.exception.InvalidMemberException;
-import com.fc.service.member.infra.validator.CreateMemberValidator;
-import com.fc.service.member.infra.validator.PasswordMeter;
-import com.fc.service.member.model.MemberCommand;
 
 @SuppressWarnings("unchecked")
 public class MemberValidationTest {

@@ -1,4 +1,4 @@
-package com.fc.service.member.exception;
+package com.fc.command.member.exception;
 
 public class AlreadyExistMemberException extends IllegalArgumentException {
 	private static final long serialVersionUID = 1L;

@@ -3,9 +3,9 @@ package com.fc.domain.member;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fc.command.member.model.MemberCommand.CreateMemberCommand;
 import com.fc.core.domain.AggregateRoot;
 import com.fc.domain.member.event.RegisteredMember;
-import com.fc.service.member.model.MemberCommand.CreateMemberCommand;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.fc.service.member.infra;
+package com.fc.command.member.infra;
 
 import com.fc.core.event.EventPublisher;
 import com.fc.domain.member.event.MemberRawEvent;

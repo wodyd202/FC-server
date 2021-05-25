@@ -1,4 +1,4 @@
-package com.fc.service.common.address.model;
+package com.fc.command.common.address.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
-package com.fc.service.member.model;
+package com.fc.command.member.model;
 
+import com.fc.command.common.address.model.AddressCommand;
 import com.fc.core.command.Command;
-import com.fc.service.common.address.model.AddressCommand;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

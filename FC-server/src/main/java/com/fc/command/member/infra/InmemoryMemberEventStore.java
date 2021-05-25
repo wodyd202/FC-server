@@ -1,4 +1,4 @@
-package com.fc.service.member.infra;
+package com.fc.command.member.infra;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
