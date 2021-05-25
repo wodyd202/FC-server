@@ -9,8 +9,8 @@ import com.fc.core.infra.Validator;
 import com.fc.service.common.address.exception.InvalidAddressException;
 import com.fc.service.common.address.model.AddressCommand;
 import com.fc.service.member.exception.InvalidMemberException;
-import com.fc.service.member.infra.CreateMemberValidator;
-import com.fc.service.member.infra.PasswordMeter;
+import com.fc.service.member.infra.validator.CreateMemberValidator;
+import com.fc.service.member.infra.validator.PasswordMeter;
 import com.fc.service.member.model.MemberCommand;
 
 @SuppressWarnings("unchecked")

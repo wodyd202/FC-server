@@ -1,4 +1,4 @@
-package com.fc.service.member.infra;
+package com.fc.service.member.infra.validator;
 
 import java.util.HashSet;
 import java.util.Set;

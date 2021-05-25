@@ -1,11 +1,11 @@
-package com.fc.service.member.infra;
+package com.fc.service.member.infra.validator;
 
 import java.util.regex.Pattern;
 
 import com.fc.core.infra.Validator;
 import com.fc.service.common.address.model.AddressCommand;
 import com.fc.service.member.exception.InvalidMemberException;
-import com.fc.service.member.infra.PasswordMeter.PasswordStrength;
+import com.fc.service.member.infra.validator.PasswordMeter.PasswordStrength;
 import com.fc.service.member.model.MemberCommand.CreateMemberCommand;
 
 import lombok.RequiredArgsConstructor;

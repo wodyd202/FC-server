@@ -1,12 +1,18 @@
 package com.fc.domain.member;
 
-import lombok.AllArgsConstructor;
+import java.io.Serializable;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
 @AllArgsConstructor
-public class Email {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "value")
+public class Email implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private String value;
-	
-	public String get() {
-		return value;
-	}
 }

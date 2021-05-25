@@ -1,6 +1,7 @@
 package com.fc.core.event;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.fc.core.domain.AggregateRoot;
 
@@ -23,7 +24,7 @@ public interface EventHandler<A extends AggregateRoot, ID> {
 	 * @param identifier
 	 * @return
 	 */
-	A find(ID identifier);
+	Optional<A> find(ID identifier);
 
 	/**
 	 * Get the All aggregate

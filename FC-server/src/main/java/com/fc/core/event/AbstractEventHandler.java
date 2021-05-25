@@ -1,22 +1,22 @@
 package com.fc.core.event;
 
-import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.groupingBy;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fc.core.domain.AggregateRoot;
 import com.fc.core.snapshot.Snapshot;
 import com.fc.core.snapshot.SnapshotRepository;
 
-import static java.util.stream.Collectors.groupingBy;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by jaceshim on 2017. 3. 5..
@@ -31,7 +31,7 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 
 	private SnapshotRepository<A, ID> snapshotRepository;
 
-	private Map<ID, AtomicInteger> snapshotCountMap = new ConcurrentHashMap<>();
+	private Map<ID, AtomicInteger> snapshotCountMap = new HashMap<>();
 
 	private static final int SNAPSHOT_COUNT = 10;
 
@@ -97,7 +97,7 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 	}
 
 	@Override
-	public A find(ID identifier) {
+	public Optional<A> find(ID identifier) {
 		// snapshot저장소에서 호출함
 		A aggregateRoot = createAggregateRootViaReflection(identifier);
 
@@ -111,14 +111,14 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 		} else {
 			baseEvents = eventStore.getEvents(identifier);
 		}
-
+		
 		if (baseEvents == null || baseEvents.size() == 0) {
-			return null;
+			return Optional.ofNullable(null);
 		}
 
 		aggregateRoot.replay(baseEvents);
 
-		return aggregateRoot;
+		return Optional.ofNullable(aggregateRoot);
 	}
 
 	@Override
