@@ -6,7 +6,7 @@ import com.fc.domain.member.event.RegisteredMember;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MemberEventProejctor extends AbstractEventProjector {
+public class MemberEventProjector extends AbstractEventProjector {
 	public void execute(RegisteredMember event) {
 		log.info("save query member : {}", event);
 	}

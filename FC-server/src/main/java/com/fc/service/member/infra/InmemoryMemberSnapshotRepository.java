@@ -9,7 +9,7 @@ import com.fc.core.snapshot.SnapshotRepository;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 
-public class InmemorySnapshotRepository implements SnapshotRepository<Member,Email> {
+public class InmemoryMemberSnapshotRepository implements SnapshotRepository<Member,Email> {
 	
 	private Map<Email, Snapshot<Member, Email>> repo = new HashMap<>();
 	

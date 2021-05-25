@@ -2,6 +2,8 @@ package com.fc.service.member;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.fc.core.infra.Validator;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
@@ -15,6 +17,7 @@ import lombok.Setter;
 
 @Setter
 @AllArgsConstructor
+@Service
 public class SimpleMemberService implements MemberService {
 	private MemberEventHandler memberEventHandler;
 	

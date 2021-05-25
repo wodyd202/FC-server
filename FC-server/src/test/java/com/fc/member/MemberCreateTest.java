@@ -25,9 +25,9 @@ import com.fc.service.member.exception.AlreadyExistMemberException;
 import com.fc.service.member.exception.AlreadyDeletedMemberException;
 import com.fc.service.member.infra.InmemoryMemberEventStore;
 import com.fc.service.member.infra.InmemoryMemberEventStoreRepository;
-import com.fc.service.member.infra.InmemorySnapshotRepository;
+import com.fc.service.member.infra.InmemoryMemberSnapshotRepository;
 import com.fc.service.member.infra.MemberEventHandler;
-import com.fc.service.member.infra.MemberEventProejctor;
+import com.fc.service.member.infra.MemberEventProjector;
 import com.fc.service.member.infra.MemberEventPublisher;
 import com.fc.service.member.infra.MemberEventStoreRepository;
 import com.fc.service.member.model.MemberCommand;
@@ -72,14 +72,14 @@ public class MemberCreateTest {
 	@BeforeEach
 	void setUp() {
 		EventPublisher<MemberRawEvent> publisher = new MemberEventPublisher();
-		EventProjector projector = new MemberEventProejctor();
+		EventProjector projector = new MemberEventProjector();
 		
 		// 이벤트
 		MemberEventStoreRepository eventStoreRepository = new InmemoryMemberEventStoreRepository();
 		EventStore<Email> eventStore = new InmemoryMemberEventStore(new ObjectMapper(), eventStoreRepository, publisher, projector);
 
 		// 스냅샷
-		SnapshotRepository<Member, Email> snapshotRepository = new InmemorySnapshotRepository();
+		SnapshotRepository<Member, Email> snapshotRepository = new InmemoryMemberSnapshotRepository();
 		
 		MemberEventHandler memberEventHandler = new MemberEventHandler(eventStore, snapshotRepository);
 		memberService = new SimpleMemberService(memberEventHandler);
