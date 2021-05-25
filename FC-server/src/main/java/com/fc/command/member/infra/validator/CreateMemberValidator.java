@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.member.exception.InvalidMemberException;
-import com.fc.command.member.infra.validator.PasswordMeter.PasswordStrength;
 import com.fc.command.member.model.MemberCommand.CreateMember;
 import com.fc.core.infra.Validator;
 
@@ -51,16 +50,6 @@ public class CreateMemberValidator implements Validator<CreateMember> {
 		if(isEmpty) {
 			throw new InvalidMemberException("사용자 비밀번호를 입력해주세요.");
 		}
-		meterPassword(password);
-	}
-
-	private void meterPassword(String password) {
-		PasswordStrength meter = passwordMeter.meter(password);
-		if(meter == PasswordStrength.INVALID) {
-			throw new InvalidMemberException("사용자 비밀번호 형식이 올바르지 않습니다.");
-		}
-		if(meter == PasswordStrength.WEEK) {
-			throw new InvalidMemberException("사용자 비밀번호 강도가 약합니다.");
-		}
+		passwordMeter.meter(password);
 	}
 }

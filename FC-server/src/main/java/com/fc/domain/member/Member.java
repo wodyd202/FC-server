@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fc.command.member.model.MemberCommand.CreateMember;
 import com.fc.core.domain.AggregateRoot;
 import com.fc.domain.member.event.ChangedMemberAddress;
+import com.fc.domain.member.event.ChangedMemberPassword;
 import com.fc.domain.member.event.RegisteredMember;
 
 import lombok.AccessLevel;
@@ -60,6 +61,11 @@ public class Member extends AggregateRoot<Email> {
 		applyChange(new ChangedMemberAddress(this.email, this.address));
 	}
 	
+	public void changePassword(Password password) {
+		this.password = password;
+		applyChange(new ChangedMemberPassword(this.email, this.password));
+	}
+	
 	protected void apply(RegisteredMember event) {
 		this.email = event.getEmail();
 		this.password = event.getPassword();
@@ -72,4 +78,7 @@ public class Member extends AggregateRoot<Email> {
 		this.address = event.getAddress();
 	}
 	
+	protected void apply(ChangedMemberPassword event) {
+		this.password = event.getPassword();
+	}
 }

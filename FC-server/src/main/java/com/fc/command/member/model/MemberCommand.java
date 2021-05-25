@@ -32,5 +32,13 @@ public class MemberCommand implements Command{
 		private double longtitude;
 		private double letitude;
 	}
+
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class ChangePassword {
+		private String originPassword;
+		private String changePassword;
+	}
 	
 }

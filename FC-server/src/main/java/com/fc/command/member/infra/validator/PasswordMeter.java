@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import com.fc.command.member.exception.InvalidMemberException;
+
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -37,8 +39,14 @@ public class PasswordMeter {
 		}
 	};
 
-	public PasswordStrength meter(String password) {
-		return analysisPassword(password);
+	public void meter(String password) {
+		PasswordStrength analysisPassword = analysisPassword(password);
+		if(analysisPassword == PasswordStrength.INVALID) {
+			throw new InvalidMemberException("사용자 비밀번호 형식이 올바르지 않습니다.");
+		}
+		if(analysisPassword == PasswordStrength.WEEK) {
+			throw new InvalidMemberException("사용자 비밀번호 강도가 약합니다.");
+		}
 	}
 
 	private PasswordStrength analysisPassword(String password) {

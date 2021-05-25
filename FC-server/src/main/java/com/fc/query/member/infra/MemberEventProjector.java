@@ -9,6 +9,7 @@ import com.fc.core.event.AbstractEventProjector;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member.MemberState;
 import com.fc.domain.member.event.ChangedMemberAddress;
+import com.fc.domain.member.event.ChangedMemberPassword;
 import com.fc.domain.member.event.RegisteredMember;
 import com.fc.domain.member.read.Member;
 
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberEventProjector extends AbstractEventProjector {
 	private final MemberJpaRepository memberJpaRepository;
 	
-	public void execute(RegisteredMember event) {
+	protected void execute(RegisteredMember event) {
 		Member member = Member.builder()
 				.email(event.getEmail())
 				.password(event.getPassword())
@@ -33,11 +34,19 @@ public class MemberEventProjector extends AbstractEventProjector {
 		log.info("save query member : {}", event);
 	}
 	
-	public void execute(ChangedMemberAddress event) {
+	protected void execute(ChangedMemberAddress event) {
 		Email to = event.getIdentifier();
 		Member member = memberJpaRepository.findById(to).orElseThrow(()->new MemberNotFoundException("해당 사용자가 존재하지 않습니다."));
 		member.changeAddress(event.getAddress());
 		memberJpaRepository.save(member);
 		log.info("change address member : {}", event);
+	}
+	
+	protected void execute(ChangedMemberPassword event) {
+		Email to = event.getIdentifier();
+		Member member = memberJpaRepository.findById(to).orElseThrow(()->new MemberNotFoundException("해당 사용자가 존재하지 않습니다."));
+		member.changePassword(event.getPassword());
+		memberJpaRepository.save(member);
+		log.info("change password member : {}", event);
 	}
 }

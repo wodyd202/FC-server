@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Password;
@@ -35,6 +37,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SecondaryTable(name = "MEMBER_ADDRESS", pkJoinColumns = @PrimaryKeyJoinColumn(name = "MEMBER_EMAIL"))
+@DynamicUpdate
 public class Member {
 	
 	@EmbeddedId
@@ -69,5 +72,9 @@ public class Member {
 
 	public void changeAddress(Address address) {
 		this.address = address;
+	}
+
+	public void changePassword(Password password) {
+		this.password = password;
 	}
 }
