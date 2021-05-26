@@ -1,6 +1,6 @@
 package com.fc.domain.store;
 
-import java.util.Set;
+import javax.persistence.Embeddable;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BusinessStyles {
-	Set<BusinessStyle> styles;
+@Embeddable
+public class StoreStyle {
+	private String value;
 }

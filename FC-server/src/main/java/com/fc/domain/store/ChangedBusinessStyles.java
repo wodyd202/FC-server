@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChangedBusinessStyles extends AbstractStoreEvent{
 	private static final long serialVersionUID = 1L;
-	private BusinessStyles styles;
+	private StoreStyles styles;
 	
-	public ChangedBusinessStyles(Owner targetOwner, BusinessStyles styles) {
+	public ChangedBusinessStyles(Owner targetOwner, StoreStyles styles) {
 		this.owner = targetOwner;
 		this.styles = styles;
 	}

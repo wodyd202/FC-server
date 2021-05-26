@@ -1,13 +1,17 @@
 package com.fc.domain.store;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BusinessStyle {
+public class Holiday {
 	private String value;
+	
+	@Override
+	public String toString() {
+		return this.value;
+	}
 }

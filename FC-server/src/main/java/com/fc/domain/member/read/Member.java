@@ -17,7 +17,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.domain.Persistable;
 
 import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
@@ -39,7 +38,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SecondaryTable(name = "MEMBER_ADDRESS", pkJoinColumns = @PrimaryKeyJoinColumn(name = "MEMBER_EMAIL"))
 @DynamicUpdate
-public class Member implements Persistable<Email>{
+public class Member{
 	
 	@EmbeddedId
 	@AttributeOverride(column = @Column(name = "email"), name = "value")
@@ -78,15 +77,5 @@ public class Member implements Persistable<Email>{
 
 	public void changePassword(Password password) {
 		this.password = password;
-	}
-
-	@Override
-	public Email getId() {
-		return this.email;
-	}
-
-	@Override
-	public boolean isNew() {
-		return false;
 	}
 }

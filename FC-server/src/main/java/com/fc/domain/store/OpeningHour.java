@@ -2,6 +2,8 @@ package com.fc.domain.store;
 
 import java.util.Set;
 
+import javax.persistence.Convert;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +19,6 @@ public class OpeningHour {
 	private byte weekendStartTime;
 	private byte weekendEndTime;
 	
-	private Set<String> holidays;
+	@Convert(converter = HolidayConverter.class)
+	private Set<Holiday> holidays;
 }

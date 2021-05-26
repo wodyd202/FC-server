@@ -22,11 +22,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends AggregateRoot<Owner>{
 	private static final long serialVersionUID = 1L;
-	public enum StoreState { SELL, NOT_SELL }
+	public enum StoreState { SELL, NOT_SELL , CLOSED }
 	private Owner owner;
 	private BusinessDetail detail;
 	private StoreTags tags;
-	private BusinessStyles styles;
+	private StoreStyles styles;
 	private MainImage image;
 	private OpeningHour openingHour;
 	private StoreState state;
