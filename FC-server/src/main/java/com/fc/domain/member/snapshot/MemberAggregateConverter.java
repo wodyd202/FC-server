@@ -2,16 +2,23 @@ package com.fc.domain.member.snapshot;
 
 import javax.persistence.AttributeConverter;
 
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fc.domain.member.Member;
 
-public class MemberAggregateConverter implements AttributeConverter<Member, String>{
+import lombok.RequiredArgsConstructor;
 
+@Component
+@RequiredArgsConstructor
+public class MemberAggregateConverter implements AttributeConverter<Member, String>{
+	private final ObjectMapper objectMapper;
+	
 	@Override
 	public String convertToDatabaseColumn(Member attribute) {
 		try {
-			return new ObjectMapper().writeValueAsString(attribute);
+			return objectMapper.writeValueAsString(attribute);
 		} catch (JsonProcessingException e) {
 			throw new IllegalArgumentException();
 		}
@@ -20,7 +27,7 @@ public class MemberAggregateConverter implements AttributeConverter<Member, Stri
 	@Override
 	public Member convertToEntityAttribute(String dbData) {
 		try {
-			return new ObjectMapper().readValue(dbData, Member.class);
+			return objectMapper.readValue(dbData, Member.class);
 		} catch (JsonProcessingException e) {
 			throw new IllegalArgumentException();
 		}
