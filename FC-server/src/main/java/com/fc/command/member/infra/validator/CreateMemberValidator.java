@@ -1,7 +1,5 @@
 package com.fc.command.member.infra.validator;
 
-import java.util.regex.Pattern;
-
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.member.exception.InvalidMemberException;
 import com.fc.command.member.model.MemberCommand.CreateMember;
@@ -13,6 +11,8 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class CreateMemberValidator implements Validator<CreateMember> {
+	final String EMAIL_REGEX = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
+	
 	private final Validator<AddressCommand> addressValidator;
 	private final PasswordMeter passwordMeter;
 	
@@ -31,25 +31,12 @@ public class CreateMemberValidator implements Validator<CreateMember> {
 	}
 
 	private void emailValidation(String email) {
-		boolean isEmpty = email == null || email.isEmpty();
-		if(isEmpty) {
-			throw new InvalidMemberException("사용자 이메일을 입력해주세요.");
-		}
-		isEmail(email);
-	}
-
-	private void isEmail(String email) {
-		final String regex = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
-		if(!Pattern.matches(regex, email)) {
-			throw new InvalidMemberException("이메일 형식으로 입력해주세요.");
-		}
+		assertNotEmptyString(email, new InvalidMemberException("사용자 이메일을 입력해주세요."));
+		assertRegex(EMAIL_REGEX, email, new InvalidMemberException("이메일 형식으로 입력해주세요."));
 	}
 
 	private void passwordValidation(String password) {
-		boolean isEmpty = password == null || password.isEmpty();
-		if(isEmpty) {
-			throw new InvalidMemberException("사용자 비밀번호를 입력해주세요.");
-		}
+		assertNotEmptyString(password, new InvalidMemberException("사용자 비밀번호를 입력해주세요."));
 		passwordMeter.meter(password);
 	}
 }

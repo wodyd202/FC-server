@@ -22,14 +22,10 @@ public class ChangePasswordValidator implements Validator<ChangePassword> {
 	}
 
 	private void originPasswordValidation(String originPassword) {
-		if(originPassword == null || originPassword.isEmpty()) {
-			throw new InvalidMemberException("기존 비밀번호를 입력해주세요.");
-		}
+		assertNotEmptyString(originPassword, new InvalidMemberException("기존 비밀번호를 입력해주세요."));
 	}
 
 	private void changePasswordValidation(String changePassword) {
-		if(changePassword == null || changePassword.isEmpty()) {
-			throw new InvalidMemberException("변경할 비밀번호를 입력해주세요.");
-		}
+		assertNotEmptyString(changePassword, new InvalidMemberException("변경할 비밀번호를 입력해주세요."));
 	}
 }

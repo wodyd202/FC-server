@@ -15,4 +15,5 @@ public class BusinessDetail {
 	private String businessNumber;
 	private Phone phone;
 	private Address address;
+	private String addressDetail;
 }
