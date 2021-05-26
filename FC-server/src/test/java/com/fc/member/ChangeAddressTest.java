@@ -12,8 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fc.command.common.address.exception.InvalidAddressException;
+import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.common.address.model.AddressCommand;
-import com.fc.command.member.AddressDetailGetter;
 import com.fc.command.member.MemberService;
 import com.fc.command.member.SimpleMemberService;
 import com.fc.command.member.infra.MemberEventHandler;

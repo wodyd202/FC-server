@@ -1,6 +1,6 @@
-package com.fc.store;
+package com.fc.command.store;
 
-import com.fc.command.member.AddressDetailGetter;
+import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.infra.Validator;
 import com.fc.domain.store.Owner;

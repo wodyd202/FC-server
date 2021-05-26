@@ -1,6 +1,6 @@
-package com.fc.store;
+package com.fc.command.store;
 
-import com.fc.command.member.AddressDetailGetter;
+import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.member.exception.MemberNotFoundException;
 import com.fc.command.store.infra.StoreEventHandler;
 import com.fc.command.store.model.StoreCommand.CreateStore;
@@ -9,6 +9,7 @@ import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.Store;
+import com.fc.query.member.infra.MemberRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -19,7 +20,7 @@ import lombok.AllArgsConstructor;
   */
 @AllArgsConstructor
 public class SimpleStoreService implements StoreService {
-	private MemberQueryRepository memberRepository;
+	private MemberRepository memberRepository;
 	private StoreEventHandler storeEventHandler;
 	
 	@Override

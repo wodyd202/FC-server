@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.fc.command.member.AddressDetailGetter;
+import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.member.MemberService;
 import com.fc.command.member.infra.validator.ChangeAddressValidator;
 import com.fc.command.member.infra.validator.ChangePasswordValidator;

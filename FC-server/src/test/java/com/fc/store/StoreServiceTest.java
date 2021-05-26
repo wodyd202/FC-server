@@ -10,9 +10,11 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.common.address.model.AddressCommand;
-import com.fc.command.member.AddressDetailGetter;
 import com.fc.command.member.infra.validator.ChangeAddressValidator;
+import com.fc.command.store.SimpleStoreService;
+import com.fc.command.store.StoreService;
 import com.fc.command.store.infra.StoreEventHandler;
 import com.fc.command.store.infra.validator.CreateStoreValidator;
 import com.fc.command.store.model.StoreCommand;
@@ -23,6 +25,7 @@ import com.fc.domain.member.Email;
 import com.fc.domain.member.read.Member;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.Store;
+import com.fc.query.member.infra.MemberRepository;
 
 public class StoreServiceTest {
 	
@@ -48,7 +51,7 @@ public class StoreServiceTest {
 		StoreEventHandler storeEventHandler = mock(StoreEventHandler.class);
 		AddressDetailGetter addressGetter = mock(AddressDetailGetter.class);
 		
-		MemberQueryRepository memberQueryRepository = mock(MemberQueryRepository.class);
+		MemberRepository memberQueryRepository = mock(MemberRepository.class);
 		
 		Member mockMember = mock(Member.class);
 		

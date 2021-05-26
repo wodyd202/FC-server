@@ -1,5 +1,6 @@
 package com.fc.command.member;
 
+import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.member.model.MemberCommand;
 import com.fc.command.member.model.MemberCommand.ChangeAddress;

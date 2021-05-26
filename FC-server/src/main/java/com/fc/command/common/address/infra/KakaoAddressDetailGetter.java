@@ -5,7 +5,6 @@ import org.springframework.util.LinkedMultiValueMap;
 
 import com.fc.command.common.address.exception.InvalidAddressException;
 import com.fc.command.common.address.model.AddressCommand;
-import com.fc.command.member.AddressDetailGetter;
 import com.fc.domain.member.Address;
 import com.fc.openApi.OpenApiRequester;
 import com.fc.openApi.kakaoMap.KakaoMapOpenApiResponse;
