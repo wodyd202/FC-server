@@ -7,9 +7,6 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-/**
- * Created by jaceshim on 2017. 3. 28..
- */
 @Slf4j
 @SuppressWarnings("rawtypes")
 public abstract class AbstractEventListener implements EventListener {

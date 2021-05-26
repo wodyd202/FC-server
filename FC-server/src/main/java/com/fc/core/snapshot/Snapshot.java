@@ -1,23 +1,29 @@
 package com.fc.core.snapshot;
 
-import lombok.Getter;
-
 import java.io.Serializable;
+
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
 
 import com.fc.core.domain.AggregateRoot;
 
-/**
- * Created by jaceshim on 2017. 3. 7..
- */
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Getter
 @SuppressWarnings({ "serial", "rawtypes" })
+@MappedSuperclass
+@NoArgsConstructor
 public class Snapshot<A extends AggregateRoot, ID> implements Serializable {
 
-	private ID identifier;
+	@Id
+	protected ID identifier;
 
-	private Long version;
+	protected Long version;
 
-	private A aggregateRoot;
+	@Lob
+	protected A aggregateRoot;
 
 	public Snapshot(ID identifier, Long version, A aggregateRoot) {
 		this.identifier = identifier;

@@ -1,7 +1,7 @@
 package com.fc.command.member.infra;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,19 +21,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SuppressWarnings({"rawtypes","unchecked"})
 @RequiredArgsConstructor
-public class InmemoryMemberEventStore implements EventStore<Email> {
+public class SimpleMemberEventStore implements EventStore<Email> {
 	private final ObjectMapper objectMapper;
 	private final MemberEventStoreRepository eventStoreRepository;
 	private final EventPublisher eventPublisher;
 	private final EventProjector eventProjector;
 	
 	@Override
+	public long countEvents(Email identifier) {
+		return eventStoreRepository.countByEmail(identifier);
+	}
+	
+	@Override
 	public void saveEvents(final Email identifier, Long expectedVersion, final List<Event> baseEvents) {
 		if(expectedVersion > 0) {
 			List<MemberRawEvent> events = eventStoreRepository.findByEmail(identifier);
-			Long actualVersion = events.get(events.size() - 1).getVersion();
-			
-			if(expectedVersion.equals(actualVersion + 1)) {
+			Long actualVersion = events.get(events.size() - 1).getVersion() - 1;
+
+			if(expectedVersion.equals(actualVersion)) {
 				String exceptionMessage = String.format("Unmatched Version : expected: {}, actual: {}", expectedVersion, actualVersion);
 				throw new IllegalStateException(exceptionMessage);
 			}
@@ -46,7 +51,7 @@ public class InmemoryMemberEventStore implements EventStore<Email> {
 				payload = objectMapper.writeValueAsString(event);
 			}catch (Exception e) {}
 			expectedVersion = increaseVersion(expectedVersion);
-			LocalDateTime now = LocalDateTime.now();
+			Date now = new Date();
 			
 			MemberRawEvent rawEvent = MemberRawEvent.builder()
 					.identifiier(identifier)
@@ -69,12 +74,6 @@ public class InmemoryMemberEventStore implements EventStore<Email> {
 	@Override
 	public List<Event<Email>> getEvents(Email identifier) {
 		List<MemberRawEvent> findAll = eventStoreRepository.findByEmail(identifier);
-		return convertEvent(findAll);
-	}
-
-	@Override
-	public List<Event<Email>> getAllEvents() {
-		List<MemberRawEvent> findAll = eventStoreRepository.findAll();
 		return convertEvent(findAll);
 	}
 

@@ -2,9 +2,11 @@ package com.fc.query.member.infra;
 
 import java.util.Date;
 
-import javax.transaction.Transactional;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-import com.fc.command.member.exception.MemberNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fc.core.event.AbstractEventProjector;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member.MemberState;
@@ -22,6 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberEventProjector extends AbstractEventProjector {
 	private final MemberJpaRepository memberJpaRepository;
 	
+	@PersistenceContext
+	private EntityManager em;
+	
 	protected void execute(RegisteredMember event) {
 		Member member = Member.builder()
 				.email(event.getEmail())
@@ -34,9 +39,10 @@ public class MemberEventProjector extends AbstractEventProjector {
 		log.info("save query member : {}", event);
 	}
 	
+	@Transactional
 	protected void execute(ChangedMemberAddress event) {
 		Email to = event.getIdentifier();
-		Member member = memberJpaRepository.findById(to).orElseThrow(()->new MemberNotFoundException("해당 사용자가 존재하지 않습니다."));
+		Member member = memberJpaRepository.findById(to).get();
 		member.changeAddress(event.getAddress());
 		memberJpaRepository.save(member);
 		log.info("change address member : {}", event);
@@ -44,7 +50,7 @@ public class MemberEventProjector extends AbstractEventProjector {
 	
 	protected void execute(ChangedMemberPassword event) {
 		Email to = event.getIdentifier();
-		Member member = memberJpaRepository.findById(to).orElseThrow(()->new MemberNotFoundException("해당 사용자가 존재하지 않습니다."));
+		Member member = memberJpaRepository.findById(to).get();
 		member.changePassword(event.getPassword());
 		memberJpaRepository.save(member);
 		log.info("change password member : {}", event);

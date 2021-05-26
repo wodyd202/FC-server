@@ -1,16 +1,10 @@
 package com.fc.core.event;
 
-import static java.util.stream.Collectors.groupingBy;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fc.core.domain.AggregateRoot;
 import com.fc.core.snapshot.Snapshot;
@@ -18,9 +12,6 @@ import com.fc.core.snapshot.SnapshotRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Created by jaceshim on 2017. 3. 5..
- */
 @Slf4j
 @SuppressWarnings({"rawtypes","unchecked"})
 public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implements EventHandler<A, ID> {
@@ -30,8 +21,6 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 	private EventStore<ID> eventStore;
 
 	private SnapshotRepository<A, ID> snapshotRepository;
-
-	private Map<ID, AtomicInteger> snapshotCountMap = new HashMap<>();
 
 	private static final int SNAPSHOT_COUNT = 10;
 
@@ -73,27 +62,18 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 	@Override
 	public void save(A aggregateRoot) {
 		final ID identifier = (ID) aggregateRoot.getIdentifier();
-		// 이벤트 저장소에 이벤트 저장
 		eventStore.saveEvents(identifier, aggregateRoot.getExpectedVersion(), aggregateRoot.getUncommittedChanges());
 
-		// 미처리된 이벤트 목록 clear
 		aggregateRoot.markChangesAsCommitted();
-		AtomicInteger snapshotCount = snapshotCountMap.get(identifier);
-		if (snapshotCount == null) {
-			snapshotCount = new AtomicInteger(0);
-		}
+		
+		long countEvents = eventStore.countEvents(identifier);
 
-		if (snapshotCount.get() == SNAPSHOT_COUNT) {
-			log.debug("{} snapshot count {}", identifier, snapshotCount.get());
+		if ((countEvents % SNAPSHOT_COUNT) == 0) {
+			log.debug("{} snapshot count {}", identifier, countEvents);
 			Snapshot<A, ID> snapshot = new Snapshot<>(identifier, aggregateRoot.getExpectedVersion(), aggregateRoot);
 			snapshotRepository.save(snapshot);
-			snapshotCount.set(0);
-
 			return;
 		}
-
-		final int increaseCount = snapshotCount.incrementAndGet();
-		log.debug("{} snapshot increase count {}", increaseCount);
 	}
 
 	@Override
@@ -103,6 +83,7 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 
 		Optional<Snapshot<A, ID>> retrieveSnapshot = retrieveSnapshot(identifier);
 		List<Event<ID>> baseEvents;
+
 		if (retrieveSnapshot.isPresent()) {
 			Snapshot<A, ID> snapshot = retrieveSnapshot.get();
 			baseEvents = eventStore.getEventsByAfterVersion(snapshot.getIdentifier(), snapshot.getVersion());
@@ -115,37 +96,12 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 		if (baseEvents == null || baseEvents.size() == 0) {
 			return Optional.ofNullable(null);
 		}
-
+		
 		aggregateRoot.replay(baseEvents);
 
 		return Optional.ofNullable(aggregateRoot);
 	}
 
-	@Override
-	public List<A> findAll() {
-		List<A> result = new ArrayList<>();
-
-		final List<Event<ID>> allEventsOpt = eventStore.getAllEvents();
-		if (allEventsOpt == null) {
-			return result;
-		}
-
-		final Map<ID, List<Event<ID>>> eventsByIdentifier = allEventsOpt.stream().collect(groupingBy(Event::getIdentifier));
-		for (Map.Entry<ID, List<Event<ID>>> entry : eventsByIdentifier.entrySet()) {
-			A aggregateRoot = createAggregateRootViaReflection(entry.getKey());
-			aggregateRoot.replay(entry.getValue());
-
-			result.add(aggregateRoot);
-		}
-
-		return result;
-	}
-
-	/**
-	 * Get the snapshot
-	 * @param identifier
-	 * @return
-	 */
 	private Optional<Snapshot<A, ID>> retrieveSnapshot(ID identifier) {
 		if (snapshotRepository == null) {
 			return Optional.empty();

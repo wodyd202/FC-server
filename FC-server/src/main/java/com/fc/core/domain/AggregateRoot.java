@@ -12,9 +12,6 @@ import com.fc.core.exception.EventApplyException;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Created by jaceshim on 2017. 3. 5..
- */
 @Slf4j
 @JsonIgnoreProperties({ "identifier", "expectedVersion", "uncommittedChanges" })
 @SuppressWarnings({"serial","rawtypes"})

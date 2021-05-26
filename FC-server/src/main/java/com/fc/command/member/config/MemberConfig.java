@@ -4,12 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fc.command.member.infra.InmemoryMemberEventStore;
-import com.fc.command.member.infra.InmemoryMemberEventStoreRepository;
-import com.fc.command.member.infra.InmemoryMemberSnapshotRepository;
+import com.fc.command.member.infra.JdbcMemberEventRepository;
+import com.fc.command.member.infra.JdbcMemberSnapshotRepository;
 import com.fc.command.member.infra.MemberEventHandler;
 import com.fc.command.member.infra.MemberEventPublisher;
 import com.fc.command.member.infra.MemberEventStoreRepository;
+import com.fc.command.member.infra.SimpleMemberEventStore;
 import com.fc.core.event.EventProjector;
 import com.fc.core.event.EventPublisher;
 import com.fc.core.event.EventStore;
@@ -21,6 +21,7 @@ import com.fc.domain.member.event.MemberRawEvent;
 @Configuration
 public class MemberConfig {
 	
+	
 	@Bean
 	MemberEventHandler memberEventHandler(ObjectMapper objectMapper, EventProjector memberEventProjector) {
 		return new MemberEventHandler(memberEventStore(objectMapper, memberEventProjector), memberSnapshotRepository());
@@ -28,17 +29,17 @@ public class MemberConfig {
 	
 	@Bean
 	SnapshotRepository<Member, Email> memberSnapshotRepository(){
-		return new InmemoryMemberSnapshotRepository();
+		return new JdbcMemberSnapshotRepository();
 	}
 	
 	@Bean
 	EventStore<Email> memberEventStore(ObjectMapper objectMapper, EventProjector memberEventProjector){
-		return new InmemoryMemberEventStore(objectMapper, memberEventStoreRepository(), memberEventPublisher(), memberEventProjector);
+		return new SimpleMemberEventStore(objectMapper, memberEventStoreRepository(), memberEventPublisher(), memberEventProjector);
 	}
 	
 	@Bean
 	MemberEventStoreRepository memberEventStoreRepository() {
-		return new InmemoryMemberEventStoreRepository();
+		return new JdbcMemberEventRepository();
 	}
 	
 	@Bean

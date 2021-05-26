@@ -17,12 +17,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.domain.Persistable;
 
 import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
-import com.fc.domain.member.Password;
 import com.fc.domain.member.Member.MemberRule;
 import com.fc.domain.member.Member.MemberState;
+import com.fc.domain.member.Password;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -38,14 +39,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SecondaryTable(name = "MEMBER_ADDRESS", pkJoinColumns = @PrimaryKeyJoinColumn(name = "MEMBER_EMAIL"))
 @DynamicUpdate
-public class Member {
+public class Member implements Persistable<Email>{
 	
 	@EmbeddedId
 	@AttributeOverride(column = @Column(name = "email"), name = "value")
 	private Email email;
 
 	@Embedded
-	@AttributeOverride(column = @Column(name = "password", nullable = false), name = "value")
+	@AttributeOverride(column = @Column(name = "password"), name = "value")
 	private Password password;
 	
 	@Embedded
@@ -59,22 +60,33 @@ public class Member {
 	private Address address;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private MemberState state;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private MemberRule rule;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false)
 	private Date createDateTime;
 
+	public Member(Email email) {
+		this.email = email;
+	}
+	
 	public void changeAddress(Address address) {
 		this.address = address;
 	}
 
 	public void changePassword(Password password) {
 		this.password = password;
+	}
+
+	@Override
+	public Email getId() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isNew() {
+		return false;
 	}
 }

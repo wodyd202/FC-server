@@ -6,8 +6,8 @@ import com.fc.domain.member.Email;
 import com.fc.domain.member.event.MemberRawEvent;
 
 public interface MemberEventStoreRepository {
-	List<MemberRawEvent> findByEmail(Email email);
-	List<MemberRawEvent> findAll();
+	long countByEmail(Email identifier);
+	List<MemberRawEvent> findByEmail(Email identifier);
 	List<MemberRawEvent> findByEmailAndVersion(Email identifier, Long version);
 	void save(MemberRawEvent event);
 }

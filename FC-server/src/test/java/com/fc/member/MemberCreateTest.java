@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fc.command.member.SimpleMemberService;
 import com.fc.command.member.exception.AlreadyDeletedMemberException;
 import com.fc.command.member.exception.AlreadyExistMemberException;
-import com.fc.command.member.infra.InmemoryMemberEventStore;
+import com.fc.command.member.infra.SimpleMemberEventStore;
 import com.fc.command.member.infra.InmemoryMemberEventStoreRepository;
 import com.fc.command.member.infra.InmemoryMemberSnapshotRepository;
 import com.fc.command.member.infra.MemberEventHandler;
@@ -80,7 +80,7 @@ public class MemberCreateTest {
 		
 		// 이벤트
 		MemberEventStoreRepository eventStoreRepository = new InmemoryMemberEventStoreRepository();
-		EventStore<Email> eventStore = new InmemoryMemberEventStore(new ObjectMapper(), eventStoreRepository, publisher, projector);
+		EventStore<Email> eventStore = new SimpleMemberEventStore(new ObjectMapper(), eventStoreRepository, publisher, projector);
 
 		// 스냅샷
 		SnapshotRepository<Member, Email> snapshotRepository = new InmemoryMemberSnapshotRepository();

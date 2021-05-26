@@ -50,13 +50,13 @@ public class SimpleMemberService implements MemberService {
 	public void changeAddress(
 			Validator<AddressCommand> validator, 
 			AddressDetailGetter getter,
-			Email to, 
+			Email targetUserEmail, 
 			ChangeAddress command
 		) {
 		AddressCommand address = AddressCommand.of(command);
 		validator.validation(address);
 		Address detailAddress = getter.getDetail(address);
-		Member findMember = memberEventHandler.find(to).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
+		Member findMember = memberEventHandler.find(targetUserEmail).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
 		findMember.changeAddress(detailAddress);
 		memberEventHandler.save(findMember);
 	}
@@ -64,11 +64,11 @@ public class SimpleMemberService implements MemberService {
 	@Override
 	public void changePassword(
 			Validator<ChangePassword> validator, 
-			Email to, 
+			Email targetUserEmail, 
 			ChangePassword command
 		) {
 		validator.validation(command);
-		Member findMember = memberEventHandler.find(to).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
+		Member findMember = memberEventHandler.find(targetUserEmail).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
 		
 		verifyEqualPasswordWithChangePassword(command, findMember);
 		verifyEqualPasswordWithOriginPassword(command, findMember);

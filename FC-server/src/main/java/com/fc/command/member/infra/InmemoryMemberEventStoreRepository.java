@@ -12,12 +12,9 @@ public class InmemoryMemberEventStoreRepository implements MemberEventStoreRepos
 	private final Map<Email, List<MemberRawEvent>> repo = new HashMap<>();
 	
 	@Override
-	public List<MemberRawEvent> findAll() {
-		List<MemberRawEvent> events = new ArrayList<>();
-		repo.keySet().forEach(c->{
-			events.addAll(repo.get(c));
-		});
-		return events;
+	public long countByEmail(Email identifier) {
+		List<MemberRawEvent> list = repo.get(identifier);
+		return list == null ? 0 : list.size();
 	}
 	
 	@Override
@@ -53,5 +50,6 @@ public class InmemoryMemberEventStoreRepository implements MemberEventStoreRepos
 		}
 		list.add(event);
 	}
+
 
 }
