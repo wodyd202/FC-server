@@ -78,4 +78,8 @@ public class Member{
 	public void changePassword(Password password) {
 		this.password = password;
 	}
+
+	public void convertToSeller() {
+		this.rule = MemberRule.SELLER;
+	}
 }

@@ -60,7 +60,7 @@ public class SimpleStoreEventStore implements EventStore<Owner> {
 					.payload(payload)
 					.createDateTime(now)
 					.build();
-
+			
 			eventStoreRepository.save(rawEvent);
 			eventPublisher.publish(rawEvent);
 			eventProjector.handle(event);

@@ -7,6 +7,7 @@ import com.fc.command.member.model.MemberCommand.CreateMember;
 import com.fc.core.domain.AggregateRoot;
 import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.ChangedMemberPassword;
+import com.fc.domain.member.event.CovertedToSeller;
 import com.fc.domain.member.event.RegisteredMember;
 
 import lombok.AccessLevel;
@@ -66,6 +67,11 @@ public class Member extends AggregateRoot<Email> {
 		applyChange(new ChangedMemberPassword(this.email, this.password));
 	}
 	
+	public void convertToSeller() {
+		this.rule = MemberRule.SELLER;
+		applyChange(new CovertedToSeller(this.email));
+	}
+	
 	protected void apply(RegisteredMember event) {
 		this.email = event.getEmail();
 		this.password = event.getPassword();
@@ -81,4 +87,5 @@ public class Member extends AggregateRoot<Email> {
 	protected void apply(ChangedMemberPassword event) {
 		this.password = event.getPassword();
 	}
+
 }

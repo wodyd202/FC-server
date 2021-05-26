@@ -12,6 +12,7 @@ import com.fc.domain.member.Email;
 import com.fc.domain.member.Member.MemberState;
 import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.ChangedMemberPassword;
+import com.fc.domain.member.event.CovertedToSeller;
 import com.fc.domain.member.event.RegisteredMember;
 import com.fc.domain.member.read.Member;
 
@@ -48,11 +49,21 @@ public class MemberEventProjector extends AbstractEventProjector {
 		log.info("change address member : {}", event);
 	}
 	
+	@Transactional
 	protected void execute(ChangedMemberPassword event) {
 		Email to = event.getIdentifier();
 		Member member = memberJpaRepository.findById(to).get();
 		member.changePassword(event.getPassword());
 		memberJpaRepository.save(member);
 		log.info("change password member : {}", event);
+	}
+	
+	@Transactional
+	protected void execute(CovertedToSeller event) {
+		Email to = event.getIdentifier();
+		Member member = memberJpaRepository.findById(to).get();
+		member.convertToSeller();
+		memberJpaRepository.save(member);
+		log.info("convert to seller member : {}", event);
 	}
 }
