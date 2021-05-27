@@ -2,6 +2,8 @@ package com.fc.command.store.model;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fc.command.common.address.model.AddressCommand;
 
 import lombok.AllArgsConstructor;
@@ -40,5 +42,19 @@ public class StoreCommand {
 		private String phone;
 		private AddressCommand address;
 		private String addressDetail;
+	}
+	
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ChangeStoreImage{
+		private MultipartFile file;
+	}
+	
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ChangeStoreTag {
+		private List<String> tags;
 	}
 }

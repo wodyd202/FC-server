@@ -1,5 +1,9 @@
 package com.fc.command.store;
 
+import java.util.UUID;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.member.exception.AlreadyDeletedMemberException;
@@ -7,8 +11,11 @@ import com.fc.command.member.exception.MemberNotFoundException;
 import com.fc.command.store.exception.AlreadyExistStoreException;
 import com.fc.command.store.exception.StoreNotFoundException;
 import com.fc.command.store.infra.StoreEventHandler;
+import com.fc.command.store.model.StoreCommand.ChangeStoreImage;
 import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
+import com.fc.command.store.model.StoreCommand.ChangeStoreTag;
 import com.fc.command.store.model.StoreCommand.CreateStore;
+import com.fc.core.fileUploader.FileUploader;
 import com.fc.core.infra.Validator;
 import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
@@ -22,7 +29,7 @@ import lombok.AllArgsConstructor;
 /**
   * @Date : 2021. 5. 27. 
   * @작성자 : LJY
-  * @프로그램 설명 : 업체 관련 service
+  * @프로그램 설명 :
   */
 @AllArgsConstructor
 public class SimpleStoreService implements StoreService {
@@ -98,4 +105,41 @@ public class SimpleStoreService implements StoreService {
 		});
 	}
 
+	@Override
+	public void changeStoreImage(
+			Validator<ChangeStoreImage> validator,
+			FileUploader fileUploader,
+			Owner targetOwner,
+			ChangeStoreImage command
+		) {
+		validator.validation(command);
+		Store findStore = storeEventHandler.find(targetOwner)
+				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
+		
+		String saveFileName = UUID.randomUUID() + getFileExtention(command.getFile());
+		findStore.changeImage(saveFileName);
+		
+		fileUploader.uploadFile(command.getFile(), saveFileName);
+		storeEventHandler.save(findStore);
+	}
+	
+	private String getFileExtention(MultipartFile file) {
+		String name = file.getName();
+		int lastIndexOf = name.lastIndexOf(".");
+		return name.substring(lastIndexOf, name.length()).toUpperCase();
+	}
+
+	@Override
+	public void changeStoreTags(
+			Validator<ChangeStoreTag> validator, 
+			Owner targetStoreOwner,
+			ChangeStoreTag command
+		) {
+		validator.validation(command);
+		Store findStore = storeEventHandler.find(targetStoreOwner)
+				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
+		findStore.changeTags(command.getTags());
+		storeEventHandler.save(findStore);
+	}
+	
 }

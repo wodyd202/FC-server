@@ -1,8 +1,7 @@
-package com.fc.store;
+package com.fc.command.store.infra.validator;
 
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.store.exception.InvalidStoreException;
-import com.fc.command.store.infra.validator.AbstractStoreValidator;
 import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
 
 /**

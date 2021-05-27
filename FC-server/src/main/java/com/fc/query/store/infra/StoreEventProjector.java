@@ -43,9 +43,9 @@ public class StoreEventProjector extends AbstractEventProjector{
 	}
 	
 	protected void execute(ChangedStoreMainImage event) {
-		/**
-		 * TODO changedStoreMainImage event execute
-		 */
+		Store store = storeJpaRepository.findById(event.getIdentifier()).get();
+		store.changeImage(event.getImage());
+		storeJpaRepository.save(store);
 	}
 	
 	protected void execute(ChangedStorePhone event) {
@@ -55,9 +55,9 @@ public class StoreEventProjector extends AbstractEventProjector{
 	}
 	
 	protected void execute(ChangedStoreTags event) {
-		/**
-		 * TODO changedStoreTags event execute
-		 */
+		Store store = storeJpaRepository.findById(event.getIdentifier()).get();
+		store.changeTags(event.getTags());
+		storeJpaRepository.save(store);
 	}
 	
 	protected void execute(ChangedWeekdayOpeningHour event) {

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public interface Validator<T> {
 	void validation(T target);
 	
@@ -29,6 +31,15 @@ public interface Validator<T> {
 	default void assertNotOverMaxSizeCollectionSize(int max, List<String> list, IllegalArgumentException e) {
 		Set<String> set = new HashSet<>(list);
 		if(set.size() > max) {
+			throw e;
+		}
+	}
+	
+	default void assertImageFile(MultipartFile file, IllegalArgumentException e) {
+		String name = file.getName();
+		int lastIndexOf = name.lastIndexOf(".");
+		String extention = name.substring(lastIndexOf, name.length()).toUpperCase();
+		if (!extention.equals(".JPG") && !extention.equals(".JPEG") && !extention.equals(".PNG")) {
 			throw e;
 		}
 	}

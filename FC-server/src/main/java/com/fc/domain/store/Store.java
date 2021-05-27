@@ -9,7 +9,9 @@ import com.fc.domain.member.Address;
 import com.fc.domain.store.event.ChangedBusinessName;
 import com.fc.domain.store.event.ChangedBusinessNumber;
 import com.fc.domain.store.event.ChangedStoreAddress;
+import com.fc.domain.store.event.ChangedStoreMainImage;
 import com.fc.domain.store.event.ChangedStorePhone;
+import com.fc.domain.store.event.ChangedStoreTags;
 import com.fc.domain.store.event.RegisterdStore;
 
 import lombok.AccessLevel;
@@ -104,6 +106,16 @@ public class Store extends AggregateRoot<Owner>{
 		applyChange(new ChangedBusinessName(this.owner, businessName));
 	}
 	
+	public void changeImage(String saveFileName) {
+		this.image = new MainImage(saveFileName);
+		applyChange(new ChangedStoreMainImage(this.owner, this.image));
+	}
+
+	public void changeTags(List<String> tags) {
+		this.tags = new StoreTags(tags);
+		applyChange(new ChangedStoreTags(this.owner, this.tags));
+	}
+	
 	protected void apply(RegisterdStore event) {
 		this.owner = event.getIdentifier();
 		this.detail = event.getDetail();
@@ -129,5 +141,6 @@ public class Store extends AggregateRoot<Owner>{
 	protected void apply(ChangedBusinessName event) {
 		this.detail.changeBusinessName(event.getBusinessName());
 	}
+
 
 }

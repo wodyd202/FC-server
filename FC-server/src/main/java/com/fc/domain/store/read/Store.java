@@ -28,6 +28,7 @@ import com.fc.domain.store.Phone;
 import com.fc.domain.store.Store.StoreState;
 import com.fc.domain.store.StoreStyle;
 import com.fc.domain.store.StoreTag;
+import com.fc.domain.store.StoreTags;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -85,5 +86,13 @@ public class Store {
 
 	public void changePhone(Phone phone) {
 		this.detail.changePhone(phone);
+	}
+
+	public void changeImage(MainImage image) {
+		this.image = image;
+	}
+
+	public void changeTags(StoreTags tags) {
+		this.tags = tags.getTags();
 	}
 }
