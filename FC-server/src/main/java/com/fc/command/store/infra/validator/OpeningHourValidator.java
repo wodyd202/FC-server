@@ -1,4 +1,4 @@
-package com.fc.store;
+package com.fc.command.store.infra.validator;
 
 import java.util.List;
 
@@ -6,6 +6,9 @@ import com.fc.command.store.exception.InvalidStoreException;
 import com.fc.command.store.infra.validator.AbstractStoreValidator;
 import com.fc.command.store.model.StoreCommand.ChangeOpeningHour;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class OpeningHourValidator extends AbstractStoreValidator<ChangeOpeningHour> {
 
 	@Override

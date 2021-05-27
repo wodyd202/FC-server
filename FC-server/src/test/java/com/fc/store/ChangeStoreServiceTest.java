@@ -19,7 +19,11 @@ import com.fc.command.store.SimpleStoreService;
 import com.fc.command.store.StoreService;
 import com.fc.command.store.exception.InvalidStoreException;
 import com.fc.command.store.infra.StoreEventHandler;
+import com.fc.command.store.infra.StoreStyleRepository;
+import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.command.store.infra.validator.ImageFileValidator;
+import com.fc.command.store.infra.validator.OpeningHourValidator;
+import com.fc.command.store.infra.validator.StoreStyleValidator;
 import com.fc.command.store.infra.validator.StoreTagsValidator;
 import com.fc.command.store.model.StoreCommand.ChangeOpeningHour;
 import com.fc.command.store.model.StoreCommand.ChangeStoreImage;
@@ -32,7 +36,6 @@ import com.fc.domain.store.Store;
 import com.fc.query.member.infra.MemberRepository;
 
 public class ChangeStoreServiceTest {
-	
 	MemberRepository memberRepository = mock(MemberRepository.class);
 	StoreEventHandler storeEventHandler = mock(StoreEventHandler.class);
 	StoreService storeService = new SimpleStoreService(memberRepository, storeEventHandler);
@@ -59,26 +62,36 @@ public class ChangeStoreServiceTest {
 	
 	@Test
 	void 업체_스타일_변경() {
+		StoreStyleRepository storeStyleRepository = mock(StoreStyleRepository.class);
+		
+		when(storeStyleRepository.existByStyleName(any()))
+			.thenReturn(true);
+		
 		ChangeStoreStyle command = new ChangeStoreStyle(Arrays.asList("스타일1","스타일2","스타일3"));
-		Validator<ChangeStoreStyle> storeStyleValidator = new StoreStyleValidator();
+		Validator<ChangeStoreStyle> storeStyleValidator = new StoreStyleValidator(storeStyleRepository);
 		
 		Owner targetStoreOwner = new Owner("email");
 		storeService.changeStoreStyles(storeStyleValidator, targetStoreOwner, command);
 		
 		verify(store,times(1))
-			.changeStyles(any());
+				.changeStyles(any());
 	}
 	
 	@Test
 	void 업체_태그_변경() {
+		StoreTagRepository storeTagRepository = mock(StoreTagRepository.class);
+	
+		when(storeTagRepository.existByTagName(any()))
+			.thenReturn(true);
+		
 		ChangeStoreTag command = new ChangeStoreTag(Arrays.asList("태그1","태그2","태그3"));
-		Validator<ChangeStoreTag> storeTagsValidtor = new StoreTagsValidator();
+		Validator<ChangeStoreTag> storeTagsValidtor = new StoreTagsValidator(storeTagRepository);
 		
 		Owner targetStoreOwner = new Owner("email");
 		storeService.changeStoreTags(storeTagsValidtor, targetStoreOwner ,command);
 		
 		verify(store,times(1))
-				.changeTags(any());
+			.changeTags(any());
 	}
 	
 	@Test

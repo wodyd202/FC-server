@@ -1,22 +1,30 @@
 package com.fc.store;
 
+import static org.mockito.Mockito.any;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.member.infra.validator.ChangeAddressValidator;
 import com.fc.command.store.exception.InvalidStoreException;
+import com.fc.command.store.infra.StoreStyleRepository;
+import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.command.store.infra.validator.CreateStoreValidator;
 import com.fc.command.store.model.StoreCommand;
 import com.fc.core.infra.Validator;
 
 public class StoreValidatorTest {
+	StoreTagRepository storeTagRepository = mock(StoreTagRepository.class);
+	StoreStyleRepository storeStyleRepository = mock(StoreStyleRepository.class);
 	
-	Validator<StoreCommand.CreateStore> validator = new CreateStoreValidator(mock(ChangeAddressValidator.class));
+	Validator<StoreCommand.CreateStore> validator = 
+			new CreateStoreValidator(storeTagRepository, storeStyleRepository, mock(ChangeAddressValidator.class));
 	
 	@Test
 	void 정상_케이스() {
@@ -212,5 +220,13 @@ public class StoreValidatorTest {
 		assertThrows(InvalidStoreException.class, ()->{
 			validator.validation(command);
 		});
+	}
+	
+	@BeforeEach
+	void setUp() {
+		when(storeTagRepository.existByTagName(any()))
+			.thenReturn(true);
+		when(storeStyleRepository.existByStyleName(any()))
+			.thenReturn(true);
 	}
 }

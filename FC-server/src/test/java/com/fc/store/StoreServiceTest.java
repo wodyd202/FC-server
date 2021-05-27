@@ -23,6 +23,8 @@ import com.fc.command.store.SimpleStoreService;
 import com.fc.command.store.StoreService;
 import com.fc.command.store.exception.AlreadyExistStoreException;
 import com.fc.command.store.infra.StoreEventHandler;
+import com.fc.command.store.infra.StoreStyleRepository;
+import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.command.store.infra.validator.CreateStoreValidator;
 import com.fc.command.store.model.StoreCommand;
 import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
@@ -37,8 +39,12 @@ import com.fc.query.member.infra.MemberRepository;
 
 @SuppressWarnings("unchecked")
 public class StoreServiceTest {
+	StoreTagRepository storeTagRepository = mock(StoreTagRepository.class);
+	StoreStyleRepository storeStyleRepository = mock(StoreStyleRepository.class);
 	
-	Validator<CreateStore> validator = new CreateStoreValidator(new ChangeAddressValidator());
+	Validator<CreateStore> validator 
+				= new CreateStoreValidator(storeTagRepository,storeStyleRepository,new ChangeAddressValidator());
+	
 	StoreEventHandler storeEventHandler = mock(StoreEventHandler.class);
 	AddressDetailGetter addressGetter = mock(AddressDetailGetter.class);
 	
@@ -203,5 +209,11 @@ public class StoreServiceTest {
 	void setUp() {
 		when(memberRepository.findByEmail(any(Email.class)))
 			.thenReturn(Optional.of(mockMember));
+		
+		when(storeTagRepository.existByTagName(any()))
+			.thenReturn(true);
+		
+		when(storeStyleRepository.existByStyleName(any()))
+			.thenReturn(true);
 	}
 }

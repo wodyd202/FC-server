@@ -3,14 +3,19 @@ package com.fc.command.store.infra.validator;
 import java.util.List;
 
 import com.fc.command.common.address.model.AddressCommand;
+import com.fc.command.store.infra.StoreStyleRepository;
+import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.infra.Validator;
+
+import lombok.NoArgsConstructor;
 
 /**
   * @Date : 2021. 5. 27. 
   * @작성자 : LJY
   * @프로그램 설명 : 업체 등록 시 사용되는 validator
   */
+@NoArgsConstructor
 public class CreateStoreValidator extends AbstractStoreValidator<CreateStore> {
 	
 	@Override
@@ -45,7 +50,11 @@ public class CreateStoreValidator extends AbstractStoreValidator<CreateStore> {
 		holidayValidation(holidays);
 	}
 	
-	public CreateStoreValidator(Validator<AddressCommand> addressValidator) {
-		super(addressValidator);
+	public CreateStoreValidator(
+			StoreTagRepository storeTagRepository,
+			StoreStyleRepository storeStyleRepository, 
+			Validator<AddressCommand> addressValidator
+		) {
+		super(storeTagRepository,storeStyleRepository, addressValidator);
 	}
 }

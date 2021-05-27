@@ -1,7 +1,8 @@
-package com.fc.store;
+package com.fc.command.store.infra.validator;
 
 import java.util.List;
 
+import com.fc.command.store.infra.StoreStyleRepository;
 import com.fc.command.store.infra.validator.AbstractStoreValidator;
 import com.fc.command.store.model.StoreCommand.ChangeStoreStyle;
 
@@ -17,5 +18,9 @@ public class StoreStyleValidator extends AbstractStoreValidator<ChangeStoreStyle
 		List<String> styles = target.getStyles();
 		storeStylesValidation(styles);
 	}
-
+	
+	public StoreStyleValidator(StoreStyleRepository storeStyleRepository) {
+		super(storeStyleRepository);
+	}
+	
 }
