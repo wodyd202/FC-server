@@ -71,15 +71,12 @@ public class StoreEventProjector extends AbstractEventProjector{
 		Store store = storeJpaRepository.findById(event.getIdentifier()).get();
 		store.changeWeekdayOpeningHour(event.getStartTime(),event.getEndTime());
 		storeJpaRepository.save(store);
-		/**
-		 * TODO changedWeekdayOpeningHour event execute
-		 */
 	}
 	
 	protected void execute(ChangedWeekendOpeningHour event) {
-		/**
-		 * TODO changedWeekendOpeningHour event execute
-		 */
+		Store store = storeJpaRepository.findById(event.getIdentifier()).get();
+		store.changeWeekendOpeningHour(event.getStartTime(),event.getEndTime());
+		storeJpaRepository.save(store);
 	}
 	
 	protected void execute(RegisterdStore event) {

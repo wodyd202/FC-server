@@ -105,4 +105,8 @@ public class Store {
 	public void changeWeekdayOpeningHour(int startTime, int endTime) {
 		this.openingHour.changeWeekdayOpeningHour(startTime, endTime);
 	}
+
+	public void changeWeekendOpeningHour(int startTime, int endTime) {
+		this.openingHour.changeWeekendOpeningHour(startTime, endTime);
+	}
 }
