@@ -3,6 +3,7 @@ package com.fc.domain.product.event;
 import java.util.Date;
 
 import com.fc.domain.product.Images;
+import com.fc.domain.product.Owner;
 import com.fc.domain.product.Price;
 import com.fc.domain.product.ProductCategory;
 import com.fc.domain.product.ProductId;
@@ -30,6 +31,7 @@ public class CreatedProduct extends AbstractProductEvent {
 	private SizeList sizes;
 	private Images images;
 	private Date createDateTime;
+	private Owner owner;
 	
 	public CreatedProduct(
 			ProductId id, 
@@ -39,7 +41,8 @@ public class CreatedProduct extends AbstractProductEvent {
 			Price price,
 			SizeList sizes,
 			Images images,
-			Date createDateTime
+			Date createDateTime,
+			Owner owner
 		) {
 		this.productId = id;
 		this.title = title;
@@ -49,5 +52,6 @@ public class CreatedProduct extends AbstractProductEvent {
 		this.sizes = sizes;
 		this.images = images;
 		this.createDateTime = createDateTime;
+		this.owner = owner;
 	}
 }

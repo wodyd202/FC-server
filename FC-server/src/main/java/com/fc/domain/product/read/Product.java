@@ -19,6 +19,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fc.domain.product.Owner;
 import com.fc.domain.product.Price;
 import com.fc.domain.product.Product.ProductState;
 import com.fc.domain.product.ProductCategory;
@@ -69,4 +70,7 @@ public class Product {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDateTime;
+
+	@Enumerated(EnumType.STRING)
+	private Owner owner;
 }

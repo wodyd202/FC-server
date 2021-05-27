@@ -1,9 +1,10 @@
-package com.fc.command.product.exception;
+package com.fc.command.product.infra.validator;
 
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fc.command.product.exception.InvalidProductException;
 import com.fc.core.infra.Validator;
 import com.fc.domain.product.SizeList.Size;
 

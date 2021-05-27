@@ -7,9 +7,11 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
+import com.fc.command.product.exception.InvalidProductException;
+import com.fc.command.product.infra.validator.CreateProductValidator;
+import com.fc.command.product.model.ProductCommand.CreateProduct;
 import com.fc.core.infra.Validator;
 import com.fc.domain.product.SizeList.Size;
-import com.fc.product.ProductCommand.CreateProduct;
 
 public class ProductValidatorTest {
 	Validator<CreateProduct> validator = new CreateProductValidator();

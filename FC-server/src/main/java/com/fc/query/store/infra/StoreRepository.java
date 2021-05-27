@@ -1,5 +1,10 @@
 package com.fc.query.store.infra;
 
-public interface StoreRepository {
+import java.util.Optional;
 
+import com.fc.domain.store.Owner;
+import com.fc.domain.store.read.Store;
+
+public interface StoreRepository {
+	Optional<Store> findByOwner(Owner owner);
 }
