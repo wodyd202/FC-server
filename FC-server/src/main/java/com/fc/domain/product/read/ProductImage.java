@@ -31,7 +31,6 @@ public class ProductImage {
 
 	@Enumerated(EnumType.STRING)
 	private ProductImageType type;
-	private int productOrder;
 	
 	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.PERSIST)

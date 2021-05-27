@@ -36,9 +36,16 @@ public interface Validator<T> {
 		}
 	}
 	
-	default void assertNotOverMaxSizeCollectionSize(int max, List<String> list, IllegalArgumentException e) {
-		Set<String> set = new HashSet<>(list);
+	default void assertNotOverMaxSizeCollectionSize(int max, List<?> list, IllegalArgumentException e) {
+		Set<?> set = new HashSet<>(list);
 		if(set.size() > max) {
+			throw e;
+		}
+	}
+	
+	default void assertDuplicateValueInCollection(List<?> list, IllegalArgumentException e){
+		Set<?> set = new HashSet<>(list);
+		if(set.size() != list.size()) {
 			throw e;
 		}
 	}
