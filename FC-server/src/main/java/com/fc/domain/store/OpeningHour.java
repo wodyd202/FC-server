@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.Convert;
 
+import com.fc.domain.store.read.HolidayConverter;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

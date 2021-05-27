@@ -1,4 +1,4 @@
-package com.fc.domain.store;
+package com.fc.domain.store.read;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.AttributeConverter;
 
 import org.springframework.stereotype.Component;
+
+import com.fc.domain.store.Holiday;
 
 @Component
 public class HolidayConverter implements AttributeConverter<Set<Holiday>, String> {
