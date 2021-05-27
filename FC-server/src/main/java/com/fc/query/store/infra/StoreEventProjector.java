@@ -1,6 +1,5 @@
 package com.fc.query.store.infra;
 
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fc.core.event.AbstractEventProjector;
@@ -19,10 +18,9 @@ import com.fc.domain.store.read.Store;
 
 import lombok.RequiredArgsConstructor;
 
-@Component
 @RequiredArgsConstructor
 @Transactional
-public class StoreEventProjector extends AbstractEventProjector{
+public class StoreEventProjector extends AbstractEventProjector {
 	private final StoreJpaRepository storeJpaRepository;
 	
 	protected void execute(ChangedBusinessName event) {

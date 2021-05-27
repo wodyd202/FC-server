@@ -51,7 +51,6 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 					return (A) constructor.newInstance(identifier);
 				}
 			}
-
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
