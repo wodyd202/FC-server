@@ -82,4 +82,8 @@ public class Member{
 	public void convertToSeller() {
 		this.rule = MemberRule.SELLER;
 	}
+
+	public boolean isDelete() {
+		return this.state == MemberState.DELETE;
+	}
 }

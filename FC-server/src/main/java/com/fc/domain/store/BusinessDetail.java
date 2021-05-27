@@ -16,4 +16,21 @@ public class BusinessDetail {
 	private Phone phone;
 	private Address address;
 	private String addressDetail;
+	
+	public void changeAddress(Address address, String addressDetail) {
+		this.address = address;
+		this.addressDetail = addressDetail;
+	}
+
+	public void changePhone(Phone phone) {
+		this.phone = phone;
+	}
+
+	public void changeBusinessNumber(String businessNumber) {
+		this.businessNumber = businessNumber;
+	}
+
+	public void changeBusinessName(String businessName) {
+		this.businessName = businessName;
+	}
 }

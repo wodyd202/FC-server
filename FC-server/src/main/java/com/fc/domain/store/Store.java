@@ -6,6 +6,10 @@ import java.util.List;
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.domain.AggregateRoot;
 import com.fc.domain.member.Address;
+import com.fc.domain.store.event.ChangedBusinessName;
+import com.fc.domain.store.event.ChangedBusinessNumber;
+import com.fc.domain.store.event.ChangedStoreAddress;
+import com.fc.domain.store.event.ChangedStorePhone;
 import com.fc.domain.store.event.RegisterdStore;
 
 import lombok.AccessLevel;
@@ -79,6 +83,27 @@ public class Store extends AggregateRoot<Owner>{
 				.build();
 	}
 	
+	public void changeAddress(Address realAddress, String addressDetail) {
+		this.detail.changeAddress(realAddress, addressDetail);
+		applyChange(new ChangedStoreAddress(this.owner,realAddress,addressDetail));
+	}
+	
+	public void changePhone(String phone) {
+		Phone changePhone = new Phone(phone);
+		this.detail.changePhone(changePhone);
+		applyChange(new ChangedStorePhone(this.owner, changePhone));
+	}
+	
+	public void changeBusinessNumber(String businessNumber) {
+		this.detail.changeBusinessNumber(businessNumber);
+		applyChange(new ChangedBusinessNumber(this.owner, businessNumber));
+	}
+	
+	public void changeBusinessName(String businessName) {
+		this.detail.changeBusinessName(businessName);
+		applyChange(new ChangedBusinessName(this.owner, businessName));
+	}
+	
 	protected void apply(RegisterdStore event) {
 		this.owner = event.getIdentifier();
 		this.detail = event.getDetail();
@@ -88,4 +113,6 @@ public class Store extends AggregateRoot<Owner>{
 		this.createDateTime = event.getCreateDateTime();
 		this.state = StoreState.SELL;
 	}
+
+
 }

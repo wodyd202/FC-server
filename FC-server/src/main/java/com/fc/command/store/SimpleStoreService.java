@@ -1,12 +1,18 @@
 package com.fc.command.store;
 
 import com.fc.command.common.address.infra.AddressDetailGetter;
+import com.fc.command.common.address.model.AddressCommand;
+import com.fc.command.member.exception.AlreadyDeletedMemberException;
 import com.fc.command.member.exception.MemberNotFoundException;
+import com.fc.command.store.exception.AlreadyExistStoreException;
+import com.fc.command.store.exception.StoreNotFoundException;
 import com.fc.command.store.infra.StoreEventHandler;
+import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.infra.Validator;
 import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
+import com.fc.domain.member.read.Member;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.Store;
 import com.fc.query.member.infra.MemberRepository;
@@ -32,14 +38,64 @@ public class SimpleStoreService implements StoreService {
 		) {
 		validator.validation(command);
 		verifyExistMember(targetOwner);
+		verifyNotExistStore(targetOwner);
 		Address addressDetail = addressGetter.getDetail(command.getAddress());
 		Store store = Store.create(targetOwner, addressDetail, command);
 		storeEventHandler.save(store);
 		return store;
 	}
 
+	@Override
+	public Store changeStoreInfo(
+			Validator<ChangeStoreInfo> validator, 
+			AddressDetailGetter addressGetter, 
+			Owner targetOwner,
+			ChangeStoreInfo command
+		) {
+		validator.validation(command);
+		verifyExistMember(targetOwner);
+		Store findStore = storeEventHandler.find(targetOwner)
+					.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
+		
+		AddressCommand address = command.getAddress();
+		String addressDetail = command.getAddressDetail();
+		String businessName = command.getBusinessName();
+		String businessNumber = command.getBusinessNumber();
+		String phone = command.getPhone();
+		
+		if(address != null && addressDetail != null) {
+			Address realAddress = addressGetter.getDetail(address);
+			findStore.changeAddress(realAddress,addressDetail);
+		}
+		
+		if(businessName != null) {
+			findStore.changeBusinessName(businessName);
+		}
+		
+		if(businessNumber != null) {
+			findStore.changeBusinessNumber(businessNumber);
+		}
+		
+		if(phone != null) {
+			findStore.changePhone(phone);
+		}
+		
+		storeEventHandler.save(findStore);
+		return findStore;
+	}
+	
 	private void verifyExistMember(Owner targetOwner) {
-		memberRepository.findByEmail(new Email(targetOwner.getEmail())).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
+		Member findMember = memberRepository.findByEmail(new Email(targetOwner.getEmail()))
+			.orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
+		if(findMember.isDelete()) {
+			throw new AlreadyDeletedMemberException("이미 탈퇴한 회원입니다.");
+		}
+	}
+	
+	private void verifyNotExistStore(Owner targetOwner) {
+		storeEventHandler.find(targetOwner).ifPresent((store)->{
+			throw new AlreadyExistStoreException("해당 회원의 업체정보가 이미 존재합니다.");
+		});
 	}
 
 }

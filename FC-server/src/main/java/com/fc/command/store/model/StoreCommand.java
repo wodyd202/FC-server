@@ -29,4 +29,16 @@ public class StoreCommand {
 		private int weekendEndTime;
 		private List<String> holidays;
 	}
+	
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ChangeStoreInfo {
+		private String businessName;
+		private String businessNumber;
+		private String phone;
+		private AddressCommand address;
+		private String addressDetail;
+	}
 }

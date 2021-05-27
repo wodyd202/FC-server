@@ -1,6 +1,5 @@
 package com.fc.domain.store.event;
 
-import com.fc.domain.store.BusinessDetail;
 import com.fc.domain.store.Owner;
 
 import lombok.Getter;
@@ -15,10 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChangedBusinessName extends AbstractStoreEvent{
 	private static final long serialVersionUID = 1L;
-	private BusinessDetail businessDetail;
+	private String businessName;
 
-	public ChangedBusinessName(Owner targetOwner, BusinessDetail businessDetail) {
+	public ChangedBusinessName(Owner targetOwner, String businessName) {
 		this.owner = targetOwner;
-		this.businessDetail = businessDetail;
+		this.businessName = businessName;
 	}
 }

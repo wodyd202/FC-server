@@ -16,9 +16,11 @@ import lombok.NoArgsConstructor;
 public class ChangedStoreAddress extends AbstractStoreEvent {
 	private static final long serialVersionUID = 1L;
 	private Address address;
-
-	public ChangedStoreAddress(Owner targetOnwer, Address address) {
-		this.owner = targetOnwer;
+	private String addressDetail;
+	
+	public ChangedStoreAddress(Owner owner, Address address, String addressDetail) {
+		this.owner = owner;
 		this.address = address;
+		this.addressDetail= addressDetail;
 	}
 }
