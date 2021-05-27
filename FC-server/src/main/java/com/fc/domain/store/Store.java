@@ -13,6 +13,8 @@ import com.fc.domain.store.event.ChangedStoreMainImage;
 import com.fc.domain.store.event.ChangedStorePhone;
 import com.fc.domain.store.event.ChangedStoreStyles;
 import com.fc.domain.store.event.ChangedStoreTags;
+import com.fc.domain.store.event.ChangedWeekdayOpeningHour;
+import com.fc.domain.store.event.ChangedWeekendOpeningHour;
 import com.fc.domain.store.event.RegisterdStore;
 
 import lombok.AccessLevel;
@@ -120,6 +122,17 @@ public class Store extends AggregateRoot<Owner>{
 	public void changeStyles(List<String> styles) {
 		this.styles = new StoreStyles(styles);
 		applyChange(new ChangedStoreStyles(this.owner, this.styles));
+	}
+	
+	public void changeWeekdayOpeningHour(int startTime,int endTime) {
+		System.out.println();
+		this.openingHour.changeWeekdayOpeningHour(startTime, endTime);
+		applyChange(new ChangedWeekdayOpeningHour(this.owner, startTime, endTime));
+	}
+	
+	public void changeWeekendOpeningHour(int startTime,int endTime) {
+		this.openingHour.changeWeekendOpeningHour(startTime, endTime);
+		applyChange(new ChangedWeekendOpeningHour(this.owner, startTime, endTime));
 	}
 	
 	protected void apply(RegisterdStore event) {

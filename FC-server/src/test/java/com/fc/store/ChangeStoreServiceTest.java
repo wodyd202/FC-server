@@ -45,6 +45,8 @@ public class ChangeStoreServiceTest {
 	void 업체_영업시간_변경() {
 		ChangeOpeningHour command = ChangeOpeningHour
 				.builder()
+				.weekdayStartTime(3)
+				.weekdayEndTime(24)
 				.build();
 		Validator<ChangeOpeningHour> validator = new OpeningHourValidator();
 		
@@ -52,7 +54,7 @@ public class ChangeStoreServiceTest {
 		storeService.changeWeekdayOpeningHour(validator, targetStoreOwner ,command);
 		
 		verify(store,times(1))
-			.changeWeekdayOpeningHour(any());
+			.changeWeekdayOpeningHour(any(Integer.class),any(Integer.class));
 	}
 	
 	@Test

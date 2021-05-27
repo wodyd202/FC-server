@@ -11,6 +11,7 @@ import com.fc.command.member.exception.MemberNotFoundException;
 import com.fc.command.store.exception.AlreadyExistStoreException;
 import com.fc.command.store.exception.StoreNotFoundException;
 import com.fc.command.store.infra.StoreEventHandler;
+import com.fc.command.store.model.StoreCommand.ChangeOpeningHour;
 import com.fc.command.store.model.StoreCommand.ChangeStoreImage;
 import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
 import com.fc.command.store.model.StoreCommand.ChangeStoreStyle;
@@ -154,6 +155,32 @@ public class SimpleStoreService implements StoreService {
 				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
 		findStore.changeStyles(command.getStyles());
 		storeEventHandler.save(findStore);
+	}
+
+	@Override
+	public void changeWeekdayOpeningHour(
+			Validator<ChangeOpeningHour> validator, 
+			Owner targetStoreOwner,
+			ChangeOpeningHour command
+		) {
+		validator.validation(command);
+		Store findStore = storeEventHandler.find(targetStoreOwner)
+				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
+		if(isWeekdayOpeningHourChange(command)) {
+			findStore.changeWeekdayOpeningHour(command.getWeekdayStartTime(),command.getWeekdayEndTime());
+		}
+		if(isWeekendOpeningHourChang(command)) {
+			findStore.changeWeekendOpeningHour(command.getWeekendStartTime(),command.getWeekendEndTime());
+		}
+		storeEventHandler.save(findStore);
+	}
+
+	private boolean isWeekdayOpeningHourChange(ChangeOpeningHour command) {
+		return command.getWeekdayStartTime() != null && command.getWeekdayEndTime() != null;
+	}
+
+	private boolean isWeekendOpeningHourChang(ChangeOpeningHour command) {
+		return command.getWeekendStartTime() != null && command.getWeekendEndTime() != null;
 	}
 	
 }

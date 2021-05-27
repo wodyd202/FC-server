@@ -1,6 +1,5 @@
 package com.fc.domain.store.event;
 
-import com.fc.domain.store.OpeningHour;
 import com.fc.domain.store.Owner;
 
 import lombok.Getter;
@@ -15,10 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChangedWeekendOpeningHour extends AbstractStoreEvent{
 	private static final long serialVersionUID = 1L;
-	private OpeningHour openingHour;
+	private int startTime;
+	private int endTime;
 	
-	public ChangedWeekendOpeningHour(Owner targetOwner, OpeningHour openingHour) {
+	public ChangedWeekendOpeningHour(Owner targetOwner, int startTime, int endTime) {
 		this.owner = targetOwner;
-		this.openingHour = openingHour;
+		this.startTime = startTime;
+		this.endTime = endTime;
 	}
 }
