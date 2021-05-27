@@ -57,4 +57,23 @@ public class StoreCommand {
 	public static class ChangeStoreTag {
 		private List<String> tags;
 	}
+	
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ChangeStoreStyle {
+		private List<String> styles;
+	}
+	
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ChangeOpeningHour {
+		private Integer weekdayStartTime;
+		private Integer weekdayEndTime;
+		private Integer weekendStartTime;
+		private Integer weekendEndTime;
+		private List<String> holidays;
+	}
 }

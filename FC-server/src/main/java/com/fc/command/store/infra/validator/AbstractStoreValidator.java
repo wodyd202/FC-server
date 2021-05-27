@@ -55,9 +55,7 @@ abstract public class AbstractStoreValidator<T> implements Validator<T> {
 		assertNotOverMaxSizeCollectionSize(3, storeStyles, new InvalidStoreException("업체 스타일을 최대 3개까지 입력해주세요."));
 	}
 	
-	protected void openingHourValidation(int weekdayStartTime, int weekdayEndTime, int weekendStartTime,
-			int weekendEndTime, List<String> holidays) {
-		
+	protected void weekdayOpeningHourValidation(int weekdayStartTime, int weekdayEndTime) {
 		if(weekdayStartTime < 0 || weekdayStartTime > 24) {
 			throw new InvalidStoreException("평일 영업 시작 시간을 0~24 사이로 입력해주세요.");
 		}
@@ -66,6 +64,12 @@ abstract public class AbstractStoreValidator<T> implements Validator<T> {
 			throw new InvalidStoreException("평일 영업 종료 시간을 0~24 사이로 입력해주세요.");
 		}
 		
+		if(weekdayStartTime >= weekdayEndTime) {
+			throw new InvalidStoreException("평일 영업 시작시간은 마감시간보다 반드시 작아야합니다.");
+		}
+	}
+	
+	protected void weekendOpeningHourValidation(int weekendStartTime,int weekendEndTime) {
 		if(weekendStartTime < 0 || weekendStartTime > 24) {
 			throw new InvalidStoreException("주말 영업 시작 시간을 0~24 사이로 입력해주세요.");
 		}
@@ -74,14 +78,12 @@ abstract public class AbstractStoreValidator<T> implements Validator<T> {
 			throw new InvalidStoreException("주말 영업 종료 시간을 0~24 사이로 입력해주세요.");
 		}
 		
-		if(weekdayStartTime >= weekdayEndTime) {
-			throw new InvalidStoreException("평일 영업 시작시간은 마감시간보다 반드시 작아야합니다.");
-		}
-		
 		if(weekendStartTime >= weekendEndTime) {
 			throw new InvalidStoreException("주말 영업 시작시간은 마감시간보다 반드시 작아야합니다.");
 		}
-		
+	}
+	
+	protected void holidayValidation(List<String> holidays) {
 		if(holidays != null) {
 			assertNotOverMaxSizeCollectionSize(7, holidays, new InvalidStoreException("업체 스타일을 최대 3개까지 입력해주세요."));
 		}

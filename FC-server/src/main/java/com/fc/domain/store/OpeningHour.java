@@ -15,22 +15,32 @@ import lombok.NoArgsConstructor;
 public class OpeningHour {
 	private int weekdayStartTime;
 	private int weekdayEndTime;
-	
+
 	private int weekendStartTime;
 	private int weekendEndTime;
-	
+
 	@Convert(converter = HolidayConverter.class)
 	private Set<Holiday> holidays;
 
-	public OpeningHour(int weekdayStartTime, int weekdayEndTime, int weekendStartTime, int weekendEndTime,List<String> holidays) {
+	public OpeningHour(int weekdayStartTime, int weekdayEndTime, int weekendStartTime, int weekendEndTime,
+			List<String> holidays) {
 		this.weekdayStartTime = weekdayStartTime;
 		this.weekdayEndTime = weekdayEndTime;
 		this.weekendStartTime = weekendStartTime;
 		this.weekendEndTime = weekendEndTime;
-		if(holidays != null) {
+		if (holidays != null) {
 			this.holidays = holidays.stream().map(Holiday::new).collect(Collectors.toSet());
 		}
 	}
-	
-	
+
+	public void changeWeekdayOpeningHour(int startTime, int endTime) {
+		this.weekdayStartTime = startTime;
+		this.weekdayEndTime = endTime;
+	}
+
+	public void changeWeekendOpeningHour(int startTime, int endTime) {
+		this.weekendStartTime = startTime;
+		this.weekendEndTime = endTime;
+	}
+
 }

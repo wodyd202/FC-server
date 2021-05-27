@@ -1,6 +1,5 @@
-package com.fc.store;
+package com.fc.command.store.infra.validator;
 
-import com.fc.command.store.infra.validator.AbstractStoreValidator;
 import com.fc.command.store.model.StoreCommand.ChangeStoreTag;
 
 public class StoreTagsValidator extends AbstractStoreValidator<ChangeStoreTag> {

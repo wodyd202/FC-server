@@ -13,6 +13,7 @@ import com.fc.command.store.exception.StoreNotFoundException;
 import com.fc.command.store.infra.StoreEventHandler;
 import com.fc.command.store.model.StoreCommand.ChangeStoreImage;
 import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
+import com.fc.command.store.model.StoreCommand.ChangeStoreStyle;
 import com.fc.command.store.model.StoreCommand.ChangeStoreTag;
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.fileUploader.FileUploader;
@@ -29,7 +30,7 @@ import lombok.AllArgsConstructor;
 /**
   * @Date : 2021. 5. 27. 
   * @작성자 : LJY
-  * @프로그램 설명 :
+  * @프로그램 설명 : 업체 관련 service
   */
 @AllArgsConstructor
 public class SimpleStoreService implements StoreService {
@@ -139,6 +140,19 @@ public class SimpleStoreService implements StoreService {
 		Store findStore = storeEventHandler.find(targetStoreOwner)
 				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
 		findStore.changeTags(command.getTags());
+		storeEventHandler.save(findStore);
+	}
+
+	@Override
+	public void changeStoreStyles(
+			Validator<ChangeStoreStyle> validator, 
+			Owner targetStoreOwner,
+			ChangeStoreStyle command
+		) {
+		validator.validation(command);
+		Store findStore = storeEventHandler.find(targetStoreOwner)
+				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
+		findStore.changeStyles(command.getStyles());
 		storeEventHandler.save(findStore);
 	}
 	

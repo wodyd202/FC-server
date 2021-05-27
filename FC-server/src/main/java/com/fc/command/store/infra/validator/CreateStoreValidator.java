@@ -34,7 +34,15 @@ public class CreateStoreValidator extends AbstractStoreValidator<CreateStore> {
 		addressValidation(address, addressDetail);
 		storeTagsValidation(storeTags);
 		storeStylesValidation(storeStyles);
+		
 		openingHourValidation(weekdayStartTime, weekdayEndTime, weekendStartTime, weekendEndTime, holidays);
+	}
+
+	private void openingHourValidation(int weekdayStartTime, int weekdayEndTime, int weekendStartTime, int weekendEndTime,
+			List<String> holidays) {
+		weekdayOpeningHourValidation(weekdayStartTime, weekdayEndTime);
+		weekendOpeningHourValidation(weekendStartTime, weekendEndTime);
+		holidayValidation(holidays);
 	}
 	
 	public CreateStoreValidator(Validator<AddressCommand> addressValidator) {

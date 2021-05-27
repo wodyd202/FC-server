@@ -11,6 +11,7 @@ import com.fc.domain.store.event.ChangedBusinessNumber;
 import com.fc.domain.store.event.ChangedStoreAddress;
 import com.fc.domain.store.event.ChangedStoreMainImage;
 import com.fc.domain.store.event.ChangedStorePhone;
+import com.fc.domain.store.event.ChangedStoreStyles;
 import com.fc.domain.store.event.ChangedStoreTags;
 import com.fc.domain.store.event.RegisterdStore;
 
@@ -114,6 +115,11 @@ public class Store extends AggregateRoot<Owner>{
 	public void changeTags(List<String> tags) {
 		this.tags = new StoreTags(tags);
 		applyChange(new ChangedStoreTags(this.owner, this.tags));
+	}
+	
+	public void changeStyles(List<String> styles) {
+		this.styles = new StoreStyles(styles);
+		applyChange(new ChangedStoreStyles(this.owner, this.styles));
 	}
 	
 	protected void apply(RegisterdStore event) {

@@ -10,6 +10,14 @@ import org.springframework.web.multipart.MultipartFile;
 public interface Validator<T> {
 	void validation(T target);
 	
+	default void assertExistAll(IllegalArgumentException e, Object... objects) {
+		for(Object obj : objects) {
+			if(obj == null) {
+				throw e;
+			}
+		}
+	}
+	
 	default void assertNotNullObject(Object obj, IllegalArgumentException e) {
 		if(obj == null) {
 			throw e;

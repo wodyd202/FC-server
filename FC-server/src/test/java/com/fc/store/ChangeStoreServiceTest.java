@@ -20,7 +20,10 @@ import com.fc.command.store.StoreService;
 import com.fc.command.store.exception.InvalidStoreException;
 import com.fc.command.store.infra.StoreEventHandler;
 import com.fc.command.store.infra.validator.ImageFileValidator;
+import com.fc.command.store.infra.validator.StoreTagsValidator;
+import com.fc.command.store.model.StoreCommand.ChangeOpeningHour;
 import com.fc.command.store.model.StoreCommand.ChangeStoreImage;
+import com.fc.command.store.model.StoreCommand.ChangeStoreStyle;
 import com.fc.command.store.model.StoreCommand.ChangeStoreTag;
 import com.fc.core.fileUploader.FileUploader;
 import com.fc.core.infra.Validator;
@@ -37,12 +40,38 @@ public class ChangeStoreServiceTest {
 	Validator<ChangeStoreImage> imageValidator = new ImageFileValidator();
 	
 	Store store = mock(Store.class);
+
+	@Test
+	void 업체_영업시간_변경() {
+		ChangeOpeningHour command = ChangeOpeningHour
+				.builder()
+				.build();
+		Validator<ChangeOpeningHour> validator = new OpeningHourValidator();
+		
+		Owner targetStoreOwner = new Owner("email");
+		storeService.changeWeekdayOpeningHour(validator, targetStoreOwner ,command);
+		
+		verify(store,times(1))
+			.changeWeekdayOpeningHour(any());
+	}
+	
+	@Test
+	void 업체_스타일_변경() {
+		ChangeStoreStyle command = new ChangeStoreStyle(Arrays.asList("스타일1","스타일2","스타일3"));
+		Validator<ChangeStoreStyle> storeStyleValidator = new StoreStyleValidator();
+		
+		Owner targetStoreOwner = new Owner("email");
+		storeService.changeStoreStyles(storeStyleValidator, targetStoreOwner, command);
+		
+		verify(store,times(1))
+			.changeStyles(any());
+	}
 	
 	@Test
 	void 업체_태그_변경() {
 		ChangeStoreTag command = new ChangeStoreTag(Arrays.asList("태그1","태그2","태그3"));
 		Validator<ChangeStoreTag> storeTagsValidtor = new StoreTagsValidator();
-
+		
 		Owner targetStoreOwner = new Owner("email");
 		storeService.changeStoreTags(storeTagsValidtor, targetStoreOwner ,command);
 		

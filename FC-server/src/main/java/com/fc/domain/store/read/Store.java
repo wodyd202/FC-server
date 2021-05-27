@@ -27,6 +27,7 @@ import com.fc.domain.store.Owner;
 import com.fc.domain.store.Phone;
 import com.fc.domain.store.Store.StoreState;
 import com.fc.domain.store.StoreStyle;
+import com.fc.domain.store.StoreStyles;
 import com.fc.domain.store.StoreTag;
 import com.fc.domain.store.StoreTags;
 
@@ -94,5 +95,14 @@ public class Store {
 
 	public void changeTags(StoreTags tags) {
 		this.tags = tags.getTags();
+	}
+
+	public void changeStyles(StoreStyles styles) {
+		this.styles = styles.getStyles();
+	}
+
+	
+	public void changeWeekdayOpeningHour(int startTime, int endTime) {
+		this.openingHour.changeWeekdayOpeningHour(startTime, endTime);
 	}
 }
