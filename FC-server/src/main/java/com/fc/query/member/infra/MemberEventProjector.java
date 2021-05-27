@@ -2,9 +2,6 @@ package com.fc.query.member.infra;
 
 import java.util.Date;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fc.core.event.AbstractEventProjector;
@@ -24,9 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class MemberEventProjector extends AbstractEventProjector {
 	private final MemberJpaRepository memberJpaRepository;
-	
-	@PersistenceContext
-	private EntityManager em;
 	
 	protected void execute(RegisteredMember event) {
 		Member member = Member.builder()

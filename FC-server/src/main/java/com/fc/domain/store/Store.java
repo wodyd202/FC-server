@@ -113,6 +113,21 @@ public class Store extends AggregateRoot<Owner>{
 		this.createDateTime = event.getCreateDateTime();
 		this.state = StoreState.SELL;
 	}
-
+	
+	protected void apply(ChangedStoreAddress event) {
+		this.detail.changeAddress(event.getAddress(), event.getAddressDetail());
+	}
+	
+	protected void apply(ChangedStorePhone event) {
+		this.detail.changePhone(event.getPhone());
+	}
+	
+	protected void apply(ChangedBusinessNumber event) {
+		this.detail.changeBusinessNumber(event.getBusinessNumber());
+	}
+	
+	protected void apply(ChangedBusinessName event) {
+		this.detail.changeBusinessName(event.getBusinessName());
+	}
 
 }

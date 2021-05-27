@@ -19,10 +19,12 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fc.domain.member.Address;
 import com.fc.domain.store.BusinessDetail;
 import com.fc.domain.store.MainImage;
 import com.fc.domain.store.OpeningHour;
 import com.fc.domain.store.Owner;
+import com.fc.domain.store.Phone;
 import com.fc.domain.store.Store.StoreState;
 import com.fc.domain.store.StoreStyle;
 import com.fc.domain.store.StoreTag;
@@ -68,4 +70,20 @@ public class Store {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDateTime;
+
+	public void changeBusinessName(String businessName) {
+		this.changeBusinessName(businessName);
+	}
+
+	public void changeBusinessNumber(String businessNumber) {
+		this.changeBusinessNumber(businessNumber);
+	}
+
+	public void changeAddress(Address address, String addressDetail) {
+		this.detail.changeAddress(address, addressDetail);
+	}
+
+	public void changePhone(Phone phone) {
+		this.detail.changePhone(phone);
+	}
 }
