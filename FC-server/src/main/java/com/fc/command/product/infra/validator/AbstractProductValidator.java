@@ -25,6 +25,15 @@ abstract public class AbstractProductValidator<T> implements Validator<T>{
 		});
 	}
 	
+	protected void mainImageIdxValidation(List<MultipartFile> files, int mainImageIdx) {
+		if(files == null) {
+			throw new InvalidProductException("의류 이미지를 1개 이상 10개 이하로 등록해주세요.");
+		}
+		if(mainImageIdx < 0 || files.size() < mainImageIdx - 1) {
+			throw new InvalidProductException("대표 이미지 번호를 다시 입력해주세요.");
+		}
+	}
+	
 	protected void priceValidation(int price) {
 		if(price <= 0) {
 			throw new InvalidProductException("가격은 10원 이상으로 입력해주세요.");

@@ -13,6 +13,7 @@ public class CreateProductValidator extends AbstractProductValidator<CreateProdu
 		priceValidation(target.getPrice());
 		sizeValidation(target.getSizes());
 		imageValidation(target.getImages());
+		mainImageIdxValidation(target.getImages(), target.getMainImageIdx());
 	}
 
 }

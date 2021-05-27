@@ -71,6 +71,6 @@ public class Product {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDateTime;
 
-	@Enumerated(EnumType.STRING)
+	@Embedded
 	private Owner owner;
 }

@@ -27,4 +27,16 @@ public class ProductCommand {
 		 private List<MultipartFile> images;
 		 private int mainImageIdx;
 	}
+	
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class ChangeProductInfo {
+		 private String title;
+		 private List<String> tags;
+		 private String category;
+		 private Integer price;
+		 private List<Size> sizes;
+	}
 }
