@@ -26,6 +26,7 @@ import com.fc.domain.store.Store;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @AllArgsConstructor
@@ -46,6 +47,7 @@ public class StoreCommandApi {
 	@PostMapping
 	public ResponseEntity<Store> execute(
 			@RequestBody StoreCommand.CreateStore command, 
+			@ApiIgnore
 			@LoginUser Member loginMember
 		){
 		final Store createStore = storeService.create(createStoreValidator, addressGetter, Owner.withMember(loginMember), command);
@@ -56,6 +58,7 @@ public class StoreCommandApi {
 	@PutMapping("store-info")
 	public ResponseEntity<Store> execute(
 			@RequestBody StoreCommand.ChangeStoreInfo command,
+			@ApiIgnore
 			@LoginUser Member loginMember
 		){
 		Store changeStoreInfo = storeService.changeStoreInfo(changeStoreInfoValidator, addressGetter, Owner.withMember(loginMember), command);
@@ -66,6 +69,7 @@ public class StoreCommandApi {
 	@PutMapping("store-image")
 	public ResponseEntity<Store> execute(
 			@RequestBody StoreCommand.ChangeStoreImage command,
+			@ApiIgnore
 			@LoginUser Member loginMember
 		){
 		Store changeStoreImage = storeService.changeStoreImage(imageFileValidator, fileUploader, Owner.withMember(loginMember), command);	
@@ -76,6 +80,7 @@ public class StoreCommandApi {
 	@PutMapping("tags")
 	public ResponseEntity<Store> execute(
 			@RequestBody StoreCommand.ChangeStoreTag command,
+			@ApiIgnore
 			@LoginUser Member loginMember
 		){
 		Store changeStoreTags = storeService.changeStoreTags(storeTagsValidator, Owner.withMember(loginMember), command);
@@ -86,6 +91,7 @@ public class StoreCommandApi {
 	@PutMapping("styles")
 	public ResponseEntity<Store> execute(
 			@RequestBody StoreCommand.ChangeStoreStyle command,
+			@ApiIgnore
 			@LoginUser Member loginMember
 		){
 		Store changeStoreStyles = storeService.changeStoreStyles(storeStyleValidator, Owner.withMember(loginMember), command);
@@ -96,6 +102,7 @@ public class StoreCommandApi {
 	@PutMapping("opening-hour")
 	public ResponseEntity<Store> execute(
 			@RequestBody StoreCommand.ChangeOpeningHour command,
+			@ApiIgnore
 			@LoginUser Member loginMember
 		){
 		Store changeOpeningHour = storeService.changeOpeningHour(openingHourValidator, Owner.withMember(loginMember), command);

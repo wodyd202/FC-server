@@ -18,4 +18,14 @@ public class InmemoryStoreStyleRepository implements StoreStyleRepository {
 		return repo.contains(new StoreStyle(value));
 	}
 
+	@Override
+	public void save(StoreStyle style) {
+		repo.add(style);
+	}
+
+	@Override
+	public List<StoreStyle> findAll() {
+		return repo;
+	}
+
 }
