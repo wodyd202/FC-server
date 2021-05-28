@@ -2,6 +2,8 @@ package com.fc.domain.member;
 
 import java.util.Date;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fc.command.member.model.MemberCommand.CreateMember;
 import com.fc.core.domain.AggregateRoot;
@@ -52,8 +54,8 @@ public class Member extends AggregateRoot<Email> {
 		applyChange(new RegisteredMember(this.email,this.password,this.rule));
 	}
 	
-	public static Member create(CreateMember command) {
-		Member member = new Member(command.getEmail(), command.getPassword());
+	public static Member create(PasswordEncoder encoder, CreateMember command) {
+		Member member = new Member(command.getEmail(), encoder.encode(command.getPassword()));
 		return member;
 	}
 	

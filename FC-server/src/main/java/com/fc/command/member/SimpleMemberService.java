@@ -2,6 +2,7 @@ package com.fc.command.member;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fc.command.common.address.infra.AddressDetailGetter;
@@ -28,9 +29,10 @@ import lombok.Setter;
 @Service
 public class SimpleMemberService implements MemberService {
 	private MemberEventHandler memberEventHandler;
+	private PasswordEncoder passwordEncoder;
 	
 	@Override
-	public void create(
+	public Member create(
 			Validator<CreateMember> validator,
 			CreateMember command
 		) {
@@ -43,12 +45,13 @@ public class SimpleMemberService implements MemberService {
 				throw new AlreadyExistMemberException("해당 이메일로 가입한 회원이 이미 존재합니다.");
 			}
 		}
-		Member member = Member.create(command);
+		Member member = Member.create(passwordEncoder, command);
 		memberEventHandler.save(member);
+		return member;
 	}
 
 	@Override
-	public void changeAddress(
+	public Member changeAddress(
 			Validator<AddressCommand> validator, 
 			AddressDetailGetter getter,
 			Email targetUserEmail, 
@@ -60,10 +63,11 @@ public class SimpleMemberService implements MemberService {
 		Member findMember = memberEventHandler.find(targetUserEmail).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
 		findMember.changeAddress(detailAddress);
 		memberEventHandler.save(findMember);
+		return findMember;
 	}
 
 	@Override
-	public void changePassword(
+	public Member changePassword(
 			Validator<ChangePassword> validator, 
 			Email targetUserEmail, 
 			ChangePassword command
@@ -76,6 +80,7 @@ public class SimpleMemberService implements MemberService {
 		
 		findMember.changePassword(new Password(command.getChangePassword()));
 		memberEventHandler.save(findMember);
+		return findMember;
 	}
 
 	private void verifyEqualPasswordWithChangePassword(ChangePassword command, Member findMember) {

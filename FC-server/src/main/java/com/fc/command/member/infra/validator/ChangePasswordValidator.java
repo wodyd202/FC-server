@@ -1,11 +1,14 @@
 package com.fc.command.member.infra.validator;
 
+import org.springframework.stereotype.Component;
+
 import com.fc.command.member.exception.InvalidMemberException;
 import com.fc.command.member.model.MemberCommand.ChangePassword;
 import com.fc.core.infra.Validator;
 
 import lombok.RequiredArgsConstructor;
 
+@Component
 @RequiredArgsConstructor
 public class ChangePasswordValidator implements Validator<ChangePassword> {
 	private final PasswordMeter passwordMeter;

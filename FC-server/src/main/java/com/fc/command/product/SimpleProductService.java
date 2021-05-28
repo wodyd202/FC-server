@@ -1,4 +1,4 @@
-package com.fc.product;
+package com.fc.command.product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fc.command.product.exception.InvalidProductException;
+import com.fc.command.product.exception.ProductNotFoundException;
 import com.fc.command.product.infra.ProductEventHandler;
 import com.fc.command.product.model.ProductCommand.ChangeProductInfo;
 import com.fc.command.product.model.ProductCommand.CreateProduct;

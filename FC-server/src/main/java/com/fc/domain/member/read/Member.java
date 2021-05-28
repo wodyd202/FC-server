@@ -67,8 +67,9 @@ public class Member{
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDateTime;
 
-	public Member(Email email) {
+	public Member(Email email, Password password) {
 		this.email = email;
+		this.password = password;
 	}
 	
 	public void changeAddress(Address address) {

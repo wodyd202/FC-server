@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fc.command.common.address.exception.InvalidAddressException;
 import com.fc.command.common.address.infra.AddressDetailGetter;
@@ -30,7 +31,7 @@ public class ChangeAddressTest {
 	Validator<AddressCommand> validator = new ChangeAddressValidator();
 	MemberEventHandler memberEventHandler = mock(MemberEventHandler.class);
 
-	MemberService service = new SimpleMemberService(memberEventHandler);
+	MemberService service = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class));
 
 	Member mockMember = Member.builder().build();
 

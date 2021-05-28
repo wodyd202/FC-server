@@ -1,9 +1,8 @@
-package com.fc.product;
+package com.fc.command.product.infra.validator;
 
 import java.util.List;
 
 import com.fc.command.product.exception.InvalidProductException;
-import com.fc.command.product.infra.validator.AbstractProductValidator;
 import com.fc.command.product.model.ProductCommand.ChangeProductInfo;
 import com.fc.domain.product.SizeList.Size;
 

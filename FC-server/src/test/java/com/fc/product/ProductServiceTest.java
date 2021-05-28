@@ -15,6 +15,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
+import com.fc.command.product.ProductService;
+import com.fc.command.product.SimpleProductService;
 import com.fc.command.product.infra.ProductEventHandler;
 import com.fc.command.product.model.ProductCommand.ChangeProductInfo;
 import com.fc.command.product.model.ProductCommand.CreateProduct;

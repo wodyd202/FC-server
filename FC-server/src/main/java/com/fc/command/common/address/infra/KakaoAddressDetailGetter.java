@@ -1,6 +1,7 @@
 package com.fc.command.common.address.infra;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 
 import com.fc.command.common.address.exception.InvalidAddressException;
@@ -11,6 +12,7 @@ import com.fc.openApi.kakaoMap.KakaoMapOpenApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
+@Component
 @RequiredArgsConstructor
 public class KakaoAddressDetailGetter implements AddressDetailGetter {
 	private final OpenApiRequester<KakaoMapOpenApiResponse> openApiRequester;

@@ -21,7 +21,6 @@ import com.fc.domain.member.event.MemberRawEvent;
 @Configuration
 public class MemberConfig {
 	
-	
 	@Bean
 	MemberEventHandler memberEventHandler(ObjectMapper objectMapper, EventProjector memberEventProjector) {
 		return new MemberEventHandler(memberEventStore(objectMapper, memberEventProjector), memberSnapshotRepository());

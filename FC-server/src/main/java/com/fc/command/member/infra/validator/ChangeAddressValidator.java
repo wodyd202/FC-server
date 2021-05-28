@@ -1,9 +1,12 @@
 package com.fc.command.member.infra.validator;
 
+import org.springframework.stereotype.Component;
+
 import com.fc.command.common.address.exception.InvalidAddressException;
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.core.infra.Validator;
 
+@Component
 public class ChangeAddressValidator implements Validator<AddressCommand> {
 
 	@Override

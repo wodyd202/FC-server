@@ -1,6 +1,5 @@
 package com.fc.command.member.model;
 
-import com.fc.command.common.address.model.AddressCommand;
 import com.fc.core.command.Command;
 
 import lombok.AccessLevel;
@@ -17,12 +16,6 @@ public class MemberCommand implements Command{
 	public static class CreateMember {
 		private String email;
 		private String password;
-		private AddressCommand address;
-		
-		public CreateMember(String email, String password) {
-			this.email = email;
-			this.password = password;
-		}
 	}
 	
 	@Getter

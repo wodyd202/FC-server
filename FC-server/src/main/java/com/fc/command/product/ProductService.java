@@ -1,4 +1,4 @@
-package com.fc.product;
+package com.fc.command.product;
 
 import com.fc.command.product.model.ProductCommand.ChangeProductInfo;
 import com.fc.command.product.model.ProductCommand.CreateProduct;

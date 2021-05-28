@@ -64,16 +64,17 @@ public class Product extends AggregateRoot<ProductId>{
 	}
 	
 	public static Product create(ProductId id, Owner targetOwner, CreateProduct command, List<ProductImage> imageList) {
-		return Product.builder()
-				.id(id)
-				.title(command.getTitle())
-				.tags(command.getTags())
-				.category(command.getCategory())
-				.price(command.getPrice())
-				.images(imageList)
-				.size(command.getSizes())
-				.owner(targetOwner)
-				.build();
+		Product product = new Product(
+				id,
+				command.getTitle(),
+				command.getTags(),
+				command.getCategory(),
+				command.getPrice(),
+				command.getSizes(),
+				imageList,
+				targetOwner
+			);
+		return product;
 	}
 	
 	public void changeProductTitle(String title) {

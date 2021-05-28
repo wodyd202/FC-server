@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fc.command.member.SimpleMemberService;
@@ -86,6 +87,6 @@ public class MemberCreateTest {
 		SnapshotRepository<Member, Email> snapshotRepository = new InmemoryMemberSnapshotRepository();
 		
 		MemberEventHandler memberEventHandler = new MemberEventHandler(eventStore, snapshotRepository);
-		memberService = new SimpleMemberService(memberEventHandler);
+		memberService = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class));
 	}
 }

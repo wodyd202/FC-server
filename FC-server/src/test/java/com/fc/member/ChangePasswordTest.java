@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fc.command.member.MemberService;
 import com.fc.command.member.SimpleMemberService;
@@ -21,7 +22,7 @@ import com.fc.domain.member.Password;
 
 public class ChangePasswordTest {
 	MemberEventHandler memberEventHandler = mock(MemberEventHandler.class);
-	MemberService service = new SimpleMemberService(memberEventHandler);
+	MemberService service = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class));
 	Member mockMember = Member.builder().password(new Password("password")).build();
 
 	@Test
