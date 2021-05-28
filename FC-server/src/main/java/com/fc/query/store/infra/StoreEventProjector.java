@@ -18,6 +18,7 @@ import com.fc.domain.store.read.Store;
 
 import lombok.RequiredArgsConstructor;
 
+
 @RequiredArgsConstructor
 @Transactional
 public class StoreEventProjector extends AbstractEventProjector {

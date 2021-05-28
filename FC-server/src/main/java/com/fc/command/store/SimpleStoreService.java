@@ -2,6 +2,7 @@ package com.fc.command.store;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fc.command.common.address.infra.AddressDetailGetter;
@@ -33,6 +34,7 @@ import lombok.AllArgsConstructor;
   * @작성자 : LJY
   * @프로그램 설명 : 업체 관련 service
   */
+@Service
 @AllArgsConstructor
 public class SimpleStoreService implements StoreService {
 	private MemberRepository memberRepository;
@@ -108,7 +110,7 @@ public class SimpleStoreService implements StoreService {
 	}
 
 	@Override
-	public void changeStoreImage(
+	public Store changeStoreImage(
 			Validator<ChangeStoreImage> validator,
 			FileUploader fileUploader,
 			Owner targetOwner,
@@ -123,6 +125,7 @@ public class SimpleStoreService implements StoreService {
 		
 		fileUploader.uploadFile(command.getFile(), saveFileName);
 		storeEventHandler.save(findStore);
+		return findStore;
 	}
 	
 	private String getFileExtention(MultipartFile file) {
@@ -132,7 +135,7 @@ public class SimpleStoreService implements StoreService {
 	}
 
 	@Override
-	public void changeStoreTags(
+	public Store changeStoreTags(
 			Validator<ChangeStoreTag> validator, 
 			Owner targetStoreOwner,
 			ChangeStoreTag command
@@ -142,10 +145,11 @@ public class SimpleStoreService implements StoreService {
 				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
 		findStore.changeTags(command.getTags());
 		storeEventHandler.save(findStore);
+		return findStore;
 	}
 
 	@Override
-	public void changeStoreStyles(
+	public Store changeStoreStyles(
 			Validator<ChangeStoreStyle> validator, 
 			Owner targetStoreOwner,
 			ChangeStoreStyle command
@@ -155,10 +159,11 @@ public class SimpleStoreService implements StoreService {
 				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
 		findStore.changeStyles(command.getStyles());
 		storeEventHandler.save(findStore);
+		return findStore;
 	}
 
 	@Override
-	public void changeWeekdayOpeningHour(
+	public Store changeOpeningHour(
 			Validator<ChangeOpeningHour> validator, 
 			Owner targetStoreOwner,
 			ChangeOpeningHour command
@@ -173,6 +178,7 @@ public class SimpleStoreService implements StoreService {
 			findStore.changeWeekendOpeningHour(command.getWeekendStartTime(),command.getWeekendEndTime());
 		}
 		storeEventHandler.save(findStore);
+		return findStore;
 	}
 
 	private boolean isWeekdayOpeningHourChange(ChangeOpeningHour command) {

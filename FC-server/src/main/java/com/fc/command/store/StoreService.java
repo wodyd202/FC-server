@@ -27,26 +27,26 @@ public interface StoreService {
 			ChangeStoreInfo command
 		);
 
-	void changeStoreImage(
+	Store changeStoreImage(
 			Validator<ChangeStoreImage> validator, 
 			FileUploader fileUploader,
 			Owner targetStoreOwner, 
 			ChangeStoreImage command
 		);
 
-	void changeStoreTags(
+	Store changeStoreTags(
 			Validator<ChangeStoreTag> storeTagsValidtor, 
 			Owner targetStoreOwner, 
 			ChangeStoreTag command
 		);
 
-	void changeStoreStyles(
+	Store changeStoreStyles(
 			Validator<ChangeStoreStyle> storeStyleValidator, 
 			Owner targetStoreOwner,
 			ChangeStoreStyle command
 		);
 
-	void changeWeekdayOpeningHour(
+	Store changeOpeningHour(
 			Validator<ChangeOpeningHour> validator, 
 			Owner targetStoreOwner,
 			ChangeOpeningHour command

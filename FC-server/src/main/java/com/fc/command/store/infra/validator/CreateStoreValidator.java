@@ -2,6 +2,8 @@ package com.fc.command.store.infra.validator;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.store.infra.StoreStyleRepository;
 import com.fc.command.store.infra.StoreTagRepository;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
   * @작성자 : LJY
   * @프로그램 설명 : 업체 등록 시 사용되는 validator
   */
+@Component
 @NoArgsConstructor
 public class CreateStoreValidator extends AbstractStoreValidator<CreateStore> {
 	

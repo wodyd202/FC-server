@@ -1,5 +1,7 @@
 package com.fc.command.store.infra.validator;
 
+import org.springframework.stereotype.Component;
+
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.store.exception.InvalidStoreException;
 import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
@@ -9,6 +11,7 @@ import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
   * @작성자 : LJY
   * @프로그램 설명 : 업체 기본 정보 변경시 사용되는 validator
   */
+@Component
 public class ChangeStoreInfoValidator extends AbstractStoreValidator<ChangeStoreInfo> {
 
 	@Override

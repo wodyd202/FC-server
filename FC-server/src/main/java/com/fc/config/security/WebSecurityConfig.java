@@ -75,8 +75,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.antMatchers(HttpMethod.GET, "/api/v1/member/**/address").authenticated()
 		
 		.antMatchers(HttpMethod.PUT, "/api/v1/member/**").authenticated()
+		.antMatchers(HttpMethod.PUT, "/api/v1/store/**").authenticated()
 		
 		.antMatchers(HttpMethod.POST, "/api/v1/member").permitAll()
+		.antMatchers(HttpMethod.POST, "/api/v1/store").permitAll()
+
 		.antMatchers(HttpMethod.POST, "/oauth/token").permitAll()
 		.antMatchers(HttpMethod.POST, "/oauth/refresh-token").permitAll()
 		.and()

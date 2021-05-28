@@ -39,6 +39,8 @@ public class SwaggerConfig {
                 		Predicates.or(
         				RequestHandlerSelectors.basePackage("com.fc.command.member.api"),
         				RequestHandlerSelectors.basePackage("com.fc.query.member.api"),
+        				RequestHandlerSelectors.basePackage("com.fc.command.store.api"),
+        				RequestHandlerSelectors.basePackage("com.fc.query.store.api"),
         				RequestHandlerSelectors.basePackage("com.fc.config.security.jwt.api")
 					)
         		)

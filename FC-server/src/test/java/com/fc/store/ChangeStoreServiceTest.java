@@ -54,7 +54,7 @@ public class ChangeStoreServiceTest {
 		Validator<ChangeOpeningHour> validator = new OpeningHourValidator();
 		
 		Owner targetStoreOwner = new Owner("email");
-		storeService.changeWeekdayOpeningHour(validator, targetStoreOwner ,command);
+		storeService.changeOpeningHour(validator, targetStoreOwner ,command);
 		
 		verify(store,times(1))
 			.changeWeekdayOpeningHour(any(Integer.class),any(Integer.class));

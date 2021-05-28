@@ -12,7 +12,7 @@ import com.fc.domain.store.event.QStoreRawEvent;
 import com.fc.domain.store.event.StoreRawEvent;
 import com.querydsl.jpa.impl.JPAQuery;
 
-public class JdbcMemberEventRepository implements StoreEventStoreRepository{
+public class JdbcStoreEventRepository implements StoreEventStoreRepository{
 
 	@PersistenceContext
 	private EntityManager em;

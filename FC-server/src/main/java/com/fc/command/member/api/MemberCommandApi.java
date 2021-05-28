@@ -31,7 +31,7 @@ public class MemberCommandApi {
 	private CreateMemberValidator createMemberValidator;
 	private ChangePasswordValidator changePasswordValidator; 
 	private ChangeAddressValidator changeAddressValidator;
-	private AddressDetailGetter getter;
+	private AddressDetailGetter addressGetter;
 	
 	@ApiOperation("회원가입")
 	@PostMapping
@@ -60,7 +60,7 @@ public class MemberCommandApi {
 			@ApiIgnore
 			@LoginUser com.fc.domain.member.read.Member loginMember
 		){
-		Member member = memberService.changeAddress(changeAddressValidator, getter, loginMember.getEmail(), command);
+		Member member = memberService.changeAddress(changeAddressValidator, addressGetter, loginMember.getEmail(), command);
 		return new ResponseEntity<>(member, HttpStatus.OK);
 	}
 }
