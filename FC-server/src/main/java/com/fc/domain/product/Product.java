@@ -39,7 +39,6 @@ public class Product extends AggregateRoot<ProductId>{
 	private Date createDateTime;
 	private Owner owner;
 	
-	@Builder
 	private Product(
 			ProductId id,
 			String title,
