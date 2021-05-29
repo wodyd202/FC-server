@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.StoreTag;
-import com.fc.domain.store.read.Store;
 import com.fc.query.store.model.StoreQuery;
 import com.fc.query.store.model.StoreSearch;
 import com.fc.query.store.service.QueryStoreService;
@@ -37,8 +36,8 @@ public class StoreQueryApi {
 
 	@ApiOperation("업체 상세 가져오기")
 	@GetMapping("{owner}")
-	public ResponseEntity<Store> getStore(@PathVariable Owner owner) {
-		Store findStore = queryStoreService.findByOwner(owner);
+	public ResponseEntity<StoreQuery.StoreMainInfo> getStore(@PathVariable Owner owner) {
+		StoreQuery.StoreMainInfo findStore = queryStoreService.findByOwner(owner);
 		return new ResponseEntity<>(findStore, HttpStatus.OK);
 	}
 

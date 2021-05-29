@@ -26,8 +26,8 @@ import com.fc.domain.product.Owner;
 import com.fc.domain.product.Product;
 import com.fc.domain.product.ProductId;
 import com.fc.domain.product.SizeList.Size;
-import com.fc.domain.store.read.Store;
 import com.fc.query.store.infra.StoreRepository;
+import com.fc.query.store.model.StoreQuery;
 
 @SuppressWarnings("unchecked")
 public class ProductServiceTest {
@@ -92,6 +92,6 @@ public class ProductServiceTest {
 	@BeforeEach
 	void setUp() {
 		when(storeRepository.findByOwner(any()))
-			.thenReturn(Optional.of(mock(Store.class)));
+			.thenReturn(Optional.of(mock(StoreQuery.StoreMainInfo.class)));
 	}
 }

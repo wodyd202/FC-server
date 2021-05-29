@@ -9,7 +9,7 @@ import com.fc.query.store.model.StoreQuery;
 import com.fc.query.store.model.StoreSearch;
 
 public interface StoreRepository {
-	Optional<Store> findByOwner(Owner owner);
+	Optional<StoreQuery.StoreMainInfo> findByOwner(Owner owner);
 
 	Optional<Store> findDetailByOwner(Owner owner);
 
