@@ -2,9 +2,9 @@ package com.fc.query.member.infra;
 
 import java.util.Optional;
 
-import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.read.Member;
+import com.fc.query.member.model.MemberQuery.Address;
 
 public interface MemberRepository {
 	Optional<Member> findByEmail(Email email);

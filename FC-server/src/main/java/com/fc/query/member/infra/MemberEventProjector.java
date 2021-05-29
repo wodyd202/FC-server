@@ -9,7 +9,7 @@ import com.fc.domain.member.Email;
 import com.fc.domain.member.Member.MemberState;
 import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.ChangedMemberPassword;
-import com.fc.domain.member.event.CovertedToSeller;
+import com.fc.domain.member.event.ConvertedToSeller;
 import com.fc.domain.member.event.RegisteredMember;
 import com.fc.domain.member.read.Member;
 
@@ -53,7 +53,7 @@ public class MemberEventProjector extends AbstractEventProjector {
 	}
 	
 	@Transactional
-	protected void execute(CovertedToSeller event) {
+	protected void execute(ConvertedToSeller event) {
 		Email to = event.getIdentifier();
 		Member member = memberJpaRepository.findById(to).get();
 		member.convertToSeller();

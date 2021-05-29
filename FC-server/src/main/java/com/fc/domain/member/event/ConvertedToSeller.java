@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
   */
 @Getter
 @NoArgsConstructor
-public class CovertedToSeller extends AbstractMemberEvent{
+public class ConvertedToSeller extends AbstractMemberEvent{
 	private static final long serialVersionUID = 1L;
-	public CovertedToSeller(Email targetUserEmail) {
+	public ConvertedToSeller(Email targetUserEmail) {
 		this.email = targetUserEmail;
 	}
 }

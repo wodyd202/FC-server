@@ -26,8 +26,6 @@ import com.fc.domain.store.OpeningHour;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.Phone;
 import com.fc.domain.store.Store.StoreState;
-import com.fc.domain.store.StoreStyle;
-import com.fc.domain.store.StoreStyles;
 import com.fc.domain.store.StoreTag;
 import com.fc.domain.store.StoreTags;
 
@@ -56,10 +54,6 @@ public class Store {
 	@ElementCollection
 	@CollectionTable(name = "STORE_TAGS", joinColumns = @JoinColumn(name = "STORE_OWNER", referencedColumnName = "owner"))
 	private Set<StoreTag> tags;
-
-	@ElementCollection
-	@CollectionTable(name = "STORE_STYLES", joinColumns = @JoinColumn(name = "STORE_OWNER", referencedColumnName = "owner"))
-	private Set<StoreStyle> styles;
 
 	@Embedded
 	private MainImage image;
@@ -97,11 +91,6 @@ public class Store {
 		this.tags = tags.getTags();
 	}
 
-	public void changeStyles(StoreStyles styles) {
-		this.styles = styles.getStyles();
-	}
-
-	
 	public void changeWeekdayOpeningHour(int startTime, int endTime) {
 		this.openingHour.changeWeekdayOpeningHour(startTime, endTime);
 	}

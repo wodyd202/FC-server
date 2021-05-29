@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.store.exception.InvalidStoreException;
-import com.fc.command.store.infra.StoreStyleRepository;
 import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.core.infra.Validator;
 
@@ -18,7 +17,6 @@ import lombok.Setter;
 @NoArgsConstructor
 abstract public class AbstractStoreValidator<T> implements Validator<T> {
 	private StoreTagRepository storeTagRepository;
-	private StoreStyleRepository storeStyleRepository;
 	private Validator<AddressCommand> addressValidator;
 	private final String BUSINESSNAME_REGEX = "^[가-힣a-zA-Z0-9_ ]*{1,15}$";
 	private final String BUSINESS_NUMBER_REGEX = "^[0-9]*{10}$";
@@ -60,17 +58,6 @@ abstract public class AbstractStoreValidator<T> implements Validator<T> {
 		});
 	}
 	
-	protected void storeStylesValidation(List<String> storeStyles) {
-		assertNotNullObject(storeStyles, new InvalidStoreException("업체 스타일을 최대 3개까지 입력해주세요."));
-		storeStyles.forEach(stylesName->assertNotEmptyString(stylesName, new InvalidStoreException("업체 스타일 중 빈값이 존재합니다.")));
-		assertNotOverMaxSizeCollectionSize(3, storeStyles, new InvalidStoreException("업체 스타일을 최대 3개까지 입력해주세요."));
-		storeStyles.forEach(styleName->{
-			if(!storeStyleRepository.existByStyleName(styleName)) {
-				throw new InvalidStoreException("업체 스타일은 서버에서 제공하는 텍스트만 저장할 수 있습니다.");
-			}
-		});			
-	}
-	
 	protected void weekdayOpeningHourValidation(int weekdayStartTime, int weekdayEndTime) {
 		if(weekdayStartTime < 0 || weekdayStartTime > 24) {
 			throw new InvalidStoreException("평일 영업 시작 시간을 0~24 사이로 입력해주세요.");
@@ -109,10 +96,6 @@ abstract public class AbstractStoreValidator<T> implements Validator<T> {
 				throw new InvalidStoreException("휴일로 지정할 요일이 잘못 입력되었습니다.");
 			}
 		});
-	}
-
-	public AbstractStoreValidator(StoreStyleRepository storeStyleRepository) {
-		this.storeStyleRepository = storeStyleRepository;
 	}
 
 	public AbstractStoreValidator(StoreTagRepository storeTagRepository) {

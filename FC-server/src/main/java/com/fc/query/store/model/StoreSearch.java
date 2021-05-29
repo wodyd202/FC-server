@@ -1,4 +1,4 @@
-package com.fc.query.store.api;
+package com.fc.query.store.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

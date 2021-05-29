@@ -7,7 +7,6 @@ import com.fc.command.member.infra.MemberEventHandler;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.store.event.RegisterdStore;
-import com.fc.domain.store.event.StoreRawEvent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,14 +21,9 @@ public class MemberEventListener {
 	private final MemberEventHandler eventHandler;
 	
 	@EventListener
-	protected void on(StoreRawEvent event) throws ClassNotFoundException {
-		Class<?> eventType = Class.forName(event.getType());
+	protected void on(RegisterdStore event) throws ClassNotFoundException {
 		Email targetUserEmail = new Email(event.getIdentifier().getEmail());
 		Member findMember = eventHandler.find(targetUserEmail).get();
-		
-		if(eventType.equals(RegisterdStore.class)) {
-			findMember.convertToSeller();
-		}
 		eventHandler.save(findMember);
 	}
 }

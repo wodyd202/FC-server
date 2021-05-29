@@ -23,7 +23,6 @@ import com.fc.command.store.SimpleStoreService;
 import com.fc.command.store.StoreService;
 import com.fc.command.store.exception.AlreadyExistStoreException;
 import com.fc.command.store.infra.StoreEventHandler;
-import com.fc.command.store.infra.StoreStyleRepository;
 import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.command.store.infra.validator.CreateStoreValidator;
 import com.fc.command.store.model.StoreCommand;
@@ -40,10 +39,9 @@ import com.fc.query.member.infra.MemberRepository;
 @SuppressWarnings("unchecked")
 public class StoreServiceTest {
 	StoreTagRepository storeTagRepository = mock(StoreTagRepository.class);
-	StoreStyleRepository storeStyleRepository = mock(StoreStyleRepository.class);
 	
 	Validator<CreateStore> validator 
-				= new CreateStoreValidator(storeTagRepository,storeStyleRepository,new ChangeAddressValidator());
+				= new CreateStoreValidator(storeTagRepository,new ChangeAddressValidator());
 	
 	StoreEventHandler storeEventHandler = mock(StoreEventHandler.class);
 	AddressDetailGetter addressGetter = mock(AddressDetailGetter.class);
@@ -189,7 +187,6 @@ public class StoreServiceTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(10)
 				.weekdayEndTime(14)
 				.weekendStartTime(10)
@@ -211,9 +208,6 @@ public class StoreServiceTest {
 			.thenReturn(Optional.of(mockMember));
 		
 		when(storeTagRepository.existByTagName(any()))
-			.thenReturn(true);
-		
-		when(storeStyleRepository.existByStyleName(any()))
 			.thenReturn(true);
 	}
 }

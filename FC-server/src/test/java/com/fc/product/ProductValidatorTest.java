@@ -189,17 +189,4 @@ public class ProductValidatorTest {
 		});
 	}
 	
-	@Test
-	void 정상_등록() {
-		CreateProduct command = CreateProduct
-				.builder()
-				.title("제목")
-				.tags(Arrays.asList("태그1","태그2","태그3"))
-				.category("카테고리")
-				.price(3000)
-				.sizes(Arrays.asList(Size.L))
-				.images(Arrays.asList(new MockMultipartFile("image1.jpg", new byte[] {})))
-				.build();
-		validator.validation(command);
-	}
 }

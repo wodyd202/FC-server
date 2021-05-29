@@ -4,7 +4,6 @@ import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.store.model.StoreCommand.ChangeOpeningHour;
 import com.fc.command.store.model.StoreCommand.ChangeStoreImage;
 import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
-import com.fc.command.store.model.StoreCommand.ChangeStoreStyle;
 import com.fc.command.store.model.StoreCommand.ChangeStoreTag;
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.fileUploader.FileUploader;
@@ -38,12 +37,6 @@ public interface StoreService {
 			Validator<ChangeStoreTag> storeTagsValidtor, 
 			Owner targetStoreOwner, 
 			ChangeStoreTag command
-		);
-
-	Store changeStoreStyles(
-			Validator<ChangeStoreStyle> storeStyleValidator, 
-			Owner targetStoreOwner,
-			ChangeStoreStyle command
 		);
 
 	Store changeOpeningHour(

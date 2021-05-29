@@ -14,14 +14,11 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.fc.domain.member.Address;
-import com.fc.domain.store.BusinessDetail;
-import com.fc.domain.store.MainImage;
 import com.fc.domain.store.Owner;
-import com.fc.domain.store.Phone;
 import com.fc.domain.store.read.QStore;
 import com.fc.domain.store.read.Store;
-import com.fc.query.store.api.StoreSearch;
+import com.fc.query.store.model.StoreQuery;
+import com.fc.query.store.model.StoreSearch;
 import com.querydsl.jpa.impl.JPAQuery;
 
 @Repository
@@ -48,8 +45,8 @@ public class JdbcStoreRepository implements StoreRepository {
 	}
 
 	@Override
-	public List<Store> findAll(StoreSearch dto) {
-		StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM `store` WHERE ");
+	public List<StoreQuery.StoreList> findAll(StoreSearch dto) {
+		StringBuilder sqlBuilder = new StringBuilder("SELECT `store`.*, CONCAT(CONCAT((SELECT `name` FROM `store_tags` WHERE `store_owner` = `store`.`owner`),\",\")) AS 'tags' FROM `store` WHERE ");
 		List<String> params = new ArrayList<>();
 		boolean endFlag = false;
 
@@ -69,18 +66,6 @@ public class JdbcStoreRepository implements StoreRepository {
 			sqlBuilder.append("FROM `store_tags` WHERE ");
 			sqlBuilder.append("`name` = ?");
 			params.add(tag);
-			endFlag = true;
-			sqlBuilder.append(")");
-		}
-
-		String style = dto.getStyle();
-		if (style != null && !style.isEmpty()) {
-			appendAndCondition(sqlBuilder, endFlag);
-			sqlBuilder.append("`owner` in (");
-			sqlBuilder.append("SELECT `store_owner` ");
-			sqlBuilder.append("FROM `store_styles` WHERE ");
-			sqlBuilder.append("`name` = ?");
-			params.add(style);
 			endFlag = true;
 			sqlBuilder.append(")");
 		}
@@ -123,7 +108,7 @@ public class JdbcStoreRepository implements StoreRepository {
 		
 		PreparedStatement stmt = null;
 		ResultSet resultSet = null;
-		List<Store> stores = new ArrayList<>();
+		List<StoreQuery.StoreList> stores = new ArrayList<>();
 		try(
 			Connection connection = dataSource.getConnection();
 		){
@@ -134,27 +119,16 @@ public class JdbcStoreRepository implements StoreRepository {
 			resultSet = stmt.executeQuery();
 			
 			while(resultSet.next()) {
-				Phone phone = new Phone(resultSet.getString("first") + "-" + resultSet.getString("second") + "-" + resultSet.getString("third"));
-				Address address = new Address(resultSet.getDouble("longtitude"), 
-						resultSet.getDouble("letitude"), 
-						resultSet.getString("province"), 
-						resultSet.getString("city"),
-						resultSet.getString("neighborhood")
-					);
-				BusinessDetail detail = new BusinessDetail(
-						resultSet.getString("business_name"), 
-						resultSet.getString("business_number"), 
-						phone, 
-						address, 
-						resultSet.getString("address_detail")
-					);
-				Store store = Store
-						.builder()
-						.owner(new Owner(resultSet.getString("owner")))
-						.detail(detail)
-						.image(new MainImage(resultSet.getString("path")))
-						.build();
-				stores.add(store);
+				stores.add(StoreQuery.StoreList.builder()
+						.businessTitle(resultSet.getString("business_name"))
+						.storeTags(resultSet.getString("tags"))
+						.imagePath(resultSet.getString("path"))
+						.weekdayStartTime(resultSet.getInt("weekday_start_time"))
+						.weekdayEndTime(resultSet.getInt("weekday_end_time"))
+						.weekendStartTime(resultSet.getInt("weekend_start_time"))
+						.weekendEndTime(resultSet.getInt("weekend_end_time"))
+						.holiday("holidays")
+						.build());
 			}
 			
 		}catch (Exception e) {

@@ -11,7 +11,6 @@ import com.fc.domain.store.event.ChangedBusinessNumber;
 import com.fc.domain.store.event.ChangedStoreAddress;
 import com.fc.domain.store.event.ChangedStoreMainImage;
 import com.fc.domain.store.event.ChangedStorePhone;
-import com.fc.domain.store.event.ChangedStoreStyles;
 import com.fc.domain.store.event.ChangedStoreTags;
 import com.fc.domain.store.event.ChangedWeekdayOpeningHour;
 import com.fc.domain.store.event.ChangedWeekendOpeningHour;
@@ -22,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
   * @Date : 2021. 5. 26. 
@@ -32,6 +32,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @AllArgsConstructor
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends AggregateRoot<Owner>{
 	private static final long serialVersionUID = 1L;
@@ -39,11 +40,15 @@ public class Store extends AggregateRoot<Owner>{
 	private Owner owner;
 	private BusinessDetail detail;
 	private StoreTags tags;
-	private StoreStyles styles;
 	private MainImage image;
 	private OpeningHour openingHour;
 	private StoreState state;
 	private Date createDateTime;
+	
+	Store(Owner owner){
+		super(owner);
+		this.owner = owner;
+	}
 	
 	@Builder
 	private Store(
@@ -61,14 +66,14 @@ public class Store extends AggregateRoot<Owner>{
 			int weekendEndTime,
 			List<String> holidays
 		) {
+		super(owner);
 		this.owner = owner;
 		this.detail = new BusinessDetail(businessName, businessNumber, new Phone(phone), address, addressDetail);
 		this.tags = new StoreTags(storeTags);
-		this.styles = new StoreStyles(storeStyles);
 		this.openingHour = new OpeningHour(weekdayStartTime, weekdayEndTime, weekendStartTime, weekendEndTime, holidays);
 		this.state = StoreState.SELL;
 		this.createDateTime = new Date();
-		applyChange(new RegisterdStore(owner, detail, tags, styles, openingHour, createDateTime));
+		applyChange(new RegisterdStore(owner, detail, tags, openingHour, createDateTime));
 	}
 	
 	public static Store create(Owner targetOwner, Address storeAddress, CreateStore command) {
@@ -80,7 +85,6 @@ public class Store extends AggregateRoot<Owner>{
 				.address(storeAddress)
 				.addressDetail(command.getAddressDetail())
 				.storeTags(command.getStoreTags())
-				.storeStyles(command.getStoreStyles())
 				.weekendStartTime(command.getWeekendStartTime())
 				.weekendEndTime(command.getWeekendEndTime())
 				.weekdayStartTime(command.getWeekdayStartTime())
@@ -119,13 +123,7 @@ public class Store extends AggregateRoot<Owner>{
 		applyChange(new ChangedStoreTags(this.owner, this.tags));
 	}
 	
-	public void changeStyles(List<String> styles) {
-		this.styles = new StoreStyles(styles);
-		applyChange(new ChangedStoreStyles(this.owner, this.styles));
-	}
-	
 	public void changeWeekdayOpeningHour(int startTime,int endTime) {
-		System.out.println();
 		this.openingHour.changeWeekdayOpeningHour(startTime, endTime);
 		applyChange(new ChangedWeekdayOpeningHour(this.owner, startTime, endTime));
 	}
@@ -139,7 +137,6 @@ public class Store extends AggregateRoot<Owner>{
 		this.owner = event.getIdentifier();
 		this.detail = event.getDetail();
 		this.tags = event.getTags();
-		this.styles = event.getStyles();
 		this.openingHour = event.getOpeningHour();
 		this.createDateTime = event.getCreateDateTime();
 		this.state = StoreState.SELL;
@@ -160,6 +157,9 @@ public class Store extends AggregateRoot<Owner>{
 	protected void apply(ChangedBusinessName event) {
 		this.detail.changeBusinessName(event.getBusinessName());
 	}
-
-
+	
+	protected void apply(ChangedStoreMainImage event) {
+		this.image = event.getImage();
+	}
+	
 }

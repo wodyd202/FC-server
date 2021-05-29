@@ -14,7 +14,6 @@ import com.fc.command.store.infra.validator.ChangeStoreInfoValidator;
 import com.fc.command.store.infra.validator.CreateStoreValidator;
 import com.fc.command.store.infra.validator.ImageFileValidator;
 import com.fc.command.store.infra.validator.OpeningHourValidator;
-import com.fc.command.store.infra.validator.StoreStyleValidator;
 import com.fc.command.store.infra.validator.StoreTagsValidator;
 import com.fc.command.store.model.StoreCommand;
 import com.fc.config.security.LoginUser;
@@ -38,7 +37,6 @@ public class StoreCommandApi {
 	private CreateStoreValidator createStoreValidator; 
 	private ImageFileValidator imageFileValidator;
 	private OpeningHourValidator openingHourValidator; 
-	private StoreStyleValidator storeStyleValidator;
 	private StoreTagsValidator storeTagsValidator;
 	private AddressDetailGetter addressGetter;
 	private FileUploader fileUploader;
@@ -68,7 +66,7 @@ public class StoreCommandApi {
 	@ApiOperation("업체 이미지 변경")
 	@PutMapping("store-image")
 	public ResponseEntity<Store> execute(
-			@RequestBody StoreCommand.ChangeStoreImage command,
+			StoreCommand.ChangeStoreImage command,
 			@ApiIgnore
 			@LoginUser Member loginMember
 		){
@@ -85,17 +83,6 @@ public class StoreCommandApi {
 		){
 		Store changeStoreTags = storeService.changeStoreTags(storeTagsValidator, Owner.withMember(loginMember), command);
 		return new ResponseEntity<>(changeStoreTags, HttpStatus.OK);
-	}
-	
-	@ApiOperation("업체 스타일 변경")
-	@PutMapping("styles")
-	public ResponseEntity<Store> execute(
-			@RequestBody StoreCommand.ChangeStoreStyle command,
-			@ApiIgnore
-			@LoginUser Member loginMember
-		){
-		Store changeStoreStyles = storeService.changeStoreStyles(storeStyleValidator, Owner.withMember(loginMember), command);
-		return new ResponseEntity<>(changeStoreStyles, HttpStatus.OK);
 	}
 	
 	@ApiOperation("업체 운영시간 변경")

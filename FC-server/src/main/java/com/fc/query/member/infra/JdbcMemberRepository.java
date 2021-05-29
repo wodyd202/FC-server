@@ -7,10 +7,10 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
-import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.read.Member;
 import com.fc.domain.member.read.QMember;
+import com.fc.query.member.model.MemberQuery.Address;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 

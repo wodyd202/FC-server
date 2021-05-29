@@ -3,10 +3,9 @@ package com.fc.domain.store.event;
 import java.util.Date;
 
 import com.fc.domain.store.BusinessDetail;
-import com.fc.domain.store.StoreStyles;
-import com.fc.domain.store.StoreTags;
 import com.fc.domain.store.OpeningHour;
 import com.fc.domain.store.Owner;
+import com.fc.domain.store.StoreTags;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,15 +17,13 @@ public class RegisterdStore extends AbstractStoreEvent{
 	private static final long serialVersionUID = 1L;
 	private BusinessDetail detail;
 	private StoreTags tags;
-	private StoreStyles styles;
 	private OpeningHour openingHour;
 	private Date createDateTime;
 	
-	public RegisterdStore(Owner owner, BusinessDetail detail, StoreTags tags ,StoreStyles styles, OpeningHour openingHour, Date createDateTime) {
+	public RegisterdStore(Owner owner, BusinessDetail detail, StoreTags tags, OpeningHour openingHour, Date createDateTime) {
 		this.owner = owner;
 		this.detail = detail;
 		this.tags = tags;
-		this.styles = styles;
 		this.openingHour = openingHour;
 		this.createDateTime = createDateTime;
 	}

@@ -2,7 +2,9 @@ package com.fc.core.snapshot;
 
 import java.io.Serializable;
 
-import javax.persistence.Id;
+import javax.persistence.EmbeddedId;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
@@ -17,7 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Snapshot<A extends AggregateRoot, ID> implements Serializable {
 
-	@Id
+	@EmbeddedId
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected ID identifier;
 
 	protected Long version;

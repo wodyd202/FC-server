@@ -15,9 +15,11 @@ public class HolidayConverter implements AttributeConverter<Set<Holiday>, String
 	@Override
 	public String convertToDatabaseColumn(Set<Holiday> attribute) {
 		StringBuilder builder = new StringBuilder();
-		attribute.forEach(val -> {
-			builder.append(val + ",");
-		});
+		if(attribute != null) {
+			attribute.forEach(val -> {
+				builder.append(val + ",");
+			});
+		}
 		return builder.toString();
 	}
 

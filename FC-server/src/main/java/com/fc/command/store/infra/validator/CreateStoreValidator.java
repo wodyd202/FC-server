@@ -2,10 +2,10 @@ package com.fc.command.store.infra.validator;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fc.command.common.address.model.AddressCommand;
-import com.fc.command.store.infra.StoreStyleRepository;
 import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.infra.Validator;
@@ -29,7 +29,6 @@ public class CreateStoreValidator extends AbstractStoreValidator<CreateStore> {
 		AddressCommand address = target.getAddress();
 		String addressDetail = target.getAddressDetail();
 		List<String> storeTags = target.getStoreTags();
-		List<String> storeStyles = target.getStoreStyles();
 		int weekdayStartTime = target.getWeekdayStartTime();
 		int weekdayEndTime = target.getWeekdayEndTime();
 		int weekendStartTime = target.getWeekendStartTime();
@@ -41,7 +40,6 @@ public class CreateStoreValidator extends AbstractStoreValidator<CreateStore> {
 		phoneValidation(phone);
 		addressValidation(address, addressDetail);
 		storeTagsValidation(storeTags);
-		storeStylesValidation(storeStyles);
 		
 		openingHourValidation(weekdayStartTime, weekdayEndTime, weekendStartTime, weekendEndTime, holidays);
 	}
@@ -53,11 +51,11 @@ public class CreateStoreValidator extends AbstractStoreValidator<CreateStore> {
 		holidayValidation(holidays);
 	}
 	
+	@Autowired
 	public CreateStoreValidator(
 			StoreTagRepository storeTagRepository,
-			StoreStyleRepository storeStyleRepository, 
 			Validator<AddressCommand> addressValidator
 		) {
-		super(storeTagRepository,storeStyleRepository, addressValidator);
+		super(storeTagRepository, addressValidator);
 	}
 }

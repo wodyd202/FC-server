@@ -5,12 +5,13 @@ import java.util.Optional;
 
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.read.Store;
-import com.fc.query.store.api.StoreSearch;
+import com.fc.query.store.model.StoreQuery;
+import com.fc.query.store.model.StoreSearch;
 
 public interface StoreRepository {
 	Optional<Store> findByOwner(Owner owner);
 
 	Optional<Store> findDetailByOwner(Owner owner);
 
-	List<Store> findAll(StoreSearch dto);
+	List<StoreQuery.StoreList> findAll(StoreSearch dto);
 }

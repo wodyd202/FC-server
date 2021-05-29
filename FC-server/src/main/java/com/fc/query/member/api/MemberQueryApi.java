@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fc.config.security.LoginUser;
-import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.read.Member;
+import com.fc.query.member.model.MemberQuery;
 import com.fc.query.member.service.QueryMemberService;
 
 import io.swagger.annotations.Api;
@@ -34,11 +34,11 @@ public class MemberQueryApi {
 	
 	@ApiOperation("자신의 주소값 가져오기")
 	@GetMapping("address")
-	public ResponseEntity<Address> getAddress(
+	public ResponseEntity<MemberQuery.Address> getAddress(
 			@ApiIgnore
 			@LoginUser Member loginMember
 		){
-		Address addressOfMember = queryMemberService.getAddressOfMember(loginMember.getEmail());
+		MemberQuery.Address addressOfMember = queryMemberService.getAddressOfMember(loginMember.getEmail());
 		return new ResponseEntity<>(addressOfMember, HttpStatus.OK);
 	}
 }

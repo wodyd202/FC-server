@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class StoreCommand {
 	
@@ -24,7 +25,6 @@ public class StoreCommand {
 		private AddressCommand address;
 		private String addressDetail;
 		private List<String> storeTags;
-		private List<String> storeStyles;
 		private int weekdayStartTime;
 		private int weekdayEndTime;
 		private int weekendStartTime;
@@ -45,6 +45,7 @@ public class StoreCommand {
 	}
 	
 	@Getter
+	@Setter
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class ChangeStoreImage{
@@ -56,13 +57,6 @@ public class StoreCommand {
 	@AllArgsConstructor
 	public static class ChangeStoreTag {
 		private List<String> tags;
-	}
-	
-	@Getter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class ChangeStoreStyle {
-		private List<String> styles;
 	}
 	
 	@Getter

@@ -1,7 +1,7 @@
 package com.fc.store;
 
-import static org.mockito.Mockito.any;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import com.fc.command.common.address.model.AddressCommand;
 import com.fc.command.member.infra.validator.ChangeAddressValidator;
 import com.fc.command.store.exception.InvalidStoreException;
-import com.fc.command.store.infra.StoreStyleRepository;
 import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.command.store.infra.validator.CreateStoreValidator;
 import com.fc.command.store.model.StoreCommand;
@@ -21,10 +20,9 @@ import com.fc.core.infra.Validator;
 
 public class StoreValidatorTest {
 	StoreTagRepository storeTagRepository = mock(StoreTagRepository.class);
-	StoreStyleRepository storeStyleRepository = mock(StoreStyleRepository.class);
 	
 	Validator<StoreCommand.CreateStore> validator = 
-			new CreateStoreValidator(storeTagRepository, storeStyleRepository, mock(ChangeAddressValidator.class));
+			new CreateStoreValidator(storeTagRepository, mock(ChangeAddressValidator.class));
 	
 	@Test
 	void 정상_케이스() {
@@ -36,7 +34,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(10)
 				.weekdayEndTime(14)
 				.weekendStartTime(10)
@@ -56,7 +53,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(10)
 				.weekdayEndTime(18)
 				.weekendStartTime(10)
@@ -78,7 +74,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(30)
 				.weekdayEndTime(38)
 				.weekendStartTime(30)
@@ -100,7 +95,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(20)
 				.weekdayEndTime(18)
 				.weekendStartTime(10)
@@ -122,7 +116,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3","태그4"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(10)
 				.weekdayEndTime(18)
 				.weekendStartTime(10)
@@ -144,7 +137,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 //				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(10)
 				.weekdayEndTime(18)
 				.weekendStartTime(10)
@@ -166,7 +158,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(10)
 				.weekdayEndTime(18)
 				.weekendStartTime(10)
@@ -188,7 +179,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(10)
 				.weekdayEndTime(18)
 				.weekendStartTime(10)
@@ -210,7 +200,6 @@ public class StoreValidatorTest {
 				.address(new AddressCommand(1,1))
 				.addressDetail("상세 주소")
 				.storeTags(Arrays.asList("태그1","태그2","태그3"))
-				.storeStyles(Arrays.asList("스타일1","스타일2"))
 				.weekdayStartTime(10)
 				.weekdayEndTime(18)
 				.weekendStartTime(10)
@@ -225,8 +214,6 @@ public class StoreValidatorTest {
 	@BeforeEach
 	void setUp() {
 		when(storeTagRepository.existByTagName(any()))
-			.thenReturn(true);
-		when(storeStyleRepository.existByStyleName(any()))
 			.thenReturn(true);
 	}
 }

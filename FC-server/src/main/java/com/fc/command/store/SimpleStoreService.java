@@ -15,7 +15,6 @@ import com.fc.command.store.infra.StoreEventHandler;
 import com.fc.command.store.model.StoreCommand.ChangeOpeningHour;
 import com.fc.command.store.model.StoreCommand.ChangeStoreImage;
 import com.fc.command.store.model.StoreCommand.ChangeStoreInfo;
-import com.fc.command.store.model.StoreCommand.ChangeStoreStyle;
 import com.fc.command.store.model.StoreCommand.ChangeStoreTag;
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.fileUploader.FileUploader;
@@ -129,7 +128,7 @@ public class SimpleStoreService implements StoreService {
 	}
 	
 	private String getFileExtention(MultipartFile file) {
-		String name = file.getName();
+		String name = file.getOriginalFilename();
 		int lastIndexOf = name.lastIndexOf(".");
 		return name.substring(lastIndexOf, name.length()).toUpperCase();
 	}
@@ -144,20 +143,6 @@ public class SimpleStoreService implements StoreService {
 		Store findStore = storeEventHandler.find(targetStoreOwner)
 				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
 		findStore.changeTags(command.getTags());
-		storeEventHandler.save(findStore);
-		return findStore;
-	}
-
-	@Override
-	public Store changeStoreStyles(
-			Validator<ChangeStoreStyle> validator, 
-			Owner targetStoreOwner,
-			ChangeStoreStyle command
-		) {
-		validator.validation(command);
-		Store findStore = storeEventHandler.find(targetStoreOwner)
-				.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체 정보가 존재하지 않습니다."));
-		findStore.changeStyles(command.getStyles());
 		storeEventHandler.save(findStore);
 		return findStore;
 	}

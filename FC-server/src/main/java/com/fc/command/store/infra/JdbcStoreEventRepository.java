@@ -17,29 +17,29 @@ public class JdbcStoreEventRepository implements StoreEventStoreRepository{
 	@PersistenceContext
 	private EntityManager em;
 	
-	private QStoreRawEvent StoreRawEvent = QStoreRawEvent.storeRawEvent;
+	private QStoreRawEvent storeRawEvent = QStoreRawEvent.storeRawEvent;
 	
 	@Override
 	@Transactional(readOnly = true)
 	public long countByOwner(Owner identifier) {
 		JPAQuery<StoreRawEvent> query = new JPAQuery<>(em);
-		return query.from(StoreRawEvent).where(StoreRawEvent.identifiier.eq(identifier)).fetchCount();
+		return query.from(storeRawEvent).where(storeRawEvent.identifiier.eq(identifier)).fetchCount();
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public List<StoreRawEvent> findByOwner(Owner identifier) {
 		JPAQuery<StoreRawEvent> query = new JPAQuery<>(em);
-		return query.from(StoreRawEvent).where(StoreRawEvent.identifiier.eq(identifier)).fetch();
+		return query.from(storeRawEvent).where(storeRawEvent.identifiier.eq(identifier)).fetch();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<StoreRawEvent> findByOwnerAndVersion(Owner identifier, Long version) {
 		JPAQuery<StoreRawEvent> query = new JPAQuery<>(em);
-		return query.from(StoreRawEvent)
-				.where(StoreRawEvent.identifiier.eq(identifier)
-						.and(StoreRawEvent.version.gt(version - 1))).fetch();
+		return query.from(storeRawEvent)
+				.where(storeRawEvent.identifiier.eq(identifier)
+						.and(storeRawEvent.version.gt(version - 1))).fetch();
 	}
 
 	@Override

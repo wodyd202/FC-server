@@ -1,6 +1,5 @@
 package com.fc.store;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -12,24 +11,17 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fc.command.store.SimpleStoreService;
 import com.fc.command.store.StoreService;
-import com.fc.command.store.exception.InvalidStoreException;
 import com.fc.command.store.infra.StoreEventHandler;
-import com.fc.command.store.infra.StoreStyleRepository;
 import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.command.store.infra.validator.ImageFileValidator;
 import com.fc.command.store.infra.validator.OpeningHourValidator;
-import com.fc.command.store.infra.validator.StoreStyleValidator;
 import com.fc.command.store.infra.validator.StoreTagsValidator;
 import com.fc.command.store.model.StoreCommand.ChangeOpeningHour;
 import com.fc.command.store.model.StoreCommand.ChangeStoreImage;
-import com.fc.command.store.model.StoreCommand.ChangeStoreStyle;
 import com.fc.command.store.model.StoreCommand.ChangeStoreTag;
-import com.fc.core.fileUploader.FileUploader;
 import com.fc.core.infra.Validator;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.Store;
@@ -61,23 +53,6 @@ public class ChangeStoreServiceTest {
 	}
 	
 	@Test
-	void 업체_스타일_변경() {
-		StoreStyleRepository storeStyleRepository = mock(StoreStyleRepository.class);
-		
-		when(storeStyleRepository.existByStyleName(any()))
-			.thenReturn(true);
-		
-		ChangeStoreStyle command = new ChangeStoreStyle(Arrays.asList("스타일1","스타일2","스타일3"));
-		Validator<ChangeStoreStyle> storeStyleValidator = new StoreStyleValidator(storeStyleRepository);
-		
-		Owner targetStoreOwner = new Owner("email");
-		storeService.changeStoreStyles(storeStyleValidator, targetStoreOwner, command);
-		
-		verify(store,times(1))
-				.changeStyles(any());
-	}
-	
-	@Test
 	void 업체_태그_변경() {
 		StoreTagRepository storeTagRepository = mock(StoreTagRepository.class);
 	
@@ -92,28 +67,6 @@ public class ChangeStoreServiceTest {
 		
 		verify(store,times(1))
 			.changeTags(any());
-	}
-	
-	@Test
-	void 업체_이미지_변경_요청시_이미지_파일이_아니면_실패() {
-		MultipartFile img = new MockMultipartFile("file.exe", new byte[] {});
-		Owner targetStoreOwner = new Owner("email");
-		ChangeStoreImage command = new ChangeStoreImage(img);
-		
-		assertThrows(InvalidStoreException.class, ()->{
-			storeService.changeStoreImage(imageValidator,mock(FileUploader.class),targetStoreOwner,command);
-		});
-	}
-	
-	@Test
-	void 업체_이미지_변경() {
-		MultipartFile img = new MockMultipartFile("file.png", new byte[] {});
-		Owner targetStoreOwner = new Owner("email");
-		ChangeStoreImage command = new ChangeStoreImage(img);
-		storeService.changeStoreImage(imageValidator,mock(FileUploader.class),targetStoreOwner,command);
-		
-		verify(store,times(1))
-			.changeImage(any());
 	}
 	
 	@BeforeEach

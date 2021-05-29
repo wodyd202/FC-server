@@ -39,6 +39,11 @@ public class Product extends AggregateRoot<ProductId>{
 	private Date createDateTime;
 	private Owner owner;
 	
+	Product(ProductId id){
+		super(id);
+		this.id = id;
+	}
+	
 	private Product(
 			ProductId id,
 			String title,
@@ -49,6 +54,7 @@ public class Product extends AggregateRoot<ProductId>{
 			List<ProductImage> images,
 			Owner owner
 			) {
+		super(id);
 		this.id = id;
 		this.title = new ProductTitle(title);
 		this.tags = new ProductTags(tags);

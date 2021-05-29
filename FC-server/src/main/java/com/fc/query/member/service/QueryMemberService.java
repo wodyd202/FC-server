@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.fc.command.member.exception.MemberNotFoundException;
 import com.fc.config.security.MemberPrincipal;
-import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.read.Member;
 import com.fc.query.member.exception.AddressOfMemberNotFoundException;
 import com.fc.query.member.infra.MemberRepository;
+import com.fc.query.member.model.MemberQuery.Address;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;

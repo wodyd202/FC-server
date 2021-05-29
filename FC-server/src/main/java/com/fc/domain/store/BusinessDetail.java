@@ -1,5 +1,7 @@
 package com.fc.domain.store;
 
+import java.io.Serializable;
+
 import javax.persistence.Embedded;
 
 import com.fc.domain.member.Address;
@@ -12,7 +14,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BusinessDetail {
+public class BusinessDetail implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private String businessName;
 	private String businessNumber;
 	private Phone phone;

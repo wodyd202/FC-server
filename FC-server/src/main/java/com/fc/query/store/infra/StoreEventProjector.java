@@ -9,7 +9,6 @@ import com.fc.domain.store.event.ChangedBusinessNumber;
 import com.fc.domain.store.event.ChangedStoreAddress;
 import com.fc.domain.store.event.ChangedStoreMainImage;
 import com.fc.domain.store.event.ChangedStorePhone;
-import com.fc.domain.store.event.ChangedStoreStyles;
 import com.fc.domain.store.event.ChangedStoreTags;
 import com.fc.domain.store.event.ChangedWeekdayOpeningHour;
 import com.fc.domain.store.event.ChangedWeekendOpeningHour;
@@ -60,12 +59,6 @@ public class StoreEventProjector extends AbstractEventProjector {
 		storeJpaRepository.save(store);
 	}
 	
-	protected void execute(ChangedStoreStyles event) {
-		Store store = storeJpaRepository.findById(event.getIdentifier()).get();
-		store.changeStyles(event.getStyles());
-		storeJpaRepository.save(store);
-	}
-	
 	protected void execute(ChangedWeekdayOpeningHour event) {
 		Store store = storeJpaRepository.findById(event.getIdentifier()).get();
 		store.changeWeekdayOpeningHour(event.getStartTime(),event.getEndTime());
@@ -78,12 +71,12 @@ public class StoreEventProjector extends AbstractEventProjector {
 		storeJpaRepository.save(store);
 	}
 	
+	@Transactional
 	protected void execute(RegisterdStore event) {
 		Store store = Store.builder()
 			.owner(event.getOwner())
 			.detail(event.getDetail())
 			.tags(event.getTags().getTags())
-			.styles(event.getStyles().getStyles())
 			.openingHour(event.getOpeningHour())
 			.state(StoreState.SELL)
 			.createDateTime(event.getCreateDateTime())

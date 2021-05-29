@@ -22,7 +22,7 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 
 	private SnapshotRepository<A, ID> snapshotRepository;
 
-	private static final int SNAPSHOT_COUNT = 10;
+	private static final int SNAPSHOT_COUNT = 5;
 
 	public AbstractEventHandler(EventStore eventStore, SnapshotRepository snapshotRepository) {
 		this.eventStore = eventStore;
@@ -61,6 +61,7 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 	@Override
 	public void save(A aggregateRoot) {
 		final ID identifier = (ID) aggregateRoot.getIdentifier();
+
 		eventStore.saveEvents(identifier, aggregateRoot.getExpectedVersion(), aggregateRoot.getUncommittedChanges());
 
 		aggregateRoot.markChangesAsCommitted();
@@ -95,7 +96,6 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 		if (baseEvents == null || baseEvents.size() == 0) {
 			return Optional.ofNullable(null);
 		}
-		
 		aggregateRoot.replay(baseEvents);
 
 		return Optional.ofNullable(aggregateRoot);
