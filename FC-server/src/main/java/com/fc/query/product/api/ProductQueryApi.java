@@ -37,6 +37,15 @@ public class ProductQueryApi {
 		List<ProductList> findAll = productService.findAll(owner, dto);
 		return new ResponseEntity<>(findAll, HttpStatus.OK);
 	}
+
+	@ApiOperation("업체 신상 의류 6개 가져오기")
+	@GetMapping("{owner}/new")
+	public ResponseEntity<List<ProductQuery.ProductList>> findNewProducts(
+			@PathVariable Owner owner
+		){
+		List<ProductList> findNewProducts = productService.findNewProducts(owner);
+		return new ResponseEntity<>(findNewProducts, HttpStatus.OK);
+	}
 	
 	@ApiOperation("해당 의류 가져오기")
 	@GetMapping("{productId}")

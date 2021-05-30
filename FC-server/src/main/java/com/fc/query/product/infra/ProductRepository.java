@@ -10,6 +10,8 @@ import com.fc.query.product.model.ProductSearch;
 
 public interface ProductRepository {
 	List<ProductQuery.ProductList> findAll(Owner owner, ProductSearch dto);
-
+	
+	List<ProductQuery.ProductList> findNewProducts(Owner owner);
+	
 	Optional<ProductQuery.ProductDetail> findDetailByProductId(ProductId productId);
 }

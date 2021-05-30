@@ -59,6 +59,33 @@ public class JdbcProductRepository implements ProductRepository{
 		}, params.toArray());
 	}
 
+
+	@Override
+	public List<ProductList> findNewProducts(Owner owner) {
+		List<String> params = Arrays.asList(owner.getEmail());
+		StringBuilder sqlBuilder = new StringBuilder("SELECT `product_id`, `category`, `create_date_time`, `price`, `sizes`, `tags`, `title`,");
+		sqlBuilder.append(" (SELECT `path` FROM `product_images` WHERE `product_id` = `product`.`product_id` AND `type` = 'MAIN') AS mainImage ");
+		sqlBuilder.append("FROM `product` ");
+		sqlBuilder.append("WHERE `email` = ? ");
+		sqlBuilder.append("AND `state` = 'SELL' ");
+		sqlBuilder.append("ORDER BY `create_date_time` DESC ");
+		sqlBuilder.append("limit 0, 6");
+		
+		return template.query(sqlBuilder.toString(), new RowMapper<ProductQuery.ProductList>() {
+			@Override
+			public ProductList mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return ProductList.builder()
+					.productId(rs.getString("product_id"))
+					.category(rs.getString("category"))
+					.title(rs.getString("title"))
+					.mainImagePath(rs.getString("mainImage"))
+					.size(rs.getString("sizes"))
+					.price(rs.getInt("price"))
+					.build();
+			}
+		}, params.toArray());
+	}
+	
 	@Override
 	public Optional<ProductDetail> findDetailByProductId(ProductId productId) {
 		StringBuilder sqlBuilder = new StringBuilder("SELECT `product`.`product_id`, `category`, `create_date_time`, `price`, `sizes`, `tags`, `title`, `image_id`, `type`, `path` ");
@@ -92,5 +119,4 @@ public class JdbcProductRepository implements ProductRepository{
 		}
 		return Optional.ofNullable(null);
 	}
-
 }
