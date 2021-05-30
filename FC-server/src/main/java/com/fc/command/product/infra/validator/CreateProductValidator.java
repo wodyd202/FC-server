@@ -1,8 +1,11 @@
 package com.fc.command.product.infra.validator;
 
+import org.springframework.stereotype.Component;
+
 import com.fc.command.product.infra.validator.AbstractProductValidator;
 import com.fc.command.product.model.ProductCommand.CreateProduct;
 
+@Component
 public class CreateProductValidator extends AbstractProductValidator<CreateProduct>{
 
 	@Override

@@ -7,9 +7,6 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-/**
- * Created by jaceshim on 2017. 4. 19..
- */
 @Slf4j
 @SuppressWarnings("rawtypes")
 public abstract class AbstractEventProjector implements EventProjector {
@@ -27,7 +24,6 @@ public abstract class AbstractEventProjector implements EventProjector {
 			}
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			log.warn(e.getMessage(), e);
-			//throw new EventListenerNotApplyException(e.getMessage(), e);
 		}
 	}
 

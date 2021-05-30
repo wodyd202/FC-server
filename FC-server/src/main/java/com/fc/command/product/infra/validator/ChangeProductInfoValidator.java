@@ -2,10 +2,13 @@ package com.fc.command.product.infra.validator;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.fc.command.product.exception.InvalidProductException;
 import com.fc.command.product.model.ProductCommand.ChangeProductInfo;
 import com.fc.domain.product.SizeList.Size;
 
+@Component
 public class ChangeProductInfoValidator extends AbstractProductValidator<ChangeProductInfo>{
 
 	@Override

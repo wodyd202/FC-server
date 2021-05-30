@@ -1,7 +1,7 @@
 package com.fc.domain.product.event;
 
 import com.fc.domain.product.ProductId;
-import com.fc.domain.product.read.ProductImage;
+import com.fc.domain.product.ProductImage;
 
 import lombok.AccessLevel;
 import lombok.Getter;

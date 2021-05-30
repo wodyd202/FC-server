@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fc.command.product.exception.InvalidProductException;
@@ -24,6 +25,7 @@ import com.fc.query.store.infra.StoreRepository;
 
 import lombok.AllArgsConstructor;
 
+@Service
 @AllArgsConstructor
 public class SimpleProductService implements ProductService {
 	private StoreRepository storeRepository;
@@ -51,9 +53,9 @@ public class SimpleProductService implements ProductService {
 			fileUploader.uploadFile(file, saveFileName);
 			
 			if(command.getMainImageIdx() == i) {
-				imageList.add(new ProductImage(saveFileName, ProductImageType.MAIN));
+				imageList.add(new ProductImage(UUID.randomUUID().toString(), saveFileName, ProductImageType.MAIN));
 			}else {
-				imageList.add(new ProductImage(saveFileName, ProductImageType.SUB));
+				imageList.add(new ProductImage(UUID.randomUUID().toString(), saveFileName, ProductImageType.SUB));
 			}
 		}
 		
@@ -63,7 +65,7 @@ public class SimpleProductService implements ProductService {
 	}
 	
 	private String getFileExtention(MultipartFile file) {
-		String name = file.getName();
+		String name = file.getOriginalFilename();
 		int lastIndexOf = name.lastIndexOf(".");
 		return name.substring(lastIndexOf, name.length()).toUpperCase();
 	}

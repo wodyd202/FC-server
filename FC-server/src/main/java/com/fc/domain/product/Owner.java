@@ -1,5 +1,7 @@
 package com.fc.domain.product;
 
+import com.fc.domain.member.read.Member;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -15,5 +17,9 @@ public class Owner {
 
 	public boolean isMyProduct(Product product) {
 		return product.getOwner().equals(this);
+	}
+
+	public static Owner withMember(Member member) {
+		return new Owner(member.getEmail().getValue());
 	}
 }
