@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 
 import com.fc.command.common.address.infra.AddressDetailGetter;
 import com.fc.command.common.address.model.AddressCommand;
@@ -48,7 +49,7 @@ public class StoreServiceTest {
 	
 	MemberRepository memberRepository = mock(MemberRepository.class);
 	
-	StoreService storeService = new SimpleStoreService(memberRepository, storeEventHandler);
+	StoreService storeService = new SimpleStoreService(mock(ApplicationEventPublisher.class), memberRepository, storeEventHandler);
 
 	Member mockMember = mock(Member.class);
 	

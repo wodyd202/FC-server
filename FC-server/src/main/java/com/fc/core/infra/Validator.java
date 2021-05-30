@@ -52,6 +52,9 @@ public interface Validator<T> {
 	
 	default void assertImageFile(MultipartFile file, IllegalArgumentException e) {
 		String name = file.getOriginalFilename();
+		if(name.isEmpty()) {
+			throw e;
+		}
 		int lastIndexOf = name.lastIndexOf(".");
 		String extention = name.substring(lastIndexOf, name.length()).toUpperCase();
 		if (!extention.equals(".JPG") && !extention.equals(".JPEG") && !extention.equals(".PNG")) {

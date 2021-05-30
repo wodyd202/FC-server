@@ -53,7 +53,6 @@ public class Store extends AggregateRoot<Owner>{
 		this.owner = owner;
 	}
 	
-	@Builder
 	private Store(
 			Owner owner,
 			String businessName,
@@ -62,7 +61,6 @@ public class Store extends AggregateRoot<Owner>{
 			Address address, 
 			String addressDetail,
 			List<String> storeTags,
-			List<String> storeStyles,
 			int weekdayStartTime,
 			int weekdayEndTime,
 			int weekendStartTime,
@@ -80,19 +78,20 @@ public class Store extends AggregateRoot<Owner>{
 	}
 	
 	public static Store create(Owner targetOwner, Address storeAddress, CreateStore command) {
-		return Store.builder()
-				.owner(targetOwner)
-				.businessName(command.getBusinessName())
-				.businessNumber(command.getBusinessNumber())
-				.phone(command.getPhone())
-				.address(storeAddress)
-				.addressDetail(command.getAddressDetail())
-				.storeTags(command.getStoreTags())
-				.weekendStartTime(command.getWeekendStartTime())
-				.weekendEndTime(command.getWeekendEndTime())
-				.weekdayStartTime(command.getWeekdayStartTime())
-				.weekdayEndTime(command.getWeekdayEndTime())
-				.build();
+		return new Store(
+				targetOwner,
+				command.getBusinessName(),
+				command.getBusinessNumber(),
+				command.getPhone(),
+				storeAddress,
+				command.getAddressDetail(),
+				command.getStoreTags(),
+				command.getWeekendStartTime(),
+				command.getWeekendEndTime(),
+				command.getWeekdayStartTime(),
+				command.getWeekdayEndTime(),
+				command.getHolidays()
+			);
 	}
 	
 	public void changeAddress(Address realAddress, String addressDetail) {

@@ -18,8 +18,8 @@ abstract public class AbstractProductValidator<T> implements Validator<T>{
 	}
 	
 	protected void imageValidation(List<MultipartFile> files) {
-		assertNotNullObject(files, new InvalidProductException("의류 이미지를 1개 이상 10개 이하로 등록해주세요."));
-		assertNotOverMaxSizeCollectionSize(10, files, new InvalidProductException("의류 이미지를 1개 이상 10개 이하로 등록해주세요."));
+		assertNotNullObject(files, new InvalidProductException("의류 이미지를 1개 이상 5개 이하로 등록해주세요."));
+		assertNotOverMaxSizeCollectionSize(5, files, new InvalidProductException("의류 이미지를 1개 이상 5개 이하로 등록해주세요."));
 		files.forEach(file->{
 			assertImageFile(file, new InvalidProductException("이미지 파일만 등록해주세요."));
 		});

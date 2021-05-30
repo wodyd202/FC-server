@@ -2,6 +2,7 @@ package com.fc.command.store;
 
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ import com.fc.domain.member.Email;
 import com.fc.domain.member.read.Member;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.Store;
+import com.fc.domain.store.event.RegisterdStore;
 import com.fc.query.member.infra.MemberRepository;
 
 import lombok.AllArgsConstructor;
@@ -36,6 +38,7 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class SimpleStoreService implements StoreService {
+	private ApplicationEventPublisher publisher;
 	private MemberRepository memberRepository;
 	private StoreEventHandler storeEventHandler;
 	
@@ -52,6 +55,13 @@ public class SimpleStoreService implements StoreService {
 		Address addressDetail = addressGetter.getDetail(command.getAddress());
 		Store store = Store.create(targetOwner, addressDetail, command);
 		storeEventHandler.save(store);
+		publisher.publishEvent(new RegisterdStore(
+				store.getOwner(), 
+				store.getDetail(), 
+				store.getTags(), 
+				store.getOpeningHour(), 
+				store.getCreateDateTime())
+			);
 		return store;
 	}
 

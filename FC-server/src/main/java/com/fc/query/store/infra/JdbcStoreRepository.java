@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -69,6 +70,7 @@ public class JdbcStoreRepository implements StoreRepository {
 
 		List<String> params = Arrays.asList(owner.getEmail());
 
+		try {
 		return Optional
 				.ofNullable(template.queryForObject(sqlBuilder.toString(), new RowMapper<StoreQuery.StoreMainInfo>() {
 					@Override
@@ -90,6 +92,9 @@ public class JdbcStoreRepository implements StoreRepository {
 					}
 
 				}, params.toArray()));
+		}catch (EmptyResultDataAccessException  e) {
+			return Optional.ofNullable(null);
+		}
 	}
 
 	@Override

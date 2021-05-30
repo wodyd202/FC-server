@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 
 import com.fc.command.store.SimpleStoreService;
 import com.fc.command.store.StoreService;
@@ -30,7 +31,7 @@ import com.fc.query.member.infra.MemberRepository;
 public class ChangeStoreServiceTest {
 	MemberRepository memberRepository = mock(MemberRepository.class);
 	StoreEventHandler storeEventHandler = mock(StoreEventHandler.class);
-	StoreService storeService = new SimpleStoreService(memberRepository, storeEventHandler);
+	StoreService storeService = new SimpleStoreService(mock(ApplicationEventPublisher.class), memberRepository, storeEventHandler);
 	
 	Validator<ChangeStoreImage> imageValidator = new ImageFileValidator();
 	

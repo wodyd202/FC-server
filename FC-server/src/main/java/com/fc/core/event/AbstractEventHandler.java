@@ -65,7 +65,7 @@ public abstract class AbstractEventHandler<A extends AggregateRoot, ID> implemen
 		eventStore.saveEvents(identifier, aggregateRoot.getExpectedVersion(), aggregateRoot.getUncommittedChanges());
 
 		aggregateRoot.markChangesAsCommitted();
-		
+
 		long countEvents = eventStore.countEvents(identifier);
 
 		if ((countEvents % SNAPSHOT_COUNT) == 0) {

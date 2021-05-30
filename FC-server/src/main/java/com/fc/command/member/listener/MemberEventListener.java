@@ -24,6 +24,7 @@ public class MemberEventListener {
 	protected void on(RegisterdStore event) throws ClassNotFoundException {
 		Email targetUserEmail = new Email(event.getIdentifier().getEmail());
 		Member findMember = eventHandler.find(targetUserEmail).get();
+		findMember.convertToSeller();
 		eventHandler.save(findMember);
 	}
 }
