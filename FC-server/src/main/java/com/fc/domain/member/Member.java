@@ -1,6 +1,7 @@
 package com.fc.domain.member;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -10,8 +11,10 @@ import com.fc.core.domain.AggregateRoot;
 import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.ChangedMemberPassword;
 import com.fc.domain.member.event.ConvertedToSeller;
+import com.fc.domain.member.event.InterestedStore;
 import com.fc.domain.member.event.RegisteredMember;
-import com.fc.domain.store.Owner;
+import com.fc.domain.member.event.RemovedInterestedStore;
+import com.fc.domain.member.StoreOwner;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -36,6 +39,8 @@ public class Member extends AggregateRoot<Email> {
 	MemberState state;
 	MemberRule rule;
 	Date createDateTime;
+
+	InterestStores interestStores;
 	
 	@JsonIgnore
 	public boolean isDelete() {
@@ -55,6 +60,7 @@ public class Member extends AggregateRoot<Email> {
 		this.state = MemberState.CREATE;
 		this.rule = MemberRule.BUYER;
 		this.createDateTime = new Date();
+		this.interestStores = new InterestStores();
 		applyChange(new RegisteredMember(this.email,this.password,this.rule));
 	}
 	
@@ -78,6 +84,14 @@ public class Member extends AggregateRoot<Email> {
 		applyChange(new ConvertedToSeller(this.email));
 	}
 	
+	public void interestStore(StoreOwner targetStoreOwner) {
+		applyChange(new InterestedStore(this.email, targetStoreOwner));
+	}
+	
+	public void removeInterestStore(StoreOwner targetStoreOwner) {
+		applyChange(new RemovedInterestedStore(this.email, targetStoreOwner));
+	}
+	
 	protected void apply(RegisteredMember event) {
 		this.email = event.getEmail();
 		this.password = event.getPassword();
@@ -97,10 +111,32 @@ public class Member extends AggregateRoot<Email> {
 	protected void apply(ConvertedToSeller event) {
 		this.rule = MemberRule.SELLER;
 	}
-
-	public void interestStore(Owner targetStoreOwner) {
-		/**
-		 * TODO
-		 */
+	
+	protected void apply(InterestedStore event) {
+		if(this.interestStores == null) {
+			this.interestStores = new InterestStores();
+		}
+		this.interestStores.add(event.getOwner());
 	}
+	
+	protected void apply(RemovedInterestedStore event) {
+		if(this.interestStores == null) {
+			return;
+		}
+		this.interestStores.remove(event.getOwner());
+	}
+
+	public boolean isAlreadyInterestStore(StoreOwner targetStoreOwner) {
+		if(this.interestStores == null) {
+			return false;
+		}
+		List<StoreOwner> stores = this.interestStores.getStores();
+		for(StoreOwner store : stores) {
+			if(store.getEmail().equals(targetStoreOwner.getEmail())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

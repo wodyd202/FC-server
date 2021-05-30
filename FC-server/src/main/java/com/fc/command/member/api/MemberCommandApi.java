@@ -2,6 +2,7 @@ package com.fc.command.member.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import com.fc.command.member.infra.validator.CreateMemberValidator;
 import com.fc.command.member.model.MemberCommand;
 import com.fc.config.security.LoginUser;
 import com.fc.domain.member.Member;
+import com.fc.domain.member.StoreOwner;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,9 +35,20 @@ public class MemberCommandApi {
 	private ChangeAddressValidator changeAddressValidator;
 	private AddressDetailGetter addressGetter;
 	
+	@ApiOperation("업체 관심 주기")
+	@PostMapping("{targetStoreOwner}")
+	public ResponseEntity<StoreOwner> execute(
+			@PathVariable StoreOwner targetStoreOwner,
+			@ApiIgnore
+			@LoginUser com.fc.domain.member.read.Member loginMember
+		){
+		memberService.interest(loginMember.getEmail(), targetStoreOwner);
+		return new ResponseEntity<>(targetStoreOwner, HttpStatus.OK);
+	}
+	
 	@ApiOperation("회원가입")
 	@PostMapping
-	public ResponseEntity<Member> save(
+	public ResponseEntity<Member> execute(
 			@RequestBody MemberCommand.CreateMember command
 		){
 		Member createMember = memberService.create(createMemberValidator, command);
@@ -44,7 +57,7 @@ public class MemberCommandApi {
 	
 	@ApiOperation("비밀번호 변경")
 	@PutMapping("password")
-	public ResponseEntity<Member> changePassword(
+	public ResponseEntity<Member> execute(
 			@RequestBody MemberCommand.ChangePassword command, 
 			@ApiIgnore
 			@LoginUser com.fc.domain.member.read.Member loginMember
@@ -55,7 +68,7 @@ public class MemberCommandApi {
 
 	@ApiOperation("주소 변경")
 	@PutMapping("address")
-	public ResponseEntity<Member> changeAddress(
+	public ResponseEntity<Member> execute(
 			@RequestBody MemberCommand.ChangeAddress command,
 			@ApiIgnore
 			@LoginUser com.fc.domain.member.read.Member loginMember
@@ -63,4 +76,5 @@ public class MemberCommandApi {
 		Member member = memberService.changeAddress(changeAddressValidator, addressGetter, loginMember.getEmail(), command);
 		return new ResponseEntity<>(member, HttpStatus.OK);
 	}
+	
 }

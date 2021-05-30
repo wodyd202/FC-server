@@ -21,7 +21,7 @@ import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.Password;
-import com.fc.domain.store.Owner;
+import com.fc.domain.member.StoreOwner;
 import com.fc.query.store.infra.StoreRepository;
 
 import lombok.AllArgsConstructor;
@@ -101,16 +101,20 @@ public class SimpleMemberService implements MemberService {
 	}
 
 	@Override
-	public void interestStore(
+	public void interest(
 			Email me, 
-			Owner targetStoreOwner
+			StoreOwner targetStoreOwner
 		) {
-		if(!storeRepository.existByOnwer(targetStoreOwner)) {
-			throw new StoreNotFoundException("해당 업체가 존재하지 않습니다.");
+		if(!storeRepository.existByOnwer(new com.fc.domain.store.Owner(targetStoreOwner.getEmail()))) {
+			throw new StoreNotFoundException("해당 업체 정보가 존재하지 않습니다.");
 		}
 		Member findMember = memberEventHandler.find(me).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
-		findMember.interestStore(targetStoreOwner);
+		if(findMember.isAlreadyInterestStore(targetStoreOwner)) {
+			findMember.removeInterestStore(targetStoreOwner);
+		}else {
+			findMember.interestStore(targetStoreOwner);
+		}
 		memberEventHandler.save(findMember);
 	}
-
+	
 }
