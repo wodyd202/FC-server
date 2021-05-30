@@ -15,8 +15,8 @@ public class ProductTagsConverter implements AttributeConverter<Set<ProductTag>,
 	@Override
 	public String convertToDatabaseColumn(Set<ProductTag> attribute) {
 		StringBuilder builder = new StringBuilder();
-		attribute.forEach(val -> {
-			builder.append(val + ",");
+		attribute.forEach(tag -> {
+			builder.append(tag.getName() + ",");
 		});
 		return builder.toString();
 	}

@@ -62,6 +62,7 @@ public class Product {
 	private ProductCategory category;
 	
 	@Embedded
+	@AttributeOverride(column = @Column(name = "price"), name = "value")
 	private Price price;
 
 	@Convert(converter = ProductSizeConverter.class)

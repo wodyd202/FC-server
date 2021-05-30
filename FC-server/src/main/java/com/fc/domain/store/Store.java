@@ -22,6 +22,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
   * @Date : 2021. 5. 26. 
@@ -33,6 +34,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @ToString
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends AggregateRoot<Owner>{
 	private static final long serialVersionUID = 1L;
@@ -47,6 +49,7 @@ public class Store extends AggregateRoot<Owner>{
 	
 	Store(Owner owner){
 		super(owner);
+		log.info("load store : " + owner);
 		this.owner = owner;
 	}
 	
