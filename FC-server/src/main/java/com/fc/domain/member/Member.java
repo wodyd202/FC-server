@@ -17,7 +17,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Builder
 @AllArgsConstructor
@@ -41,6 +43,7 @@ public class Member extends AggregateRoot<Email> {
 	
 	Member(Email email){
 		super(email);
+		log.info("load member : " + email);
 		this.email = email;
 	}
 	

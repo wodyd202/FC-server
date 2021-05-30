@@ -20,7 +20,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Builder
 @AllArgsConstructor
@@ -41,6 +43,7 @@ public class Product extends AggregateRoot<ProductId>{
 	
 	Product(ProductId id){
 		super(id);
+		log.info("load product : " + id);
 		this.id = id;
 	}
 	
