@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.fc.domain.store.Owner;
+import com.fc.domain.store.Store.StoreState;
 import com.fc.domain.store.read.QStore;
 import com.fc.domain.store.read.Store;
 import com.fc.query.store.model.StoreQuery;
@@ -35,6 +36,16 @@ public class JdbcStoreRepository implements StoreRepository {
 
 	private QStore store = QStore.store;
 
+	@Override
+	public boolean existByOnwer(Owner owner) {
+		JPAQuery<Store> query = new JPAQuery<>(em);
+		return query.from(store)
+				.where(store.owner.eq(owner)
+						.and(store.state.ne(StoreState.CLOSED))
+						.and(store.state.ne(StoreState.NOT_SELL)))
+				.fetchCount() == 1 ? true : false;
+	}
+	
 	@Override
 	public Optional<StoreQuery.StoreMainInfo> findByOwner(Owner owner) {
 		StringBuilder sqlBuilder = new StringBuilder("SELECT ");
@@ -172,4 +183,5 @@ public class JdbcStoreRepository implements StoreRepository {
 			sqlBuilder.append(" AND ");
 		}
 	}
+
 }

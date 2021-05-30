@@ -19,10 +19,11 @@ import com.fc.core.infra.Validator;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.Password;
+import com.fc.query.store.infra.StoreRepository;
 
 public class ChangePasswordTest {
 	MemberEventHandler memberEventHandler = mock(MemberEventHandler.class);
-	MemberService service = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class));
+	MemberService service = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class), mock(StoreRepository.class));
 	Member mockMember = Member.builder().password(new Password("password")).build();
 
 	@Test

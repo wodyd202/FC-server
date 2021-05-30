@@ -15,11 +15,14 @@ import com.fc.command.member.infra.MemberEventHandler;
 import com.fc.command.member.model.MemberCommand.ChangeAddress;
 import com.fc.command.member.model.MemberCommand.ChangePassword;
 import com.fc.command.member.model.MemberCommand.CreateMember;
+import com.fc.command.store.exception.StoreNotFoundException;
 import com.fc.core.infra.Validator;
 import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.Password;
+import com.fc.domain.store.Owner;
+import com.fc.query.store.infra.StoreRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -30,6 +33,8 @@ import lombok.Setter;
 public class SimpleMemberService implements MemberService {
 	private MemberEventHandler memberEventHandler;
 	private PasswordEncoder passwordEncoder;
+	
+	private StoreRepository storeRepository;
 	
 	@Override
 	public Member create(
@@ -93,6 +98,19 @@ public class SimpleMemberService implements MemberService {
 		if(!findMember.getPassword().equals(new Password(command.getOriginPassword()))) {
 			throw new InvalidMemberException("기존 비밀번호가 일치하지 않습니다.");
 		}
+	}
+
+	@Override
+	public void interestStore(
+			Email me, 
+			Owner targetStoreOwner
+		) {
+		if(!storeRepository.existByOnwer(targetStoreOwner)) {
+			throw new StoreNotFoundException("해당 업체가 존재하지 않습니다.");
+		}
+		Member findMember = memberEventHandler.find(me).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
+		findMember.interestStore(targetStoreOwner);
+		memberEventHandler.save(findMember);
 	}
 
 }

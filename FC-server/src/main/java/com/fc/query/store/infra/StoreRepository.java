@@ -13,5 +13,7 @@ public interface StoreRepository {
 
 	Optional<Store> findDetailByOwner(Owner owner);
 
+	boolean existByOnwer(Owner owner);
+	
 	List<StoreQuery.StoreList> findAll(StoreSearch dto);
 }

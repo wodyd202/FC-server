@@ -11,6 +11,7 @@ import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.ChangedMemberPassword;
 import com.fc.domain.member.event.ConvertedToSeller;
 import com.fc.domain.member.event.RegisteredMember;
+import com.fc.domain.store.Owner;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -95,5 +96,11 @@ public class Member extends AggregateRoot<Email> {
 
 	protected void apply(ConvertedToSeller event) {
 		this.rule = MemberRule.SELLER;
+	}
+
+	public void interestStore(Owner targetStoreOwner) {
+		/**
+		 * TODO
+		 */
 	}
 }
