@@ -1,5 +1,8 @@
 package com.fc.query.store.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +15,7 @@ public class StoreQuery {
 	@Builder
 	@AllArgsConstructor
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@JsonInclude(content = Include.NON_NULL)
 	public static class StoreMainInfo {
 		private String businessTitle;
 		
@@ -29,12 +33,19 @@ public class StoreQuery {
 		private int weekendEndTime;
 		
 		private String holiday;
+		
+		private Boolean interestState;
+		
+		public void addInterestState(boolean interestState) {
+			this.interestState = interestState;
+		}
 	}
 	
 	@Getter
 	@Builder
 	@AllArgsConstructor
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@JsonInclude(content = Include.NON_NULL)
 	public static class StoreList {
 		private String businessTitle;
 		private String storeTags;
@@ -47,6 +58,12 @@ public class StoreQuery {
 		
 		private String holiday;
 		
+		private Boolean interestState;
+		
 		private long interestCnt;
+	
+		public void addInterestState(boolean interestState) {
+			this.interestState = interestState;
+		}
 	}
 }

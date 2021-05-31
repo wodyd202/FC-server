@@ -16,13 +16,14 @@ import com.fc.command.member.infra.MemberEventHandler;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.StoreOwner;
+import com.fc.query.product.infra.ProductRepository;
 import com.fc.query.store.infra.StoreRepository;
 
 public class StoreInterestTest {
 	
 	MemberEventHandler memberEventHandler = mock(MemberEventHandler.class);
 	StoreRepository storeRepository = mock(StoreRepository.class);
-	MemberService memberService = new SimpleMemberService(memberEventHandler, mock(PasswordEncoder.class), storeRepository);
+	MemberService memberService = new SimpleMemberService(memberEventHandler, mock(PasswordEncoder.class), storeRepository, mock(ProductRepository.class));
 	
 	@Test
 	void 업체에_관심도_주기() {
@@ -34,6 +35,6 @@ public class StoreInterestTest {
 		
 		Email me = new Email("test@naver.com");
 		StoreOwner targetStoreOwner = new StoreOwner("owner@naver.com");
-		memberService.interest(me, targetStoreOwner);
+		memberService.interestStore(me, targetStoreOwner);
 	}
 }

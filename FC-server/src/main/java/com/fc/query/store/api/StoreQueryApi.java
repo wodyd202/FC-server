@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fc.command.store.infra.StoreTagRepository;
+import com.fc.config.security.LoginUser;
+import com.fc.domain.member.read.Member;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.StoreTag;
 import com.fc.query.store.model.StoreQuery;
@@ -19,6 +21,7 @@ import com.fc.query.store.service.QueryStoreService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @AllArgsConstructor
@@ -36,15 +39,21 @@ public class StoreQueryApi {
 
 	@ApiOperation("업체 상세 가져오기")
 	@GetMapping("{owner}")
-	public ResponseEntity<StoreQuery.StoreMainInfo> getStore(@PathVariable Owner owner) {
-		StoreQuery.StoreMainInfo findStore = queryStoreService.findByOwner(owner);
+	public ResponseEntity<StoreQuery.StoreMainInfo> getStore(
+			@PathVariable Owner owner, 
+			@ApiIgnore
+			@LoginUser Member loginMember) {
+		StoreQuery.StoreMainInfo findStore = queryStoreService.findByOwner(owner, loginMember);
 		return new ResponseEntity<>(findStore, HttpStatus.OK);
 	}
 
 	@ApiOperation("업체 리스트 가져오기")
 	@GetMapping
-	public ResponseEntity<List<StoreQuery.StoreList>> getAll(StoreSearch dto) {
-		List<StoreQuery.StoreList> stores = queryStoreService.findAll(dto);
+	public ResponseEntity<List<StoreQuery.StoreList>> getAll(
+			StoreSearch dto,
+			@ApiIgnore
+			@LoginUser Member loginMember) {
+		List<StoreQuery.StoreList> stores = queryStoreService.findAll(dto, loginMember);
 		return new ResponseEntity<>(stores, HttpStatus.OK);
 	}
 }

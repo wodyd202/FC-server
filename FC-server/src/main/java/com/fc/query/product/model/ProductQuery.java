@@ -23,7 +23,11 @@ public class ProductQuery {
 		private String mainImagePath;
 		private String size;
 		private int price;
-		private boolean interest;
+		private Boolean interest;
+		
+		public void addInterestState(boolean interest) {
+			this.interest = interest;
+		}
 	}
 	
 	@Getter
@@ -37,10 +41,16 @@ public class ProductQuery {
 		private int price;
 		private String size;
 		private List<ProductImage> images;
-		private boolean interest;
+		private Boolean interest;
+		
+		private long interestCnt;
 		
 		public void addImages(List<ProductImage> images) {
 			this.images = images;
+		}
+		
+		public void addInterestState(boolean interest) {
+			this.interest = interest;
 		}
 	}
 }

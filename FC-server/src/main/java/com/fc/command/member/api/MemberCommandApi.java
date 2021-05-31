@@ -18,6 +18,7 @@ import com.fc.command.member.model.MemberCommand;
 import com.fc.config.security.LoginUser;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.StoreOwner;
+import com.fc.domain.member.StoreProductId;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,16 +36,27 @@ public class MemberCommandApi {
 	private ChangeAddressValidator changeAddressValidator;
 	private AddressDetailGetter addressGetter;
 	
+	@ApiOperation("상품 관심 주기")
+	@PostMapping("{targetProductId}/interest")
+	public ResponseEntity<StoreProductId> execute(
+			@PathVariable StoreProductId targetProductId,
+			@ApiIgnore
+			@LoginUser com.fc.domain.member.read.Member loginMember
+			){
+		memberService.interestProduct(loginMember.getEmail(), targetProductId);
+		return new ResponseEntity<>(targetProductId, HttpStatus.OK);
+	} 
+	
 	@ApiOperation("업체 관심 주기")
-	@PostMapping("{targetStoreOwner}")
+	@PostMapping("{targetStoreOwner}/interest")
 	public ResponseEntity<StoreOwner> execute(
 			@PathVariable StoreOwner targetStoreOwner,
 			@ApiIgnore
 			@LoginUser com.fc.domain.member.read.Member loginMember
 		){
-		memberService.interest(loginMember.getEmail(), targetStoreOwner);
+		memberService.interestStore(loginMember.getEmail(), targetStoreOwner);
 		return new ResponseEntity<>(targetStoreOwner, HttpStatus.OK);
-	}
+	} 
 	
 	@ApiOperation("회원가입")
 	@PostMapping

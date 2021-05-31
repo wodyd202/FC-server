@@ -28,6 +28,7 @@ import com.fc.domain.member.Member.MemberRule;
 import com.fc.domain.member.Member.MemberState;
 import com.fc.domain.member.Password;
 import com.fc.domain.member.StoreOwner;
+import com.fc.domain.member.StoreProductId;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -76,6 +77,10 @@ public class Member{
 	@CollectionTable(name = "MEMBER_STORE_INTEREST", joinColumns = @JoinColumn(name = "MEMBER_EMAIL", referencedColumnName = "email"))
 	private List<StoreOwner> interestStores;
 	
+	@ElementCollection
+	@CollectionTable(name = "MEMBER_PRODUCT_INTEREST", joinColumns = @JoinColumn(name = "MEMBER_EMAIL", referencedColumnName = "email"))
+	private List<StoreProductId> interestProducts;
+	
 	public Member(Email email, Password password, MemberRule rule) {
 		this.email = email;
 		this.password = password;
@@ -104,5 +109,13 @@ public class Member{
 
 	public void removeInterestStore(StoreOwner owner) {
 		this.interestStores.remove(owner);
+	}
+
+	public void interestStore(StoreProductId productId) {
+		this.interestProducts.add(productId);
+	}
+	
+	public void removeInterestStore(StoreProductId productId) {
+		this.interestProducts.remove(productId);
 	}
 }

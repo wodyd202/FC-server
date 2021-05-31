@@ -24,6 +24,7 @@ import com.fc.core.infra.Validator;
 import com.fc.domain.member.Address;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
+import com.fc.query.product.infra.ProductRepository;
 import com.fc.query.store.infra.StoreRepository;
 
 public class ChangeAddressTest {
@@ -32,7 +33,7 @@ public class ChangeAddressTest {
 	Validator<AddressCommand> validator = new ChangeAddressValidator();
 	MemberEventHandler memberEventHandler = mock(MemberEventHandler.class);
 
-	MemberService service = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class), mock(StoreRepository.class));
+	MemberService service = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class), mock(StoreRepository.class), mock(ProductRepository.class));
 
 	Member mockMember = Member.builder().build();
 

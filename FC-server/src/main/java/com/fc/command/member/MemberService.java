@@ -9,6 +9,7 @@ import com.fc.core.infra.Validator;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.StoreOwner;
+import com.fc.domain.member.StoreProductId;
 
 public interface MemberService {
 	Member create(Validator<MemberCommand.CreateMember> validator, MemberCommand.CreateMember command);
@@ -17,5 +18,7 @@ public interface MemberService {
 
 	Member changePassword(Validator<ChangePassword> validator, Email to, ChangePassword command);
 
-	void interest(Email me, StoreOwner targetStoreOwner);
+	void interestStore(Email me, StoreOwner targetStoreOwner);
+	
+	void interestProduct(Email me, StoreProductId productId);
 }

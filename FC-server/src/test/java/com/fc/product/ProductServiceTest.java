@@ -68,7 +68,7 @@ public class ProductServiceTest {
 	
 	@BeforeEach
 	void setUp() {
-		when(storeRepository.findByOwner(any()))
+		when(storeRepository.findByOwner(any(),any()))
 			.thenReturn(Optional.of(mock(StoreQuery.StoreMainInfo.class)));
 	}
 }

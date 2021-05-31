@@ -15,6 +15,7 @@ import com.fc.command.member.infra.MemberEventHandler;
 import com.fc.command.member.model.MemberCommand.ChangeAddress;
 import com.fc.command.member.model.MemberCommand.ChangePassword;
 import com.fc.command.member.model.MemberCommand.CreateMember;
+import com.fc.command.product.exception.ProductNotFoundException;
 import com.fc.command.store.exception.StoreNotFoundException;
 import com.fc.core.infra.Validator;
 import com.fc.domain.member.Address;
@@ -22,19 +23,23 @@ import com.fc.domain.member.Email;
 import com.fc.domain.member.Member;
 import com.fc.domain.member.Password;
 import com.fc.domain.member.StoreOwner;
+import com.fc.domain.member.StoreProductId;
+import com.fc.domain.product.ProductId;
+import com.fc.query.product.infra.ProductRepository;
 import com.fc.query.store.infra.StoreRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 
 @Setter
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class SimpleMemberService implements MemberService {
 	private MemberEventHandler memberEventHandler;
 	private PasswordEncoder passwordEncoder;
 	
 	private StoreRepository storeRepository;
+	private ProductRepository productRepository;
 	
 	@Override
 	public Member create(
@@ -89,19 +94,19 @@ public class SimpleMemberService implements MemberService {
 	}
 
 	private void verifyEqualPasswordWithChangePassword(ChangePassword command, Member findMember) {
-		if(findMember.getPassword().equals(new Password(command.getChangePassword()))) {
+		if(passwordEncoder.matches(command.getChangePassword(), findMember.getPassword().getValue())) {
 			throw new InvalidMemberException("변경하고자 하는 비밀번호가 기존 비밀번호와 동일합니다.");
 		}
 	}
 
 	private void verifyEqualPasswordWithOriginPassword(ChangePassword command, Member findMember) {
-		if(!findMember.getPassword().equals(new Password(command.getOriginPassword()))) {
+		if(!passwordEncoder.matches(command.getOriginPassword(), findMember.getPassword().getValue())) {
 			throw new InvalidMemberException("기존 비밀번호가 일치하지 않습니다.");
 		}
 	}
 
 	@Override
-	public void interest(
+	public void interestStore(
 			Email me, 
 			StoreOwner targetStoreOwner
 		) {
@@ -113,6 +118,23 @@ public class SimpleMemberService implements MemberService {
 			findMember.removeInterestStore(targetStoreOwner);
 		}else {
 			findMember.interestStore(targetStoreOwner);
+		}
+		memberEventHandler.save(findMember);
+	}
+
+	@Override
+	public void interestProduct(
+			Email me, 
+			StoreProductId productId
+		) {
+		if(!productRepository.existByProductId(new ProductId(productId.getId()))) {
+			throw new ProductNotFoundException("해당 의류 정보가 존재하지 않습니다.");
+		}
+		Member findMember = memberEventHandler.find(me).orElseThrow(()->new MemberNotFoundException("해당 이메일의 회원이 존재하지 않습니다."));
+		if(findMember.isAlreadyInterestProduct(productId)) {
+			findMember.removeInterestProduct(productId);
+		}else {
+			findMember.interestProduct(productId);
 		}
 		memberEventHandler.save(findMember);
 	}

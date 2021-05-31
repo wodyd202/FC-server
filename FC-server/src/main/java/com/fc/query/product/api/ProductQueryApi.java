@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fc.config.security.LoginUser;
+import com.fc.domain.member.read.Member;
 import com.fc.domain.product.Owner;
 import com.fc.domain.product.ProductId;
 import com.fc.query.product.model.ProductQuery;
@@ -20,6 +22,7 @@ import com.fc.query.product.service.QueryProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @AllArgsConstructor
@@ -32,9 +35,11 @@ public class ProductQueryApi {
 	@GetMapping("{owner}/product")
 	public ResponseEntity<List<ProductQuery.ProductList>> findAll(
 			@PathVariable Owner owner, 
-			ProductSearch dto
+			ProductSearch dto,
+			@ApiIgnore
+			@LoginUser Member loginMember
 		){
-		List<ProductList> findAll = productService.findAll(owner, dto);
+		List<ProductList> findAll = productService.findAll(owner, dto, loginMember);
 		return new ResponseEntity<>(findAll, HttpStatus.OK);
 	}
 
@@ -50,9 +55,11 @@ public class ProductQueryApi {
 	@ApiOperation("해당 의류 가져오기")
 	@GetMapping("{productId}")
 	public ResponseEntity<ProductQuery.ProductDetail> findDetail(
-			@PathVariable ProductId productId
+			@PathVariable ProductId productId,
+			@ApiIgnore
+			@LoginUser Member loginMember
 		){
-		ProductDetail findDetail = productService.findDetailByProductId(productId);
+		ProductDetail findDetail = productService.findDetailByProductId(productId, loginMember);
 		return new ResponseEntity<>(findDetail, HttpStatus.OK);
 	}
 }

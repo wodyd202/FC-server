@@ -12,7 +12,6 @@ import lombok.Setter;
 public class StoreSearch {
 	private String title;
 	private String tag;
-	private String style;
 	
 	private Integer letitude;
 	private Integer longtitude;
@@ -24,4 +23,15 @@ public class StoreSearch {
 	
 	private int page;
 	private int size;
+	
+	public boolean emptyAll() {
+		if(title == null || title.isEmpty()) {} else { return false; }
+		if(letitude == null) {} else { return false; }
+		if(longtitude == null) {} else { return false; }
+		if(distanceCoordinateDifference == null) {} else { return false; }
+		if(province == null || province.isEmpty()) {} else { return false; }
+		if(neighborhood == null || neighborhood.isEmpty()) {} else { return false; }
+		if(city == null || city.isEmpty()) {} else { return false; }
+		return true;
+	}
 }

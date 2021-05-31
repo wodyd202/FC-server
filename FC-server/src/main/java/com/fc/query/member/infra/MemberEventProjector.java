@@ -11,8 +11,10 @@ import com.fc.domain.member.Member.MemberState;
 import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.ChangedMemberPassword;
 import com.fc.domain.member.event.ConvertedToSeller;
+import com.fc.domain.member.event.InterestedProduct;
 import com.fc.domain.member.event.InterestedStore;
 import com.fc.domain.member.event.RegisteredMember;
+import com.fc.domain.member.event.RemovedInterestedProduct;
 import com.fc.domain.member.event.RemovedInterestedStore;
 import com.fc.domain.member.read.Member;
 
@@ -76,5 +78,21 @@ public class MemberEventProjector extends AbstractEventProjector {
 		member.removeInterestStore(event.getOwner());
 		memberJpaRepository.save(member);
 		log.info("remove interest store : {}", event);
+	}
+
+	protected void execute(InterestedProduct event) {
+		Email to = event.getIdentifier();
+		Member member = memberJpaRepository.findById(to).get();
+		member.interestStore(event.getProductId());
+		memberJpaRepository.save(member);
+		log.info("interest product : {}", event);
+	}
+	
+	protected void execute(RemovedInterestedProduct event) {
+		Email to = event.getIdentifier();
+		Member member = memberJpaRepository.findById(to).get();
+		member.removeInterestStore(event.getProductId());
+		memberJpaRepository.save(member);
+		log.info("remove interest product : {}", event);
 	}
 }

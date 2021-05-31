@@ -11,10 +11,11 @@ import com.fc.core.domain.AggregateRoot;
 import com.fc.domain.member.event.ChangedMemberAddress;
 import com.fc.domain.member.event.ChangedMemberPassword;
 import com.fc.domain.member.event.ConvertedToSeller;
+import com.fc.domain.member.event.InterestedProduct;
 import com.fc.domain.member.event.InterestedStore;
 import com.fc.domain.member.event.RegisteredMember;
+import com.fc.domain.member.event.RemovedInterestedProduct;
 import com.fc.domain.member.event.RemovedInterestedStore;
-import com.fc.domain.member.StoreOwner;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,7 @@ public class Member extends AggregateRoot<Email> {
 	Date createDateTime;
 
 	InterestStores interestStores;
+	InterestProducts interestProducts;
 	
 	@JsonIgnore
 	public boolean isDelete() {
@@ -61,6 +63,7 @@ public class Member extends AggregateRoot<Email> {
 		this.rule = MemberRule.BUYER;
 		this.createDateTime = new Date();
 		this.interestStores = new InterestStores();
+		this.interestProducts = new InterestProducts();
 		applyChange(new RegisteredMember(this.email,this.password,this.rule));
 	}
 	
@@ -92,12 +95,42 @@ public class Member extends AggregateRoot<Email> {
 		applyChange(new RemovedInterestedStore(this.email, targetStoreOwner));
 	}
 	
+	public boolean isAlreadyInterestStore(StoreOwner targetStoreOwner) {
+		List<StoreOwner> stores = this.interestStores.getStores();
+		for(StoreOwner store : stores) {
+			if(store.getEmail().equals(targetStoreOwner.getEmail())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void removeInterestProduct(StoreProductId productId) {
+		this.interestProducts.add(productId);
+	}
+
+	public void interestProduct(StoreProductId productId) {
+		this.interestProducts.remove(productId);
+	}
+	
+	public boolean isAlreadyInterestProduct(StoreProductId productId) {
+		List<StoreProductId> products = this.interestProducts.getProducts();
+		for(StoreProductId product : products) {
+			if(product.getId().equals(productId.getId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	protected void apply(RegisteredMember event) {
 		this.email = event.getEmail();
 		this.password = event.getPassword();
 		this.state = MemberState.CREATE;
 		this.rule = MemberRule.BUYER;
 		this.createDateTime = new Date();
+		this.interestStores = new InterestStores();
+		this.interestProducts = new InterestProducts();
 	}
 
 	protected void apply(ChangedMemberAddress event) {
@@ -113,30 +146,19 @@ public class Member extends AggregateRoot<Email> {
 	}
 	
 	protected void apply(InterestedStore event) {
-		if(this.interestStores == null) {
-			this.interestStores = new InterestStores();
-		}
 		this.interestStores.add(event.getOwner());
 	}
 	
 	protected void apply(RemovedInterestedStore event) {
-		if(this.interestStores == null) {
-			return;
-		}
 		this.interestStores.remove(event.getOwner());
 	}
 
-	public boolean isAlreadyInterestStore(StoreOwner targetStoreOwner) {
-		if(this.interestStores == null) {
-			return false;
-		}
-		List<StoreOwner> stores = this.interestStores.getStores();
-		for(StoreOwner store : stores) {
-			if(store.getEmail().equals(targetStoreOwner.getEmail())) {
-				return true;
-			}
-		}
-		return false;
+	protected void apply(InterestedProduct event) {
+		this.interestProducts.add(event.getProductId());
+	}
+	
+	protected void apply(RemovedInterestedProduct event) {
+		this.interestProducts.remove(event.getProductId());
 	}
 
 }

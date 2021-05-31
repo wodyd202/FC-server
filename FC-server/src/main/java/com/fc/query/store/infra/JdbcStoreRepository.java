@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.fc.domain.member.read.Member;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.Store.StoreState;
 import com.fc.domain.store.read.QStore;
@@ -48,7 +49,9 @@ public class JdbcStoreRepository implements StoreRepository {
 	}
 	
 	@Override
-	public Optional<StoreQuery.StoreMainInfo> findByOwner(Owner owner) {
+	public Optional<StoreQuery.StoreMainInfo> findByOwner(Owner owner, Member loginMember) {
+		List<String> params = Arrays.asList(owner.getEmail());
+
 		StringBuilder sqlBuilder = new StringBuilder("SELECT ");
 		sqlBuilder.append("`business_name`, ");
 		sqlBuilder.append("`longtitude`, ");
@@ -64,18 +67,26 @@ public class JdbcStoreRepository implements StoreRepository {
 		sqlBuilder.append("`weekend_start_time`, ");
 		sqlBuilder.append("`weekend_end_time`, ");
 		sqlBuilder.append("`holidays` ");
+		
+		if(loginMember != null) {
+			sqlBuilder.append(", `IF((` ");
+			sqlBuilder.append("SELECT COUNT(`email`) ");
+			sqlBuilder.append("FROM `member_store_interest` ");
+			sqlBuilder.append("WHERE `member_store_interest`.`member_email` = ? ");
+			sqlBuilder.append("AND `member_store_interest`.`email` = `store`.`owner`) >= 1, 'true','false') AS interest ");
+			params.add(0, loginMember.getEmail().getValue());
+		}
+		
 		sqlBuilder.append("FROM `store` ");
 		sqlBuilder.append("WHERE `owner` = ? ");
 		sqlBuilder.append("AND `state` != 'DELETE'");
-
-		List<String> params = Arrays.asList(owner.getEmail());
 
 		try {
 		return Optional
 				.ofNullable(template.queryForObject(sqlBuilder.toString(), new RowMapper<StoreQuery.StoreMainInfo>() {
 					@Override
 					public StoreMainInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
-						return StoreMainInfo.builder()
+						StoreMainInfo storeMainInfo = StoreMainInfo.builder()
 								.businessTitle(rs.getString("business_name"))
 								.longtitude(rs.getDouble("longtitude"))
 								.letitude(rs.getDouble("letitude"))
@@ -89,6 +100,10 @@ public class JdbcStoreRepository implements StoreRepository {
 								.weekendEndTime(rs.getInt("weekend_end_time"))
 								.holiday(rs.getString("holidays"))
 								.build();
+						if(loginMember != null) {
+							storeMainInfo.addInterestState(Boolean.parseBoolean(rs.getString("interest")));
+						}
+						return storeMainInfo;
 					}
 
 				}, params.toArray()));
@@ -104,10 +119,28 @@ public class JdbcStoreRepository implements StoreRepository {
 	}
 
 	@Override
-	public List<StoreQuery.StoreList> findAll(StoreSearch dto) {
-		StringBuilder sqlBuilder = new StringBuilder(
-				"SELECT `store`.*, CONCAT(CONCAT((SELECT `name` FROM `store_tags` WHERE `store_owner` = `store`.`owner`),\",\")) AS 'tags' FROM `store` WHERE ");
+	public List<StoreQuery.StoreList> findAll(StoreSearch dto, Member loginMember) {
 		List<String> params = new ArrayList<>();
+
+		StringBuilder sqlBuilder = new StringBuilder("SELECT `store`.*, ");
+		sqlBuilder.append("CONCAT(CONCAT((SELECT `name` FROM `store_tags` WHERE `store_owner` = `store`.`owner`),\",\")) AS 'tags', ");
+		sqlBuilder.append("(SELECT COUNT(`email`) FROM `member_store_interest` WHERE `member_store_interest`.`member_email` = `store`.`owner`) AS interestCnt ");
+		
+		if(loginMember != null) {
+			sqlBuilder.append(", `IF((` ");
+			sqlBuilder.append("SELECT COUNT(`email`) ");
+			sqlBuilder.append("FROM `member_store_interest` ");
+			sqlBuilder.append("WHERE `member_store_interest`.`member_email` = ? ");
+			sqlBuilder.append("AND `member_store_interest`.`email` = `store`.`owner`) >= 1, 'true','false') AS interest ");
+			params.add(loginMember.getEmail().getValue());
+		}
+		
+		sqlBuilder.append("FROM `store` ");
+		
+		if(!(dto == null || dto.emptyAll())) {
+			sqlBuilder.append("WHERE ");
+		}
+		
 		boolean endFlag = false;
 
 		String title = dto.getTitle();
@@ -166,10 +199,11 @@ public class JdbcStoreRepository implements StoreRepository {
 			sqlBuilder.append(
 					"(6371*ACOS(COS(RADIANS(?))*COS(RADIANS(letitude))*COS(RADIANS(longtitude)- RADIANS(?))+SIN(RADIANS(?))*SIN(RADIANS(letitude)))) > ?");
 		}
+		
 		return template.query(sqlBuilder.toString(), new RowMapper<StoreQuery.StoreList>() {
 			@Override
 			public StoreList mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return StoreQuery.StoreList.builder()
+				StoreList storeList = StoreQuery.StoreList.builder()
 						.businessTitle(rs.getString("business_name"))
 						.storeTags(rs.getString("tags"))
 						.imagePath(rs.getString("path"))
@@ -178,7 +212,12 @@ public class JdbcStoreRepository implements StoreRepository {
 						.weekendStartTime(rs.getInt("weekend_start_time"))
 						.weekendEndTime(rs.getInt("weekend_end_time"))
 						.holiday("holidays")
+						.interestCnt(rs.getInt("interestCnt"))
 						.build();
+				if(loginMember != null) {
+					storeList.addInterestState(Boolean.parseBoolean(rs.getString("interest")));
+				}
+				return storeList;
 			}
 		}, params.toArray());
 	}

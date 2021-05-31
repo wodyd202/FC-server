@@ -18,12 +18,11 @@ public class InterestStores implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private List<StoreOwner> stores;
 
-	InterestStores() {}
+	InterestStores() {
+		this.stores = new ArrayList<>();
+	}
 
 	public void add(StoreOwner owner) {
-		if (this.stores == null) {
-			this.stores = new ArrayList<>();
-		}
 		this.stores.add(owner);
 	}
 

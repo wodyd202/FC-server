@@ -34,6 +34,7 @@ import com.fc.domain.member.Member.MemberState;
 import com.fc.domain.member.event.MemberRawEvent;
 import com.fc.query.member.infra.MemberEventProjector;
 import com.fc.query.member.infra.MemberJpaRepository;
+import com.fc.query.product.infra.ProductRepository;
 import com.fc.query.store.infra.StoreRepository;
 
 @SuppressWarnings("unchecked")
@@ -88,6 +89,6 @@ public class MemberCreateTest {
 		SnapshotRepository<Member, Email> snapshotRepository = new InmemoryMemberSnapshotRepository();
 		
 		MemberEventHandler memberEventHandler = new MemberEventHandler(eventStore, snapshotRepository);
-		memberService = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class), mock(StoreRepository.class));
+		memberService = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class), mock(StoreRepository.class), mock(ProductRepository.class));
 	}
 }

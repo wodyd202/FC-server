@@ -25,6 +25,11 @@ import com.fc.query.store.infra.StoreRepository;
 
 import lombok.AllArgsConstructor;
 
+/**
+  * @Date : 2021. 5. 31. 
+  * @작성자 : LJY
+  * @프로그램 설명 : 의류 관련 service
+  */
 @Service
 @AllArgsConstructor
 public class SimpleProductService implements ProductService {
@@ -39,8 +44,9 @@ public class SimpleProductService implements ProductService {
 			CreateProduct command
 		) {
 		validator.validation(command);
-		storeRepository.findByOwner(new com.fc.domain.store.Owner(targetOwner.getEmail()))
-			.orElseThrow(()->new StoreNotFoundException("해당 회원의 업체가 존재하지 않습니다."));
+		if(!storeRepository.existByOnwer(new com.fc.domain.store.Owner(targetOwner.getEmail()))) {
+			new StoreNotFoundException("해당 회원의 업체가 존재하지 않습니다.");
+		}
 		List<ProductImage> imageList = new ArrayList<>();
 		
 		List<MultipartFile> images = command.getImages();
