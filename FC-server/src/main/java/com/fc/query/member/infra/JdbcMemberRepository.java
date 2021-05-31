@@ -29,7 +29,8 @@ public class JdbcMemberRepository implements MemberRepository{
 				query
 				.select(Projections.constructor(Member.class, 
 						member.email,
-						member.password()
+						member.password(),
+						member.rule
 					))
 				.from(member)
 				.where(member.email.eq(email)).fetchOne());

@@ -76,9 +76,10 @@ public class Member{
 	@CollectionTable(name = "MEMBER_STORE_INTEREST", joinColumns = @JoinColumn(name = "MEMBER_EMAIL", referencedColumnName = "email"))
 	private List<StoreOwner> interestStores;
 	
-	public Member(Email email, Password password) {
+	public Member(Email email, Password password, MemberRule rule) {
 		this.email = email;
 		this.password = password;
+		this.rule = rule;
 	}
 	
 	public void changeAddress(Address address) {
