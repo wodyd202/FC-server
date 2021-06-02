@@ -15,6 +15,7 @@ import com.fc.domain.member.read.Member;
 import com.fc.domain.store.Owner;
 import com.fc.domain.store.StoreTag;
 import com.fc.query.store.model.StoreQuery;
+import com.fc.query.store.model.StoreQuery.StoreList;
 import com.fc.query.store.model.StoreSearch;
 import com.fc.query.store.service.QueryStoreService;
 
@@ -49,11 +50,11 @@ public class StoreQueryApi {
 
 	@ApiOperation("업체 리스트 가져오기")
 	@GetMapping
-	public ResponseEntity<List<StoreQuery.StoreList>> getAll(
+	public ResponseEntity<StoreQuery.StoreList> getAll(
 			StoreSearch dto,
 			@ApiIgnore
 			@LoginUser Member loginMember) {
-		List<StoreQuery.StoreList> stores = queryStoreService.findAll(dto, loginMember);
-		return new ResponseEntity<>(stores, HttpStatus.OK);
+		StoreList storeList = queryStoreService.findAll(dto, loginMember);
+		return new ResponseEntity<>(storeList, HttpStatus.OK);
 	}
 }

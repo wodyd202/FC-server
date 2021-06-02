@@ -1,6 +1,5 @@
 package com.fc.query.store.infra;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.fc.domain.member.read.Member;
@@ -16,5 +15,5 @@ public interface StoreRepository {
 
 	boolean existByOnwer(Owner owner);
 	
-	List<StoreQuery.StoreList> findAll(StoreSearch dto, Member loginMember);
+	StoreQuery.StoreList findAll(StoreSearch dto, Member loginMember);
 }

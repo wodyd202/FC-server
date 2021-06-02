@@ -17,17 +17,18 @@ import org.springframework.stereotype.Repository;
 
 import com.fc.domain.member.read.Member;
 import com.fc.domain.product.Owner;
+import com.fc.domain.product.Product.ProductState;
 import com.fc.domain.product.ProductId;
 import com.fc.domain.product.ProductImage;
-import com.fc.domain.product.Product.ProductState;
 import com.fc.domain.product.ProductImage.ProductImageType;
 import com.fc.domain.product.read.Product;
 import com.fc.domain.product.read.QProduct;
 import com.fc.query.product.model.ProductQuery;
 import com.fc.query.product.model.ProductQuery.ProductDetail;
 import com.fc.query.product.model.ProductQuery.ProductList;
-import com.querydsl.jpa.impl.JPAQuery;
+import com.fc.query.product.model.ProductQuery.ProductListData;
 import com.fc.query.product.model.ProductSearch;
+import com.querydsl.jpa.impl.JPAQuery;
 
 @Repository
 public class JdbcProductRepository implements ProductRepository{
@@ -41,35 +42,45 @@ public class JdbcProductRepository implements ProductRepository{
 	private QProduct product = QProduct.product;
 	
 	@Override
-	public List<ProductQuery.ProductList> findAll(Owner owner, ProductSearch dto, Member loginMember) {
-		List<String> params = Arrays.asList(owner.getEmail());
-		StringBuilder sqlBuilder = new StringBuilder("SELECT `product_id`, `category`, `create_date_time`, `price`, `sizes`, `tags`, `title`,");
-		sqlBuilder.append(" (SELECT `path` FROM `product_images` WHERE `product_id` = `product`.`product_id` AND `type` = 'MAIN') AS mainImage ");
+	public ProductQuery.ProductList findAll(Owner owner, ProductSearch dto, Member loginMember) {
+		List<String> params = new ArrayList<String>() {
+			private static final long serialVersionUID = 1L;{
+			add(owner.getEmail());
+		}};
+		
+		StringBuilder selectCountSqlBuilder = new StringBuilder("SELECT COUNT(*) AS totalCount ");
+		StringBuilder selectListSqlBuilder = new StringBuilder("SELECT `product_id`, `category`, `create_date_time`, `price`, `sizes`, `tags`, `title`,");
+		selectListSqlBuilder.append(" (SELECT `path` FROM `product_images` WHERE `product_id` = `product`.`product_id` AND `type` = 'MAIN') AS mainImage ");
 		
 		if(loginMember != null) {
-			sqlBuilder.append(", SELECT COUNT(`id`) ");
-			sqlBuilder.append("FROM `member_product_interest` ");
-			sqlBuilder.append("WHERE `member_product_interest`.`member_email` = ? ");
-			sqlBuilder.append("AND `member_product_interest`.`id` = `product`.`product_id`) >= 1, 'true','false') AS interest ");
+			selectListSqlBuilder.append(", SELECT COUNT(`id`) ");
+			selectListSqlBuilder.append("FROM `member_product_interest` ");
+			selectListSqlBuilder.append("WHERE `member_product_interest`.`member_email` = ? ");
+			selectListSqlBuilder.append("AND `member_product_interest`.`id` = `product`.`product_id`) >= 1, 'true','false') AS interest ");
 			params.add(loginMember.getEmail().getValue());
 		}
 		
-		sqlBuilder.append("FROM `product` ");
-		sqlBuilder.append("WHERE `email` = ? ");
-		sqlBuilder.append("AND `state` = 'SELL' ");
+		selectListSqlBuilder.append("FROM `product` ");
+		selectCountSqlBuilder.append("FROM `product` ");
+		
+		StringBuilder whereSqlBuilder = new StringBuilder("WHERE `email` = ? ");
+		whereSqlBuilder.append("AND `state` = 'SELL' ");
 		
 		String category = dto.getCategory();
 		if(category != null && !category.isEmpty()) {
-			sqlBuilder.append("AND `category` = ? ");
+			whereSqlBuilder.append("AND `category` = ? ");
 			params.add(category);
 		}
-
-		sqlBuilder.append("LIMIT " + dto.getPage() * dto.getSize() + "," + dto.getSize());
 		
-		return template.query(sqlBuilder.toString(), new RowMapper<ProductQuery.ProductList>() {
+		StringBuilder limitSqlBuilder = new StringBuilder("LIMIT " + dto.getPage() * dto.getSize() + "," + dto.getSize());
+		
+		Object[] paramArray = params.toArray();
+		
+		List<ProductListData> productList = template.query(selectListSqlBuilder.toString() + whereSqlBuilder.toString() + limitSqlBuilder.toString()
+			, new RowMapper<ProductQuery.ProductListData>() {
 			@Override
-			public ProductList mapRow(ResultSet rs, int rowNum) throws SQLException {
-				ProductList productList = ProductList.builder()
+			public ProductListData mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ProductListData productList = ProductListData.builder()
 					.productId(rs.getString("product_id"))
 					.category(rs.getString("category"))
 					.title(rs.getString("title"))
@@ -82,12 +93,20 @@ public class JdbcProductRepository implements ProductRepository{
 				}
 				return productList;
 			}
-		}, params.toArray());
+		}, paramArray);
+		
+		long totalCount = template.queryForObject(selectCountSqlBuilder.toString() + whereSqlBuilder.toString(), new RowMapper<Long>() {
+			@Override
+			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getLong("totalCount");
+			}
+		},paramArray);
+		return new ProductList(productList, totalCount);
 	}
 
 
 	@Override
-	public List<ProductList> findNewProducts(Owner owner) {
+	public List<ProductListData> findNewProducts(Owner owner) {
 		List<String> params = Arrays.asList(owner.getEmail());
 		StringBuilder sqlBuilder = new StringBuilder("SELECT `product_id`, `category`, `create_date_time`, `price`, `sizes`, `tags`, `title`,");
 		sqlBuilder.append(" (SELECT `path` FROM `product_images` WHERE `product_id` = `product`.`product_id` AND `type` = 'MAIN') AS mainImage ");
@@ -97,10 +116,10 @@ public class JdbcProductRepository implements ProductRepository{
 		sqlBuilder.append("ORDER BY `create_date_time` DESC ");
 		sqlBuilder.append("limit 0, 6");
 		
-		return template.query(sqlBuilder.toString(), new RowMapper<ProductQuery.ProductList>() {
+		return template.query(sqlBuilder.toString(), new RowMapper<ProductQuery.ProductListData>() {
 			@Override
-			public ProductList mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return ProductList.builder()
+			public ProductListData mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return ProductListData.builder()
 					.productId(rs.getString("product_id"))
 					.category(rs.getString("category"))
 					.title(rs.getString("title"))

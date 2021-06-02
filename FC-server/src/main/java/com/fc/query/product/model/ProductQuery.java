@@ -13,10 +13,18 @@ import lombok.NoArgsConstructor;
 public class ProductQuery {
 	
 	@Getter
-	@Builder
 	@AllArgsConstructor
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class ProductList {
+		private List<ProductListData> productList;
+		private long totalCount;
+	}
+	
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class ProductListData {
 		private String productId;
 		private String category;
 		private String title;

@@ -3,7 +3,6 @@ package com.fc.query.store.infra;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +22,7 @@ import com.fc.domain.store.read.QStore;
 import com.fc.domain.store.read.Store;
 import com.fc.query.store.model.StoreQuery;
 import com.fc.query.store.model.StoreQuery.StoreList;
+import com.fc.query.store.model.StoreQuery.StoreListData;
 import com.fc.query.store.model.StoreQuery.StoreMainInfo;
 import com.fc.query.store.model.StoreSearch;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -50,7 +50,10 @@ public class JdbcStoreRepository implements StoreRepository {
 	
 	@Override
 	public Optional<StoreQuery.StoreMainInfo> findByOwner(Owner owner, Member loginMember) {
-		List<String> params = Arrays.asList(owner.getEmail());
+		List<String> params = new ArrayList<String>() {
+			private static final long serialVersionUID = 1L;{
+			add(owner.getEmail());
+		}};
 
 		StringBuilder sqlBuilder = new StringBuilder("SELECT ");
 		sqlBuilder.append("`business_name`, ");
@@ -119,91 +122,88 @@ public class JdbcStoreRepository implements StoreRepository {
 	}
 
 	@Override
-	public List<StoreQuery.StoreList> findAll(StoreSearch dto, Member loginMember) {
+	public StoreQuery.StoreList findAll(StoreSearch dto, Member loginMember) {
 		List<String> params = new ArrayList<>();
 
-		StringBuilder sqlBuilder = new StringBuilder("SELECT `store`.*, ");
-		sqlBuilder.append("CONCAT(CONCAT((SELECT `name` FROM `store_tags` WHERE `store_owner` = `store`.`owner`),\",\")) AS 'tags', ");
-		sqlBuilder.append("(SELECT COUNT(`email`) FROM `member_store_interest` WHERE `member_store_interest`.`member_email` = `store`.`owner`) AS interestCnt ");
+		StringBuilder selectCountSqlBuilder = new StringBuilder("SELECT count(*) AS totalCount ");
+		StringBuilder selectListSqlBuilder = new StringBuilder("SELECT `store`.*, ");
+		selectListSqlBuilder.append("CONCAT(CONCAT((SELECT `name` FROM `store_tags` WHERE `store_owner` = `store`.`owner`),\",\")) AS 'tags', ");
+		selectListSqlBuilder.append("(SELECT COUNT(`email`) FROM `member_store_interest` WHERE `member_store_interest`.`member_email` = `store`.`owner`) AS interestCnt ");
 		
 		if(loginMember != null) {
-			sqlBuilder.append(", `IF((` ");
-			sqlBuilder.append("SELECT COUNT(`email`) ");
-			sqlBuilder.append("FROM `member_store_interest` ");
-			sqlBuilder.append("WHERE `member_store_interest`.`member_email` = ? ");
-			sqlBuilder.append("AND `member_store_interest`.`email` = `store`.`owner`) >= 1, 'true','false') AS interest ");
+			selectListSqlBuilder.append(", `IF((` ");
+			selectListSqlBuilder.append("SELECT COUNT(`email`) ");
+			selectListSqlBuilder.append("FROM `member_store_interest` ");
+			selectListSqlBuilder.append("WHERE `member_store_interest`.`member_email` = ? ");
+			selectListSqlBuilder.append("AND `member_store_interest`.`email` = `store`.`owner`) >= 1, 'true','false') AS interest ");
 			params.add(loginMember.getEmail().getValue());
 		}
 		
-		sqlBuilder.append("FROM `store` ");
+		selectCountSqlBuilder.append("FROM `store` ");
+		selectListSqlBuilder.append("FROM `store` ");
 		
-		if(!(dto == null || dto.emptyAll())) {
-			sqlBuilder.append("WHERE ");
-		}
+		StringBuilder whereSqlBuilder = new StringBuilder();
 		
-		boolean endFlag = false;
+		whereSqlBuilder.append("WHERE `state` = 'SELL' ");
 
 		String title = dto.getTitle();
 		if (title != null && !title.isEmpty()) {
-			appendAndCondition(sqlBuilder, endFlag);
-			sqlBuilder.append("`business_name` like ?");
+			whereSqlBuilder.append("AND `business_name` like ? ");
 			params.add(title);
-			endFlag = true;
 		}
 
 		String tag = dto.getTag();
 		if (tag != null && !tag.isEmpty()) {
-			appendAndCondition(sqlBuilder, endFlag);
-			sqlBuilder.append("`owner` in (");
-			sqlBuilder.append("SELECT `store_owner` ");
-			sqlBuilder.append("FROM `store_tags` WHERE ");
-			sqlBuilder.append("`name` = ?");
+			whereSqlBuilder.append("`owner` in (");
+			whereSqlBuilder.append("SELECT `store_owner` ");
+			whereSqlBuilder.append("FROM `store_tags` WHERE ");
+			whereSqlBuilder.append("`name` = ?");
+			whereSqlBuilder.append(") ");
 			params.add(tag);
-			endFlag = true;
-			sqlBuilder.append(")");
 		}
 
 		String province = dto.getProvince();
 		if (province != null && !province.isEmpty()) {
-			appendAndCondition(sqlBuilder, endFlag);
-			sqlBuilder.append("`province` = ?");
+			whereSqlBuilder.append("AND `province` = ?");
 			params.add(province);
-			endFlag = true;
 		}
 
 		String neighborhood = dto.getNeighborhood();
 		if (neighborhood != null && !neighborhood.isEmpty()) {
-			appendAndCondition(sqlBuilder, endFlag);
-			sqlBuilder.append("`neighborhood` = ?");
+			whereSqlBuilder.append("AND `neighborhood` = ? ");
 			params.add(neighborhood);
-			endFlag = true;
 		}
 
 		String city = dto.getCity();
 		if (city != null && !city.isEmpty()) {
-			appendAndCondition(sqlBuilder, endFlag);
-			sqlBuilder.append("`city` = ?");
+			whereSqlBuilder.append("AND `city` = ? ");
 			params.add(city);
-			endFlag = true;
 		}
 
 		Integer distanceCoordinateDifference = dto.getDistanceCoordinateDifference();
 		Integer letitude = dto.getLetitude();
 		Integer longtitude = dto.getLongtitude();
 		if (distanceCoordinateDifference != null && longtitude != null && letitude != null) {
-			appendAndCondition(sqlBuilder, endFlag);
 			params.add(Integer.toString(letitude));
 			params.add(Integer.toString(longtitude));
 			params.add(Integer.toString(letitude));
 			params.add(Integer.toString(distanceCoordinateDifference));
-			sqlBuilder.append(
-					"(6371*ACOS(COS(RADIANS(?))*COS(RADIANS(letitude))*COS(RADIANS(longtitude)- RADIANS(?))+SIN(RADIANS(?))*SIN(RADIANS(letitude)))) > ?");
+			whereSqlBuilder.append(
+					"AND (6371*ACOS(COS(RADIANS(?))*COS(RADIANS(letitude))*COS(RADIANS(longtitude)- RADIANS(?))+SIN(RADIANS(?))*SIN(RADIANS(letitude)))) > ?");
 		}
 		
-		return template.query(sqlBuilder.toString(), new RowMapper<StoreQuery.StoreList>() {
+		Object[] paramArray = params.toArray();
+		long totalCount = template.queryForObject(selectCountSqlBuilder.toString() + whereSqlBuilder.toString(), new RowMapper<Long>() {
 			@Override
-			public StoreList mapRow(ResultSet rs, int rowNum) throws SQLException {
-				StoreList storeList = StoreQuery.StoreList.builder()
+			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getLong("totalCount");
+			}
+			
+		}, paramArray);
+		List<StoreListData> storeListData = template.query(selectListSqlBuilder.toString() + whereSqlBuilder.toString(), new RowMapper<StoreQuery.StoreListData>() {
+			@Override
+			public StoreListData mapRow(ResultSet rs, int rowNum) throws SQLException {
+				StoreListData storeList = StoreQuery.StoreListData.builder()
 						.businessTitle(rs.getString("business_name"))
 						.storeTags(rs.getString("tags"))
 						.imagePath(rs.getString("path"))
@@ -219,13 +219,8 @@ public class JdbcStoreRepository implements StoreRepository {
 				}
 				return storeList;
 			}
-		}, params.toArray());
-	}
-
-	private void appendAndCondition(StringBuilder sqlBuilder, boolean endFlag) {
-		if (endFlag) {
-			sqlBuilder.append(" AND ");
-		}
+		}, paramArray);
+		return new StoreList(storeListData, totalCount);
 	}
 
 }

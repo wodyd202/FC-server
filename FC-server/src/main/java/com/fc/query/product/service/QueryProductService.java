@@ -10,7 +10,7 @@ import com.fc.domain.product.Owner;
 import com.fc.domain.product.ProductId;
 import com.fc.query.product.infra.ProductRepository;
 import com.fc.query.product.model.ProductQuery;
-import com.fc.query.product.model.ProductQuery.ProductList;
+import com.fc.query.product.model.ProductQuery.ProductListData;
 import com.fc.query.product.model.ProductSearch;
 
 import lombok.AllArgsConstructor;
@@ -22,11 +22,11 @@ import lombok.Setter;
 public class QueryProductService {
 	private ProductRepository productRepository;
 	
-	public List<ProductQuery.ProductList> findAll(Owner owner, ProductSearch dto, Member loginMember){
+	public ProductQuery.ProductList findAll(Owner owner, ProductSearch dto, Member loginMember){
 		return productRepository.findAll(owner, dto, loginMember);
 	}
 	
-	public List<ProductList> findNewProducts(Owner owner) {
+	public List<ProductListData> findNewProducts(Owner owner) {
 		return productRepository.findNewProducts(owner);
 	}
 	

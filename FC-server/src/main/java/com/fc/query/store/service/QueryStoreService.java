@@ -1,7 +1,5 @@
 package com.fc.query.store.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.fc.command.store.exception.StoreNotFoundException;
@@ -22,7 +20,7 @@ public class QueryStoreService {
 		return storeRepository.findByOwner(owner, loginMember).orElseThrow(() -> new StoreNotFoundException("해당 업체 정보가 존재하지 않습니다."));
 	}
 
-	public List<StoreQuery.StoreList> findAll(StoreSearch dto, Member loginMember) {
+	public StoreQuery.StoreList findAll(StoreSearch dto, Member loginMember) {
 		return storeRepository.findAll(dto, loginMember);
 	}
 }

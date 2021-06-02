@@ -10,9 +10,9 @@ import com.fc.query.product.model.ProductQuery;
 import com.fc.query.product.model.ProductSearch;
 
 public interface ProductRepository {
-	List<ProductQuery.ProductList> findAll(Owner owner, ProductSearch dto, Member loginMember);
+	ProductQuery.ProductList findAll(Owner owner, ProductSearch dto, Member loginMember);
 	
-	List<ProductQuery.ProductList> findNewProducts(Owner owner);
+	List<ProductQuery.ProductListData> findNewProducts(Owner owner);
 	
 	Optional<ProductQuery.ProductDetail> findDetailByProductId(ProductId productId, Member loginMember);
 

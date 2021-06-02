@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.fc.domain.member.Email;
 import com.fc.domain.member.read.Member;
+import com.fc.query.member.model.MemberQuery;
 import com.fc.query.member.model.MemberQuery.Address;
 
 public interface MemberRepository {
@@ -11,5 +12,9 @@ public interface MemberRepository {
 
 	boolean existByEmail(Email email);
 
-	Optional<Address> getAddressOfMember(Email email);
+	Optional<Address> findAddressByEmail(Email email);
+	
+	MemberQuery.InterestStoreList findInterestStoreListByEmail(Email email);
+	
+	MemberQuery.InterestProductList findInterestProductListByEmail(Email email);
 }

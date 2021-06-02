@@ -11,6 +11,8 @@ import com.fc.config.security.LoginUser;
 import com.fc.domain.member.Email;
 import com.fc.domain.member.read.Member;
 import com.fc.query.member.model.MemberQuery;
+import com.fc.query.member.model.MemberQuery.InterestProductList;
+import com.fc.query.member.model.MemberQuery.InterestStoreList;
 import com.fc.query.member.service.QueryMemberService;
 
 import io.swagger.annotations.Api;
@@ -40,5 +42,31 @@ public class MemberQueryApi {
 		){
 		MemberQuery.Address addressOfMember = queryMemberService.getAddressOfMember(loginMember.getEmail());
 		return new ResponseEntity<>(addressOfMember, HttpStatus.OK);
+	}
+	
+	@ApiOperation("관심 업체 목록 가져오기")
+	@GetMapping("interest-store")
+	public ResponseEntity<InterestStoreList> getInterestStoreList(
+			@ApiIgnore
+			@LoginUser Member loginMember
+		){
+		/**
+		 * 페이징
+		 */
+		InterestStoreList interestStoreList = queryMemberService.getInterestStoreList(loginMember.getEmail());
+		return new ResponseEntity<>(interestStoreList, HttpStatus.OK);
+	}
+	
+	@ApiOperation("관심 의류 목록 가져오기")
+	@GetMapping("interest-product")
+	public ResponseEntity<InterestProductList> getInterestProductList(
+			@ApiIgnore
+			@LoginUser Member loginMember
+		){
+		/**
+		 * 페이징
+		 */
+		InterestProductList interestProductList = queryMemberService.getInterestProductList(loginMember.getEmail());
+		return new ResponseEntity<>(interestProductList, HttpStatus.OK);
 	}
 }

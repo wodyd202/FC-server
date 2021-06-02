@@ -1,5 +1,7 @@
 package com.fc.query.store.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -45,8 +47,17 @@ public class StoreQuery {
 	@Builder
 	@AllArgsConstructor
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	@JsonInclude(content = Include.NON_NULL)
 	public static class StoreList {
+		private List<StoreListData> storeLists;
+		private long totalCount;
+	}
+	
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@JsonInclude(content = Include.NON_NULL)
+	public static class StoreListData {
 		private String businessTitle;
 		private String storeTags;
 		private String imagePath;
@@ -61,7 +72,7 @@ public class StoreQuery {
 		private Boolean interestState;
 		
 		private long interestCnt;
-	
+		
 		public void addInterestState(boolean interestState) {
 			this.interestState = interestState;
 		}

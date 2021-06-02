@@ -1,5 +1,7 @@
 package com.fc.query.member.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,5 +18,45 @@ public class MemberQuery {
 		private String province;
 		private String city;
 		private String neighborhood;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class InterestStoreList {
+		private List<InterestStoreData> interestStoreList;
+		private long totalCount;
+	}
+	
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class InterestStoreData {
+		private String mainImage;
+		private String businessName;
+		private double longtitude;
+		private double letitude;
+		private String tags;
+	}
+	
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class InterestProductList {
+		private List<InterestProductData> interestProductList;
+		private long totalCount;
+	}
+	
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class InterestProductData {
+		private String mainImage;
+		private String title;
+		private int price;
+		private String tags;
+		private String storeName;
 	}
 }

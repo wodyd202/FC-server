@@ -16,6 +16,7 @@ import com.fc.domain.product.ProductId;
 import com.fc.query.product.model.ProductQuery;
 import com.fc.query.product.model.ProductQuery.ProductDetail;
 import com.fc.query.product.model.ProductQuery.ProductList;
+import com.fc.query.product.model.ProductQuery.ProductListData;
 import com.fc.query.product.model.ProductSearch;
 import com.fc.query.product.service.QueryProductService;
 
@@ -33,22 +34,22 @@ public class ProductQueryApi {
 	
 	@ApiOperation("업체 의류 목록 가져오기")
 	@GetMapping("{owner}/product")
-	public ResponseEntity<List<ProductQuery.ProductList>> findAll(
+	public ResponseEntity<ProductQuery.ProductList> findAll(
 			@PathVariable Owner owner, 
 			ProductSearch dto,
 			@ApiIgnore
 			@LoginUser Member loginMember
 		){
-		List<ProductList> findAll = productService.findAll(owner, dto, loginMember);
+		ProductList findAll = productService.findAll(owner, dto, loginMember);
 		return new ResponseEntity<>(findAll, HttpStatus.OK);
 	}
 
 	@ApiOperation("업체 신상 의류 6개 가져오기")
 	@GetMapping("{owner}/new")
-	public ResponseEntity<List<ProductQuery.ProductList>> findNewProducts(
+	public ResponseEntity<List<ProductQuery.ProductListData>> findNewProducts(
 			@PathVariable Owner owner
 		){
-		List<ProductList> findNewProducts = productService.findNewProducts(owner);
+		List<ProductListData> findNewProducts = productService.findNewProducts(owner);
 		return new ResponseEntity<>(findNewProducts, HttpStatus.OK);
 	}
 	
