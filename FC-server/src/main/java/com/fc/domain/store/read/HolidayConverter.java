@@ -27,7 +27,7 @@ public class HolidayConverter implements AttributeConverter<Set<Holiday>, String
 	public Set<Holiday> convertToEntityAttribute(String dbData) {
 		String[] split = dbData.split(",");
 		Set<Holiday> set = new HashSet<>();
-		for (int i = 0; i < split.length - 1; i++) {
+		for (int i = 0; i < split.length; i++) {
 			set.add(new Holiday(split[i]));
 		}
 		return set;

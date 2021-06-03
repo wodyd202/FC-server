@@ -37,7 +37,7 @@ public class MemberCommandApi {
 	private AddressDetailGetter addressGetter;
 	
 	@ApiOperation("상품 관심 주기")
-	@PostMapping("{targetProductId}/interest")
+	@PostMapping("{targetProductId}/product/interest")
 	public ResponseEntity<StoreProductId> execute(
 			@PathVariable StoreProductId targetProductId,
 			@ApiIgnore
@@ -48,7 +48,7 @@ public class MemberCommandApi {
 	} 
 	
 	@ApiOperation("업체 관심 주기")
-	@PostMapping("{targetStoreOwner}/interest")
+	@PostMapping("{targetStoreOwner}/store/interest")
 	public ResponseEntity<StoreOwner> execute(
 			@PathVariable StoreOwner targetStoreOwner,
 			@ApiIgnore

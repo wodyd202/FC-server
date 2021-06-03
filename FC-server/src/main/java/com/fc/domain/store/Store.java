@@ -3,6 +3,8 @@ package com.fc.domain.store;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.fc.command.store.model.StoreCommand.CreateStore;
 import com.fc.core.domain.AggregateRoot;
 import com.fc.domain.member.Address;
@@ -35,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @ToString
 @Slf4j
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends AggregateRoot<Owner>{
 	private static final long serialVersionUID = 1L;
