@@ -33,10 +33,14 @@ public class MemberQuery {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class InterestStoreData {
+		private String owner;
 		private String mainImage;
 		private String businessName;
 		private double longtitude;
 		private double letitude;
+		private String province;
+		private String city;
+		private String neighborhood;
 		private String tags;
 	}
 	

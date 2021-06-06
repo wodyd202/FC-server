@@ -87,14 +87,6 @@ public class Member extends AggregateRoot<Email> {
 		applyChange(new ConvertedToSeller(this.email));
 	}
 	
-	public void interestStore(StoreOwner targetStoreOwner) {
-		applyChange(new InterestedStore(this.email, targetStoreOwner));
-	}
-	
-	public void removeInterestStore(StoreOwner targetStoreOwner) {
-		applyChange(new RemovedInterestedStore(this.email, targetStoreOwner));
-	}
-	
 	public boolean isAlreadyInterestStore(StoreOwner targetStoreOwner) {
 		List<StoreOwner> stores = this.interestStores.getStores();
 		for(StoreOwner store : stores) {
@@ -105,12 +97,20 @@ public class Member extends AggregateRoot<Email> {
 		return false;
 	}
 
+	public void interestStore(StoreOwner targetStoreOwner) {
+		applyChange(new InterestedStore(this.email, targetStoreOwner));
+	}
+	
+	public void removeInterestStore(StoreOwner targetStoreOwner) {
+		applyChange(new RemovedInterestedStore(this.email, targetStoreOwner));
+	}
+
 	public void removeInterestProduct(StoreProductId productId) {
-		this.interestProducts.add(productId);
+		applyChange(new RemovedInterestedProduct(this.email, productId));
 	}
 
 	public void interestProduct(StoreProductId productId) {
-		this.interestProducts.remove(productId);
+		applyChange(new InterestedProduct(this.email, productId));
 	}
 	
 	public boolean isAlreadyInterestProduct(StoreProductId productId) {

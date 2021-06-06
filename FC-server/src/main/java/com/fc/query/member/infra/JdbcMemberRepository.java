@@ -85,9 +85,8 @@ public class JdbcMemberRepository implements MemberRepository{
 		}};
 		
 		StringBuilder countSqlBuilder = new StringBuilder("SELECT COUNT(`owner`) AS totalCount ");
-		
-		StringBuilder selectSqlBuilder = new StringBuilder("SELECT `owner`, `longtitude`, `letitude`, `path`, `business_name`, ");
-		selectSqlBuilder.append("CONCAT((SELECT `name` FROM `store_tags` WHERE `store_owner` = `store`.`owner`), \",\") AS tags ");
+		StringBuilder selectSqlBuilder = new StringBuilder("SELECT `owner`,`province`, `city`, `neighborhood` ,`longtitude`, `letitude`, `path`, `business_name`, ");
+		selectSqlBuilder.append("(SELECT GROUP_CONCAT(`name`) FROM `store_tags` WHERE `store_owner` = `store`.`owner`) AS tags ");
 		countSqlBuilder.append("FROM `store` ");
 		selectSqlBuilder.append("FROM `store` ");
 		
@@ -109,6 +108,10 @@ public class JdbcMemberRepository implements MemberRepository{
 			@Override
 			public InterestStoreData mapRow(ResultSet rs, int rowNum) throws SQLException {
 				return InterestStoreData.builder()
+						.owner(rs.getString("owner"))
+						.city(rs.getString("city"))
+						.businessName(rs.getString("neighborhood"))
+						.province(rs.getString("province"))
 						.mainImage(rs.getString("path"))
 						.businessName(rs.getString("business_name"))
 						.longtitude(rs.getDouble("longtitude"))
@@ -117,6 +120,7 @@ public class JdbcMemberRepository implements MemberRepository{
 						.build();
 			}
 		}, paramArray);
+		
 		
 		return new InterestStoreList(interestStoreList, totalCount);
 	}

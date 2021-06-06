@@ -13,8 +13,8 @@ public class StoreSearch {
 	private String title;
 	private String tag;
 	
-	private Integer letitude;
-	private Integer longtitude;
+	private Double letitude;
+	private Double longtitude;
 	private Integer distanceCoordinateDifference;
 	
 	private String province;

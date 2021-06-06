@@ -127,7 +127,7 @@ public class JdbcStoreRepository implements StoreRepository {
 
 		StringBuilder selectCountSqlBuilder = new StringBuilder("SELECT count(*) AS totalCount ");
 		StringBuilder selectListSqlBuilder = new StringBuilder("SELECT `store`.*, ");
-		selectListSqlBuilder.append("CONCAT(CONCAT((SELECT `name` FROM `store_tags` WHERE `store_owner` = `store`.`owner`),\",\")) AS 'tags', ");
+		selectListSqlBuilder.append("(SELECT GROUP_CONCAT(`name`) FROM `store_tags` WHERE `store_owner` = `store`.`owner`) AS tags, ");
 		selectListSqlBuilder.append("(SELECT COUNT(`email`) FROM `member_store_interest` WHERE `member_store_interest`.`member_email` = `store`.`owner`) AS interestCnt ");
 		
 		if(loginMember != null) {
@@ -181,15 +181,15 @@ public class JdbcStoreRepository implements StoreRepository {
 		}
 
 		Integer distanceCoordinateDifference = dto.getDistanceCoordinateDifference();
-		Integer letitude = dto.getLetitude();
-		Integer longtitude = dto.getLongtitude();
+		Double letitude = dto.getLetitude();
+		Double longtitude = dto.getLongtitude();
 		if (distanceCoordinateDifference != null && longtitude != null && letitude != null) {
-			params.add(Integer.toString(letitude));
-			params.add(Integer.toString(longtitude));
-			params.add(Integer.toString(letitude));
+			params.add(Double.toString(letitude));
+			params.add(Double.toString(longtitude));
+			params.add(Double.toString(letitude));
 			params.add(Integer.toString(distanceCoordinateDifference));
 			whereSqlBuilder.append(
-					"AND (6371*ACOS(COS(RADIANS(?))*COS(RADIANS(letitude))*COS(RADIANS(longtitude)- RADIANS(?))+SIN(RADIANS(?))*SIN(RADIANS(letitude)))) > ?");
+					"AND (6371*ACOS(COS(RADIANS(?))*COS(RADIANS(letitude))*COS(RADIANS(longtitude)- RADIANS(?))+SIN(RADIANS(?))*SIN(RADIANS(letitude)))) <= ?");
 		}
 		
 		Object[] paramArray = params.toArray();
