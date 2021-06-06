@@ -4,14 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fc.command.store.infra.InmemoryStoreTagRepository;
 import com.fc.command.store.infra.JdbcStoreEventRepository;
 import com.fc.command.store.infra.JdbcStoreSnapshotRepository;
 import com.fc.command.store.infra.SimpleStoreEventStore;
 import com.fc.command.store.infra.StoreEventHandler;
 import com.fc.command.store.infra.StoreEventPublisher;
 import com.fc.command.store.infra.StoreEventStoreRepository;
-import com.fc.command.store.infra.StoreTagRepository;
 import com.fc.core.event.EventProjector;
 import com.fc.core.event.EventPublisher;
 import com.fc.core.event.EventStore;
@@ -47,10 +45,5 @@ public class StoreConfig {
 	@Bean
 	EventPublisher<StoreRawEvent> storeEventPublisher() {
 		return new StoreEventPublisher();
-	}
-	
-	@Bean
-	StoreTagRepository storeTagRepository() {
-		return new InmemoryStoreTagRepository();
 	}
 }

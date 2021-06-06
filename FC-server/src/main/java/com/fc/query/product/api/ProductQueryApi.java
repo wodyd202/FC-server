@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fc.command.product.infra.ProductTagRepository;
 import com.fc.config.security.LoginUser;
 import com.fc.domain.member.read.Member;
 import com.fc.domain.product.Owner;
 import com.fc.domain.product.ProductId;
+import com.fc.domain.product.ProductTag;
 import com.fc.query.product.model.ProductQuery;
 import com.fc.query.product.model.ProductQuery.ProductDetail;
 import com.fc.query.product.model.ProductQuery.ProductList;
@@ -31,6 +33,13 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "의류 조회 관련 API")
 public class ProductQueryApi {
 	private QueryProductService productService;
+	private ProductTagRepository productTagRepository; 
+	
+	@ApiOperation("업체 태그 목록 가져오기")
+	@GetMapping("tags")
+	public ResponseEntity<List<ProductTag>> getTags(){
+		return new ResponseEntity<>(productTagRepository.findAll(), HttpStatus.OK);
+	}
 	
 	@ApiOperation("업체 의류 목록 가져오기")
 	@GetMapping("{owner}/product")

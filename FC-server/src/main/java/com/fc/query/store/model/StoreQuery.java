@@ -69,12 +69,22 @@ public class StoreQuery {
 		
 		private String holiday;
 		
+		private String owner;
+		
 		private Boolean interestState;
 		
 		private long interestCnt;
 		
+		private double longtitude;
+		private double letitude;
+		private Double distanceCoordinate;
+		
 		public void addInterestState(boolean interestState) {
 			this.interestState = interestState;
+		}
+
+		public void addDistanceCoordinate(double distanceCoordinate) {
+			this.distanceCoordinate = distanceCoordinate;
 		}
 	}
 }

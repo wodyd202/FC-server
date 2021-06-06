@@ -3,8 +3,11 @@ package com.fc.command.store.infra;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.fc.domain.store.StoreTag;
 
+@Repository
 public class InmemoryStoreTagRepository implements StoreTagRepository {
 	private List<StoreTag> repo = new ArrayList<>();
 

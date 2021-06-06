@@ -123,12 +123,24 @@ public class JdbcStoreRepository implements StoreRepository {
 
 	@Override
 	public StoreQuery.StoreList findAll(StoreSearch dto, Member loginMember) {
-		List<String> params = new ArrayList<>();
-
+		List<String> listParam = new ArrayList<>();
+		List<String> countParam = new ArrayList<>();
+		
 		StringBuilder selectCountSqlBuilder = new StringBuilder("SELECT count(*) AS totalCount ");
 		StringBuilder selectListSqlBuilder = new StringBuilder("SELECT `store`.*, ");
 		selectListSqlBuilder.append("(SELECT GROUP_CONCAT(`name`) FROM `store_tags` WHERE `store_owner` = `store`.`owner`) AS tags, ");
 		selectListSqlBuilder.append("(SELECT COUNT(`email`) FROM `member_store_interest` WHERE `member_store_interest`.`member_email` = `store`.`owner`) AS interestCnt ");
+
+		Integer distanceCoordinateDifference = dto.getDistanceCoordinateDifference();
+		Double letitude = dto.getLetitude();
+		Double longtitude = dto.getLongtitude();
+		
+		if (isRequiarDistanceCoordinateDifferenceCondition(distanceCoordinateDifference, longtitude, letitude)) {
+			selectListSqlBuilder.append(", (6371*ACOS(COS(RADIANS(?))*COS(RADIANS(letitude))*COS(RADIANS(longtitude)- RADIANS(?))+SIN(RADIANS(?))*SIN(RADIANS(letitude)))) AS distanceCoordinateDifference ");
+			listParam.add(Double.toString(letitude));
+			listParam.add(Double.toString(longtitude));
+			listParam.add(Double.toString(letitude));
+		}
 		
 		if(loginMember != null) {
 			selectListSqlBuilder.append(", `IF((` ");
@@ -136,7 +148,8 @@ public class JdbcStoreRepository implements StoreRepository {
 			selectListSqlBuilder.append("FROM `member_store_interest` ");
 			selectListSqlBuilder.append("WHERE `member_store_interest`.`member_email` = ? ");
 			selectListSqlBuilder.append("AND `member_store_interest`.`email` = `store`.`owner`) >= 1, 'true','false') AS interest ");
-			params.add(loginMember.getEmail().getValue());
+			listParam.add(loginMember.getEmail().getValue());
+			countParam.add(loginMember.getEmail().getValue());
 		}
 		
 		selectCountSqlBuilder.append("FROM `store` ");
@@ -149,7 +162,8 @@ public class JdbcStoreRepository implements StoreRepository {
 		String title = dto.getTitle();
 		if (title != null && !title.isEmpty()) {
 			whereSqlBuilder.append("AND `business_name` like ? ");
-			params.add(title);
+			listParam.add(title);
+			countParam.add(title);
 		}
 
 		String tag = dto.getTag();
@@ -159,47 +173,57 @@ public class JdbcStoreRepository implements StoreRepository {
 			whereSqlBuilder.append("FROM `store_tags` WHERE ");
 			whereSqlBuilder.append("`name` = ?");
 			whereSqlBuilder.append(") ");
-			params.add(tag);
+			listParam.add(tag);
+			countParam.add(tag);
 		}
 
 		String province = dto.getProvince();
 		if (province != null && !province.isEmpty()) {
 			whereSqlBuilder.append("AND `province` = ?");
-			params.add(province);
+			listParam.add(province);
+			countParam.add(province);
 		}
 
 		String neighborhood = dto.getNeighborhood();
 		if (neighborhood != null && !neighborhood.isEmpty()) {
 			whereSqlBuilder.append("AND `neighborhood` = ? ");
-			params.add(neighborhood);
+			listParam.add(neighborhood);
+			countParam.add(neighborhood);
 		}
 
 		String city = dto.getCity();
 		if (city != null && !city.isEmpty()) {
 			whereSqlBuilder.append("AND `city` = ? ");
-			params.add(city);
+			listParam.add(city);
+			countParam.add(city);
 		}
 
-		Integer distanceCoordinateDifference = dto.getDistanceCoordinateDifference();
-		Double letitude = dto.getLetitude();
-		Double longtitude = dto.getLongtitude();
-		if (distanceCoordinateDifference != null && longtitude != null && letitude != null) {
-			params.add(Double.toString(letitude));
-			params.add(Double.toString(longtitude));
-			params.add(Double.toString(letitude));
-			params.add(Integer.toString(distanceCoordinateDifference));
-			whereSqlBuilder.append(
-					"AND (6371*ACOS(COS(RADIANS(?))*COS(RADIANS(letitude))*COS(RADIANS(longtitude)- RADIANS(?))+SIN(RADIANS(?))*SIN(RADIANS(letitude)))) <= ?");
+		if (isRequiarDistanceCoordinateDifferenceCondition(distanceCoordinateDifference, longtitude, letitude)) {
+			whereSqlBuilder.append("AND (6371*ACOS(COS(RADIANS(?))*COS(RADIANS(letitude))*COS(RADIANS(longtitude)- RADIANS(?))+SIN(RADIANS(?))*SIN(RADIANS(letitude)))) <= ?");
+			String distanceCoordinateDifferenceStr = Integer.toString(distanceCoordinateDifference);
+			String letitudeStr = Double.toString(letitude);
+			String longtitudeStr = Double.toString(longtitude);
+			
+			listParam.add(letitudeStr);
+			listParam.add(longtitudeStr);
+			listParam.add(letitudeStr);
+			
+			countParam.add(letitudeStr);
+			countParam.add(longtitudeStr);
+			countParam.add(letitudeStr);
+			
+			listParam.add(distanceCoordinateDifferenceStr);
+			countParam.add(distanceCoordinateDifferenceStr);
 		}
 		
-		Object[] paramArray = params.toArray();
 		long totalCount = template.queryForObject(selectCountSqlBuilder.toString() + whereSqlBuilder.toString(), new RowMapper<Long>() {
 			@Override
 			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
 				return rs.getLong("totalCount");
 			}
 			
-		}, paramArray);
+		}, countParam.toArray());
+		
 		List<StoreListData> storeListData = template.query(selectListSqlBuilder.toString() + whereSqlBuilder.toString(), new RowMapper<StoreQuery.StoreListData>() {
 			@Override
 			public StoreListData mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -207,20 +231,30 @@ public class JdbcStoreRepository implements StoreRepository {
 						.businessTitle(rs.getString("business_name"))
 						.storeTags(rs.getString("tags"))
 						.imagePath(rs.getString("path"))
+						.longtitude(rs.getDouble("longtitude"))
+						.letitude(rs.getDouble("letitude"))
+						.owner(rs.getString("owner"))
 						.weekdayStartTime(rs.getInt("weekday_start_time"))
 						.weekdayEndTime(rs.getInt("weekday_end_time"))
 						.weekendStartTime(rs.getInt("weekend_start_time"))
 						.weekendEndTime(rs.getInt("weekend_end_time"))
-						.holiday("holidays")
+						.holiday(rs.getString("holidays"))
 						.interestCnt(rs.getInt("interestCnt"))
 						.build();
+				if (isRequiarDistanceCoordinateDifferenceCondition(distanceCoordinateDifference, longtitude, letitude)) {
+					storeList.addDistanceCoordinate(rs.getDouble("distanceCoordinateDifference"));
+				}
 				if(loginMember != null) {
 					storeList.addInterestState(Boolean.parseBoolean(rs.getString("interest")));
 				}
 				return storeList;
 			}
-		}, paramArray);
+		}, listParam.toArray());
 		return new StoreList(storeListData, totalCount);
+	}
+	
+	private boolean isRequiarDistanceCoordinateDifferenceCondition(Integer distanceCoordinateDifference, Double longtitude, Double letitude) {
+		return distanceCoordinateDifference != null && longtitude != null && letitude != null;
 	}
 
 }
