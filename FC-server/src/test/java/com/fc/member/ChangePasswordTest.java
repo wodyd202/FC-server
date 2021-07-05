@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fc.command.member.MemberService;
@@ -23,12 +24,15 @@ import com.fc.query.product.infra.ProductRepository;
 import com.fc.query.store.infra.StoreRepository;
 
 public class ChangePasswordTest {
+	PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	MemberEventHandler memberEventHandler = mock(MemberEventHandler.class);
-	MemberService service = new SimpleMemberService(memberEventHandler,mock(PasswordEncoder.class), mock(StoreRepository.class), mock(ProductRepository.class));
-	Member mockMember = Member.builder().password(new Password("password")).build();
+	MemberService service = new SimpleMemberService(memberEventHandler, passwordEncoder, mock(StoreRepository.class), mock(ProductRepository.class));
 
 	@Test
 	void 사용자_비밀번호_수정() {
+		String encodedPassword = passwordEncoder.encode("password");
+		Member mockMember = Member.builder().password(new Password(encodedPassword)).build();
+
 		MemberCommand.ChangePassword command = new MemberCommand.ChangePassword("password","password.123[]");
 		Validator<MemberCommand.ChangePassword> validator = new ChangePasswordValidator(new PasswordMeter());
 		
