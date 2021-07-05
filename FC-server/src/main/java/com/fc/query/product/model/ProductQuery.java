@@ -33,7 +33,7 @@ public class ProductQuery {
 		private int price;
 		private Boolean interest;
 		
-		public void addInterestState(boolean interest) {
+		public void addInterestState(Boolean interest) {
 			this.interest = interest;
 		}
 	}
@@ -44,6 +44,7 @@ public class ProductQuery {
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class ProductDetail {
 		private String productId;
+		private String owner;
 		private String title;
 		private String tags;
 		private int price;

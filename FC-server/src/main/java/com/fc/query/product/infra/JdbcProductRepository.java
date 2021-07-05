@@ -43,7 +43,11 @@ public class JdbcProductRepository implements ProductRepository{
 	
 	@Override
 	public ProductQuery.ProductList findAll(Owner owner, ProductSearch dto, Member loginMember) {
-		List<String> params = new ArrayList<String>() {
+		List<String> countQueryParams = new ArrayList<String>() {
+			private static final long serialVersionUID = 1L;{
+				add(owner.getEmail());
+			}};
+		List<String> listQueryParams = new ArrayList<String>() {
 			private static final long serialVersionUID = 1L;{
 			add(owner.getEmail());
 		}};
@@ -53,11 +57,11 @@ public class JdbcProductRepository implements ProductRepository{
 		selectListSqlBuilder.append(" (SELECT `path` FROM `product_images` WHERE `product_id` = `product`.`product_id` AND `type` = 'MAIN') AS mainImage ");
 		
 		if(loginMember != null) {
-			selectListSqlBuilder.append(", SELECT COUNT(`id`) ");
+			selectListSqlBuilder.append(", (SELECT IF(COUNT(*) > 0, TRUE, FALSE) ");
 			selectListSqlBuilder.append("FROM `member_product_interest` ");
 			selectListSqlBuilder.append("WHERE `member_product_interest`.`member_email` = ? ");
-			selectListSqlBuilder.append("AND `member_product_interest`.`id` = `product`.`product_id`) >= 1, 'true','false') AS interest ");
-			params.add(loginMember.getEmail().getValue());
+			selectListSqlBuilder.append("AND `member_product_interest`.`id` = `product`.`product_id`) AS interest ");
+			listQueryParams.add(loginMember.getEmail().getValue());
 		}
 		
 		selectListSqlBuilder.append("FROM `product` ");
@@ -69,12 +73,11 @@ public class JdbcProductRepository implements ProductRepository{
 		String category = dto.getCategory();
 		if(category != null && !category.isEmpty()) {
 			whereSqlBuilder.append("AND `category` = ? ");
-			params.add(category);
+			listQueryParams.add(category);
+			countQueryParams.add(category);
 		}
 		
 		StringBuilder limitSqlBuilder = new StringBuilder("LIMIT " + dto.getPage() * dto.getSize() + "," + dto.getSize());
-		
-		Object[] paramArray = params.toArray();
 		
 		List<ProductListData> productList = template.query(selectListSqlBuilder.toString() + whereSqlBuilder.toString() + limitSqlBuilder.toString()
 			, new RowMapper<ProductQuery.ProductListData>() {
@@ -88,19 +91,20 @@ public class JdbcProductRepository implements ProductRepository{
 					.size(rs.getString("sizes"))
 					.price(rs.getInt("price"))
 					.build();
+
 				if(loginMember != null) {
-					productList.addInterestState(Boolean.parseBoolean(rs.getString("interest")));
+					productList.addInterestState(rs.getBoolean("interest"));
 				}
 				return productList;
 			}
-		}, paramArray);
+		}, listQueryParams.toArray());
 		
 		long totalCount = template.queryForObject(selectCountSqlBuilder.toString() + whereSqlBuilder.toString(), new RowMapper<Long>() {
 			@Override
 			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
 				return rs.getLong("totalCount");
 			}
-		},paramArray);
+		},countQueryParams.toArray());
 		return new ProductList(productList, totalCount);
 	}
 
@@ -135,7 +139,7 @@ public class JdbcProductRepository implements ProductRepository{
 	public Optional<ProductDetail> findDetailByProductId(ProductId productId, Member loginMember) {
 		List<String> params = Arrays.asList(productId.getId());
 
-		StringBuilder sqlBuilder = new StringBuilder("SELECT `product`.`product_id`, `category`, `create_date_time`, `price`, `sizes`, `tags`, `title`, `image_id`, `type`, `path`, ");
+		StringBuilder sqlBuilder = new StringBuilder("SELECT `product`.`product_id`, `product`.`email`, `category`, `create_date_time`, `price`, `sizes`, `tags`, `title`, `image_id`, `type`, `path`, ");
 		
 		sqlBuilder.append("(SELECT COUNT(`id`) ");
 		sqlBuilder.append("FROM `member_product_interest` ");
@@ -166,6 +170,7 @@ public class JdbcProductRepository implements ProductRepository{
 				ProductDetail productDetail = ProductDetail.builder()
 						.productId(rs.getString("product_id"))
 						.title(rs.getString("title"))
+						.owner(rs.getString("email"))
 						.tags(rs.getString("tags"))
 						.price(rs.getInt("price"))
 						.size(rs.getString("sizes"))

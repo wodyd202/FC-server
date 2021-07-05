@@ -55,13 +55,13 @@ public class SimpleProductService implements ProductService {
 		// 받아온 이미지 파일을 저장후 저장할 객체로 변환
 		for(int i = 0;i<imageCount;i++) {
 			MultipartFile file = images.get(i);
-			String saveFileName = UUID.randomUUID() + getFileExtention(file);
+			String saveFileName = UUID.randomUUID().toString();
 			fileUploader.uploadFile(file, saveFileName);
 			
 			if(command.getMainImageIdx() == i) {
-				imageList.add(new ProductImage(UUID.randomUUID().toString(), saveFileName, ProductImageType.MAIN));
+				imageList.add(new ProductImage(UUID.randomUUID().toString(), saveFileName + getFileExtention(file), ProductImageType.MAIN));
 			}else {
-				imageList.add(new ProductImage(UUID.randomUUID().toString(), saveFileName, ProductImageType.SUB));
+				imageList.add(new ProductImage(UUID.randomUUID().toString(), saveFileName + getFileExtention(file), ProductImageType.SUB));
 			}
 		}
 		
