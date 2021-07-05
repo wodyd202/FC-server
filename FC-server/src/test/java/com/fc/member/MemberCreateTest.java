@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -49,7 +48,6 @@ public class MemberCreateTest {
 	}
 	
 	@Test
-	@Disabled
 	void 중복된_사용자_실패() {
 		MemberCommand.CreateMember command = new MemberCommand.CreateMember("test@naver.com","password.[]123");
 		memberService.create(mock(Validator.class), command);
@@ -60,7 +58,6 @@ public class MemberCreateTest {
 	}
 	
 	@Test
-	@Disabled
 	void 이미탈퇴한_회원이_다시_등록하는_경우_실패() {
 		MemberEventHandler memberEventHandler = mock(MemberEventHandler.class);
 		memberService.setMemberEventHandler(memberEventHandler);
